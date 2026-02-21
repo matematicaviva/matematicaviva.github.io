@@ -1,1 +1,1469 @@
+<!doctype html>
+<html lang="it" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Sezioni Coniche – Completo</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+html, body { height: 100%; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
+
+:root {
+  --bg-color: #0a0e1a;
+  --surface-color: #141a2e;
+  --text-color: #e8e6f0;
+  --primary-color: #f0a500;
+  --secondary-color: #4a6cf7;
+  --nav-h: 56px;
+  --footer-h: 60px;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-display { font-family: 'Playfair Display', serif; }
+
+.slide {
+  display: none;
+  position: absolute;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  bottom: var(--footer-h);
+  width: 100%;
+  height: calc(100% - var(--nav-h) - var(--footer-h));
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.slide.active {
+  display: flex;
+  opacity: 1;
+}
+
+canvas { display: block; touch-action: none; }
+
+/* ── NAV DOTS ── */
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(232,230,240,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  flex-shrink: 0;
+  /* touch target */
+  padding: 6px;
+  background-clip: content-box;
+}
+.nav-dot.active {
+  background: var(--primary-color);
+  background-clip: content-box;
+  transform: scale(1.4);
+  box-shadow: 0 0 12px rgba(240,165,0,0.5);
+}
+.nav-dot:hover { background: rgba(240,165,0,0.6); background-clip: content-box; }
+
+/* ── SLIDER ── */
+.slider-track {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  outline: none;
+}
+.slider-track::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(240,165,0,0.6);
+}
+.slider-track::-moz-range-thumb {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(240,165,0,0.6);
+}
+
+.formula-box {
+  background: rgba(74,108,247,0.1);
+  border: 1px solid rgba(74,108,247,0.3);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  letter-spacing: 1px;
+  display: inline-block;
+}
+
+.glow-text { text-shadow: 0 0 30px rgba(240,165,0,0.3); }
+
+.card-surface {
+  background: var(--surface-color);
+  border: 1px solid rgba(74,108,247,0.15);
+  border-radius: 16px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes rotateLine {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.anim-up { animation: fadeInUp 0.8s ease forwards; }
+.anim-up-d1 { animation: fadeInUp 0.8s 0.15s ease forwards; opacity: 0; }
+.anim-up-d2 { animation: fadeInUp 0.8s 0.3s ease forwards; opacity: 0; }
+.anim-up-d3 { animation: fadeInUp 0.8s 0.45s ease forwards; opacity: 0; }
+.anim-left { animation: fadeInLeft 0.8s ease forwards; }
+.anim-left-d1 { animation: fadeInLeft 0.8s 0.2s ease forwards; opacity: 0; }
+
+.table-row {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* ── BUTTONS ── */
+.btn-nav {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  min-width: 90px;
+  touch-action: manipulation;
+}
+.btn-prev {
+  background: rgba(74,108,247,0.2);
+  color: var(--secondary-color);
+  border: 1px solid rgba(74,108,247,0.3);
+}
+.btn-prev:hover, .btn-prev:active { background: rgba(74,108,247,0.35); }
+.btn-next {
+  background: var(--primary-color);
+  color: var(--bg-color);
+}
+.btn-next:hover, .btn-next:active { background: #d4900a; }
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── INFO CARD ── */
+.info-card {
+  background: rgba(74,125,255,0.12);
+  border: 1px solid rgba(74,125,255,0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: clamp(13px, 1.8vw, 15px);
+  line-height: 1.7;
+  color: rgba(232,236,244,0.85);
+}
+
+.pause-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 20;
+  background: rgba(212,160,83,0.2);
+  border: 1px solid rgba(212,160,83,0.4);
+  color: #d4a053;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  transition: all 0.3s;
+  touch-action: manipulation;
+}
+.pause-btn:hover, .pause-btn:active { background: rgba(212,160,83,0.4); }
+.pause-btn.paused { background: rgba(100,180,255,0.2); border-color: rgba(100,180,255,0.4); color: #64b4ff; }
+
+/* ── RESPONSIVE: TABLET & MOBILE ── */
+@media (max-width: 1023px) {
+  /* Nav: nascondi dots su schermi piccoli, mostra solo su tablet+ */
+  #nav-dots { display: none; }
+  /* Footer dots restano visibili */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --nav-h: 50px;
+    --footer-h: 56px;
+  }
+
+  /* Slide content: stack verticale compatto */
+  .slide > div {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    gap: 12px !important;
+  }
+
+  /* Canvas dimensioni adattive su mobile */
+  canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 220px;
+    max-height: 300px;
+  }
+
+  /* Nascondi footer dots su mobile piccolo per spazio */
+  #nav-dots-bottom { display: none; }
+
+  /* Counter slide più visibile al centro su mobile */
+  #slide-counter {
+    font-size: 0.85rem !important;
+    color: rgba(232,230,240,0.7) !important;
+  }
+
+  /* Slide 13 degeneri cards: stack */
+  #slide-13 .flex { flex-wrap: wrap; }
+  #slide-13 .card-surface { width: 100%; }
+
+  /* Tabella finale: forza scroll orizzontale */
+  #slide-17 .card-surface { overflow-x: auto; }
+
+  /* Formula box più compatta */
+  .formula-box { padding: 8px 14px; }
+
+  /* Info card compatta */
+  .info-card { padding: 12px 14px; }
+
+  /* Cards statistiche flex-wrap */
+  .slide .flex.gap-4, .slide .flex.gap-3 {
+    flex-wrap: wrap;
+  }
+  .slide .flex.gap-4 > .card-surface,
+  .slide .flex.gap-3 > .card-surface {
+    min-width: calc(50% - 8px);
+    flex: 1 1 calc(50% - 8px);
+  }
+
+  /* Btn nav più grandi per touch */
+  .btn-nav {
+    padding: 10px 14px;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  canvas {
+    min-height: 180px;
+    max-height: 240px;
+  }
+  /* Slide 9 degeneri intro cards */
+  #slide-9 .card-surface { padding: 14px 12px; font-size: 0.9rem; }
+}
+
+/* ── TABLET: layout orizzontale con canvas ridotto ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .slide > div {
+    padding: 16px 20px !important;
+    gap: 20px !important;
+  }
+  canvas {
+    max-height: 320px;
+  }
+  /* Mostra dots in nav su tablet */
+  #nav-dots { display: flex; }
+}
+
+/* ── FULLSCREEN adjustments ── */
+#app-wrapper:fullscreen { height: 100vh; }
+#app-wrapper:-webkit-full-screen { height: 100vh; }
+  </style>
+</head>
+<body class="h-full">
+  <div id="app-wrapper" class="relative h-full w-full" style="background: var(--bg-color);">
+    <div id="particles" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+    <!-- NAV TOP -->
+    <nav class="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3"
+         style="background: rgba(10,14,26,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(74,108,247,0.1); height: var(--nav-h);">
+      <div class="font-display font-bold tracking-wide" style="font-size: clamp(0.7rem, 2vw, 0.9rem); color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 30%;" id="nav-title">Le Sezioni Coniche</div>
+      <div class="flex gap-1 items-center flex-wrap justify-center" id="nav-dots" style="max-width: 40%;"></div>
+      <div class="flex items-center gap-2" style="flex-shrink: 0;">
+        <div class="text-xs font-semibold" style="color: rgba(232,230,240,0.5); white-space: nowrap;" id="slide-counter">1 / 17</div>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Schermo intero"
+          style="background: rgba(74,108,247,0.15); border: 1px solid rgba(74,108,247,0.3); color: var(--secondary-color); padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.2s; line-height: 1; touch-action: manipulation;">⛶</button>
+      </div>
+    </nav>
+
+    <!-- ========== SLIDE 1: INTRO ========== -->
+    <section id="slide-1" class="slide flex-col items-center justify-center" data-slide="1" style="display:flex;">
+      <div class="text-center z-10 px-6">
+        <div class="mb-8 anim-up" style="font-size: 4rem;">📐</div>
+        <h1 class="font-display font-900 glow-text anim-up-d1" style="font-size: clamp(2rem, 5vw, 4rem); color: var(--primary-color); line-height: 1.1; margin-bottom: 1rem;">Geometria Classica</h1>
+        <p class="anim-up-d2 font-light" style="font-size: clamp(0.95rem, 2.2vw, 1.5rem); color: rgba(232,230,240,0.6); max-width: 600px; margin-left: auto; margin-right: auto;">Un viaggio attraverso le forme più belle della matematica</p>
+        <div class="mt-12 anim-up-d3">
+          <div style="font-size: 0.9rem; color: rgba(232,230,240,0.5); letter-spacing: 1px;">✨ Scopri cosa accade quando un piano incontra un cono ✨</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 2: FORMAZIONE DEL CONO ========== -->
+    <section id="slide-2" class="slide flex-col items-center justify-center" data-slide="2">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center">
+          <div id="cone-formation-container" style="width:100%; height:min(400px, 45vw); min-height: 220px; position:relative;"></div>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <div class="mb-3 text-xs font-semibold tracking-widest uppercase" style="color: var(--primary-color);">Geometria Classica</div>
+          <h1 class="font-display font-900 glow-text mb-4" style="font-size: clamp(2rem, 4vw, 3.2rem); color: var(--primary-color); line-height: 1.1;">Come nasce il Cono</h1>
+          <p class="font-light leading-relaxed mb-6" style="color: rgba(232,230,240,0.7); font-size: 1rem;">
+            Un <strong style="color: var(--text-color);">asse verticale</strong> fisso e una <strong style="color: var(--text-color);">retta incidente</strong> che ruota attorno a esso: il risultato è la superficie conica, protagonista di tutta la geometria che esploreremo.
+          </p>
+          <div class="card-surface p-4 mb-4">
+            <p class="text-sm font-semibold mb-2" style="color: var(--primary-color);">Elementi fondamentali:</p>
+            <ul class="text-sm space-y-1" style="color: rgba(232,230,240,0.75);">
+              <li>🔵 <strong style="color: var(--text-color);">Asse</strong> — retta verticale di simmetria</li>
+              <li>🟠 <strong style="color: var(--text-color);">Generatrice</strong> — retta incidente che ruota</li>
+              <li>🔴 <strong style="color: var(--text-color);">Vertice</strong> — punto di incontro tra i due</li>
+              <li>✨ <strong style="color: var(--text-color);">Superficie conica</strong> — traccia della rotazione</li>
+            </ul>
+          </div>
+          <p class="text-xs" style="color: rgba(232,230,240,0.4);">💡 Osserva la generatrice arancione ruotare attorno all'asse blu</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 3: TITOLO CON CONO INTERATTIVO ========== -->
+    <section id="slide-3" class="slide flex-col items-center justify-center" data-slide="3">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="cone3d-slide2" width="420" height="380" style="cursor: grab; max-width: 100%; display: block;"></canvas>
+          <p class="mt-4 text-xs text-center" style="color: rgba(232,230,240,0.5);">💡 Muovi il mouse per ruotare il cono</p>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h1 id="main-title-el" class="font-display font-900 glow-text mb-1" style="font-size: clamp(2rem, 4vw, 3.5rem); color: var(--primary-color); line-height: 1.1;">Le Sezioni Coniche</h1>
+          <p id="subtitle-el" class="font-light leading-relaxed" style="font-size: clamp(0.95rem, 2vw, 1.3rem); color: rgba(232,230,240,0.7);">Dalla geometria solida alle curve nel piano</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 4: DOPPIO CONO INTERATTIVO ========== -->
+    <section id="slide-4" class="slide flex-col items-center justify-center" data-slide="4">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center">
+          <h2 class="font-display font-bold text-2xl mb-2 anim-up" style="color: var(--primary-color);">Il Doppio Cono Interattivo</h2>
+          <canvas id="cone3d-interactive" width="420" height="380" style="cursor: grab; max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-xs w-full anim-left-d1">
+          <div class="card-surface p-6">
+            <label for="plane-angle-slider" class="block text-sm font-semibold mb-2" style="color: var(--text-color);">Angolo del piano</label>
+            <input type="range" id="plane-angle-slider" min="0" max="90" value="0" class="slider-track w-full mb-2">
+            <div class="flex justify-between text-xs" style="color: rgba(232,230,240,0.5);">
+              <span>0° (parallelo)</span>
+              <span id="angle-value" style="color: var(--primary-color); font-weight: 700;">0°</span>
+              <span>90° (verticale)</span>
+            </div>
+            <div class="mt-5 p-4 rounded-xl" style="background: rgba(240,165,0,0.08); border: 1px solid rgba(240,165,0,0.2);">
+              <p class="text-sm font-semibold" style="color: var(--primary-color);">Sezione attuale:</p>
+              <p id="section-label" class="text-lg font-bold mt-1" style="color: var(--text-color);">Circonferenza</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 5: CIRCONFERENZA ========== -->
+    <section id="slide-5" class="slide flex-col items-center justify-center" data-slide="5">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="circle-canvas" width="380" height="380" style="max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Circonferenza</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano è <strong style="color: var(--text-color);">parallelo alla base</strong> del cono. Tutti i punti sono equidistanti dal centro.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">x²</span> + <span style="color: var(--secondary-color);">y²</span> = <span style="color: var(--text-color);">r²</span></div>
+          <div class="flex gap-4 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Centro</div><div class="font-bold" style="color: var(--primary-color);">(0, 0)</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Raggio</div><div class="font-bold" style="color: var(--secondary-color);">r</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Eccentricità</div><div class="font-bold" style="color: #4ade80;">e = 0</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 6: ELLISSE ========== -->
+    <section id="slide-6" class="slide flex-col items-center justify-center" data-slide="6">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="ellipse-canvas" width="400" height="360" style="max-width: 100%; display: block;"></canvas>
+          <div class="mt-3 w-full max-w-xs">
+            <label for="eccentricity-slider" class="block text-xs font-semibold mb-1" style="color: rgba(232,230,240,0.6);">Eccentricità (e)</label>
+            <input type="range" id="eccentricity-slider" min="0" max="95" value="50" class="slider-track w-full">
+            <div class="flex justify-between text-xs mt-1" style="color: rgba(232,230,240,0.4);"><span>0 (cerchio)</span><span id="ecc-value" style="color: var(--primary-color); font-weight: 700;">0.50</span><span>1</span></div>
+          </div>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Ellisse</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano è <strong style="color: var(--text-color);">inclinato</strong> rispetto alla base, ma non parallelo a una generatrice. La somma delle distanze dai fuochi è costante.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">x²/a²</span> + <span style="color: var(--secondary-color);">y²/b²</span> = <span style="color: var(--text-color);">1</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Fuochi</div><div class="font-bold text-sm" style="color: #f87171;">F₁, F₂</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Eccentricità</div><div class="font-bold" style="color: #4ade80;">0 &lt; e &lt; 1</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 7: PARABOLA ========== -->
+    <section id="slide-7" class="slide flex-col items-center justify-center" data-slide="7">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="parabola-canvas" width="400" height="380" style="max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Parabola</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano è <strong style="color: var(--text-color);">parallelo a una generatrice</strong> del cono. Ogni punto è equidistante dal fuoco e dalla direttrice.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">y</span> = <span style="color: var(--secondary-color);">a</span><span style="color: var(--text-color);">x²</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Fuoco</div><div class="font-bold text-sm" style="color: #f87171;">F</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Direttrice</div><div class="font-bold text-sm" style="color: var(--secondary-color);">d</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Eccentricità</div><div class="font-bold" style="color: #4ade80;">e = 1</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 8: IPERBOLE ========== -->
+    <section id="slide-8" class="slide flex-col items-center justify-center" data-slide="8">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="hyperbola-canvas" width="400" height="380" style="max-width: 100%; display: block;"></canvas>
+          <div class="mt-3 w-full max-w-xs">
+            <label for="hyperbola-slider" class="block text-xs font-semibold mb-1" style="color: rgba(232,230,240,0.6);">Apertura</label>
+            <input type="range" id="hyperbola-slider" min="20" max="80" value="45" class="slider-track w-full">
+            <div class="flex justify-between text-xs mt-1" style="color: rgba(232,230,240,0.4);"><span>Stretta</span><span id="hyp-value" style="color: var(--primary-color); font-weight: 700;">45°</span><span>Larga</span></div>
+          </div>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Iperbole</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano interseca <strong style="color: var(--text-color);">entrambe le falde</strong> del cono. La differenza delle distanze dai fuochi è costante.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">x²/a²</span> − <span style="color: var(--secondary-color);">y²/b²</span> = <span style="color: var(--text-color);">1</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Rami</div><div class="font-bold text-sm" style="color: #f87171;">2</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Asintoti</div><div class="font-bold text-sm" style="color: var(--secondary-color);">y = ±(b/a)x</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Eccentricità</div><div class="font-bold" style="color: #4ade80;">e &gt; 1</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 9: COSA SONO LE DEGENERI ========== -->
+    <section id="slide-9" class="slide flex-col items-center justify-center" data-slide="9">
+      <div class="w-full h-full flex flex-col items-center justify-center px-6 py-8 text-center">
+        <h2 class="font-display font-bold mb-6 anim-up" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Cosa sono le Coniche Degeneri?</h2>
+        <p class="anim-up-d1 font-light" style="max-width: 700px; color: rgba(232,230,240,0.7);">
+          Una conica è <strong style="color: var(--text-color);">degenere</strong> quando il piano interseca il cono in modo limite.
+          <br><br>
+          In questi casi la curva non è più una forma classica, ma si riduce a:
+        </p>
+        <div class="mt-8 flex gap-6 flex-wrap justify-center anim-up-d2">
+          <div class="card-surface p-6">🔹 Un punto</div>
+          <div class="card-surface p-6">🔹 Una retta</div>
+          <div class="card-surface p-6">🔹 Due rette incidenti</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 10: DEGENERE – PUNTO (3D) ========== -->
+    <section id="slide-10" class="slide flex-col items-center justify-center" data-slide="10">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left" style="position:relative; min-height:350px;">
+          <canvas id="canvas-deg-point" style="width:100%; height:350px; display:block;"></canvas>
+          <button class="pause-btn" id="pauseBtn-deg-point" onclick="togglePause('deg-point')">⏸ Pausa</button>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <div class="text-xs font-semibold tracking-widest uppercase mb-2" style="color: var(--primary-color);">Primo Caso — Degenere</div>
+          <h2 class="font-display font-bold mb-3" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Il Punto</h2>
+          <div class="info-card mb-4">
+            <strong style="color: #d4a053;">Condizione:</strong> Piano per il vertice con inclinazione minore dell'angolo di apertura.
+            <br><br>
+            <strong style="color: #d4a053;">Risultato:</strong> L'intersezione è un singolo punto nel vertice.
+          </div>
+          <div class="formula-box"><span style="color: var(--primary-color);">x²</span> + <span style="color: var(--secondary-color);">y²</span> = <span style="color: var(--text-color);">0</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 11: DEGENERE – RETTA (3D) ========== -->
+    <section id="slide-11" class="slide flex-col items-center justify-center" data-slide="11">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left" style="position:relative; min-height:350px;">
+          <canvas id="canvas-deg-line" style="width:100%; height:350px; display:block;"></canvas>
+          <button class="pause-btn" id="pauseBtn-deg-line" onclick="togglePause('deg-line')">⏸ Pausa</button>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <div class="text-xs font-semibold tracking-widest uppercase mb-2" style="color: var(--primary-color);">Secondo Caso — Degenere</div>
+          <h2 class="font-display font-bold mb-3" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">La Retta</h2>
+          <div class="info-card mb-4">
+            <strong style="color: #d4a053;">Condizione:</strong> Piano tangente al cono lungo una generatrice che si estende attraverso entrambe le falde.
+            <br><br>
+            <strong style="color: #d4a053;">Risultato:</strong> L'intersezione è una singola linea retta prolungata.
+          </div>
+          <div class="formula-box"><span style="color: var(--primary-color);">y</span> = <span style="color: var(--secondary-color);">m</span><span style="color: var(--text-color);">x</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 12: DEGENERE – DUE RETTE (3D) ========== -->
+    <section id="slide-12" class="slide flex-col items-center justify-center" data-slide="12">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left" style="position:relative; min-height:350px;">
+          <canvas id="canvas-deg-lines" style="width:100%; height:350px; display:block;"></canvas>
+          <button class="pause-btn" id="pauseBtn-deg-lines" onclick="togglePause('deg-lines')">⏸ Pausa</button>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <div class="text-xs font-semibold tracking-widest uppercase mb-2" style="color: var(--primary-color);">Terzo Caso — Degenere</div>
+          <h2 class="font-display font-bold mb-3" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Due Rette Incidenti</h2>
+          <div class="info-card mb-4">
+            <strong style="color: #d4a053;">Condizione:</strong> Piano per il vertice tagliando entrambe le falde.
+            <br><br>
+            <strong style="color: #d4a053;">Risultato:</strong> L'intersezione produce due rette incidenti nel vertice.
+          </div>
+          <div class="formula-box"><span style="color: var(--primary-color);">x²</span> − <span style="color: var(--secondary-color);">y²</span> = <span style="color: var(--text-color);">0</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 13: RIEPILOGO DEGENERI ========== -->
+    <section id="slide-13" class="slide flex-col items-center justify-center" data-slide="13">
+      <div class="w-full h-full flex flex-col items-center justify-center px-6 py-8 text-center">
+        <h2 class="font-display font-bold mb-8 anim-up" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Tre Coniche Degeneri</h2>
+        <div class="flex gap-6 flex-wrap justify-center anim-up-d1">
+          <div class="card-surface p-8 text-center" style="width:220px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">•</div>
+            <h3 class="font-display font-bold text-lg mb-2" style="color: var(--primary-color);">Punto</h3>
+            <p class="text-sm" style="color: rgba(232,230,240,0.7);">Piano incontra il cono solo in un punto. Conica ridotta a un singolo punto nel vertice.</p>
+          </div>
+          <div class="card-surface p-8 text-center" style="width:220px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">╱</div>
+            <h3 class="font-display font-bold text-lg mb-2" style="color: var(--primary-color);">Retta</h3>
+            <p class="text-sm" style="color: rgba(232,230,240,0.7);">Piano tangente. Conica ridotta a una linea retta prolungata.</p>
+          </div>
+          <div class="card-surface p-8 text-center" style="width:220px;">
+            <div style="font-size: 3rem; margin-bottom: 12px;">✕</div>
+            <h3 class="font-display font-bold text-lg mb-2" style="color: var(--primary-color);">Due Rette</h3>
+            <p class="text-sm" style="color: rgba(232,230,240,0.7);">Piano contiene l'asse del cono. Conica in due linee incidenti.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 14: DEGENERE PUNTO (2D) ========== -->
+    <section id="slide-14" class="slide flex-col items-center justify-center" data-slide="14">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="degenerate-point-canvas" width="380" height="380" style="max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Punto (Degenere)</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano interseca il cono <strong style="color: var(--text-color);">solo nel vertice.</strong> La conica si riduce a un singolo punto.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">x²</span> + <span style="color: var(--secondary-color);">y²</span> = <span style="color: var(--text-color);">0</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Punti reali</div><div class="font-bold text-sm" style="color: #f87171;">1</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Tipo</div><div class="font-bold text-sm" style="color: var(--secondary-color);">Degenere</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 15: DEGENERE RETTA (2D) ========== -->
+    <section id="slide-15" class="slide flex-col items-center justify-center" data-slide="15">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="degenerate-line-canvas" width="380" height="380" style="max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Retta (Degenere)</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano è <strong style="color: var(--text-color);">tangente al cono</strong>. La sezione è una singola retta che appartiene al cono.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">y</span> = <span style="color: var(--secondary-color);">m</span><span style="color: var(--text-color);">x</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Punti reali</div><div class="font-bold text-sm" style="color: #f87171;">∞</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Tipo</div><div class="font-bold text-sm" style="color: var(--secondary-color);">Degenere</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 16: DEGENERE DUE RETTE (2D) ========== -->
+    <section id="slide-16" class="slide flex-col items-center justify-center" data-slide="16">
+      <div class="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center anim-left">
+          <canvas id="degenerate-lines-canvas" width="380" height="380" style="max-width: 100%; display: block;"></canvas>
+        </div>
+        <div class="flex-1 max-w-md anim-up-d1">
+          <h2 class="font-display font-bold mb-1" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Due Rette (Degenere)</h2>
+          <p class="mb-4 font-light leading-relaxed" style="color: rgba(232,230,240,0.7); font-size: 0.95rem;">Il piano contiene <strong style="color: var(--text-color);">l'asse del cono</strong>. La sezione è una coppia di rette che si intersecano nel vertice.</p>
+          <div class="formula-box mb-4"><span style="color: var(--primary-color);">x²</span> − <span style="color: var(--secondary-color);">y²</span> = <span style="color: var(--text-color);">0</span></div>
+          <div class="flex gap-3 mt-4">
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Rette</div><div class="font-bold text-sm" style="color: #f87171;">2</div></div>
+            <div class="card-surface p-3 flex-1 text-center"><div class="text-xs mb-1" style="color: rgba(232,230,240,0.5);">Tipo</div><div class="font-bold text-sm" style="color: var(--secondary-color);">Degenere</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 17: CONFRONTO FINALE ========== -->
+    <section id="slide-17" class="slide flex-col items-center justify-center" data-slide="17">
+      <div class="w-full h-full flex flex-col items-center justify-center px-6 py-8">
+        <h2 class="font-display font-bold text-center mb-6 anim-up" style="font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--primary-color);">Confronto Finale</h2>
+        <div class="card-surface overflow-hidden anim-up-d1 w-full max-w-5xl" style="overflow-x: auto;">
+          <table class="w-full text-sm" style="min-width: 700px;">
+            <thead>
+              <tr style="background: rgba(74,108,247,0.12);">
+                <th class="text-left p-4 font-semibold" style="color: var(--primary-color);">Sezione</th>
+                <th class="text-left p-4 font-semibold" style="color: var(--primary-color);">Piano</th>
+                <th class="text-center p-4 font-semibold" style="color: var(--primary-color);">Tipo</th>
+                <th class="text-center p-4 font-semibold" style="color: var(--primary-color);">Eccentricità</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER NAV -->
+    <footer class="absolute bottom-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3"
+            style="background: rgba(10,14,26,0.85); backdrop-filter: blur(10px); border-top: 1px solid rgba(74,108,247,0.1); height: var(--footer-h);">
+      <button id="btn-prev" class="btn-nav btn-prev" aria-label="Slide precedente">← Indietro</button>
+      <div class="flex gap-1 items-center" id="nav-dots-bottom"></div>
+      <button id="btn-next" class="btn-nav btn-next" aria-label="Slide successiva">Avanti →</button>
+    </footer>
+  </div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentSlide = 1;
+const totalSlides = 17;
+let animationIds = {};
+let coneInstances = {};
+let interactiveCone = null;
+let coneSlide2 = null;
+const pauseStates = { 'deg-point': false, 'deg-line': false, 'deg-lines': false };
+
+// ─── PARTICLES ───────────────────────────────────────────────────────────────
+function initParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.background = Math.random() > 0.5 ? 'rgba(240,165,0,0.3)' : 'rgba(74,108,247,0.3)';
+    p.style.animation = `pulse ${2 + Math.random() * 4}s ${Math.random() * 2}s infinite`;
+    container.appendChild(p);
+  }
+}
+
+// ─── NAV ─────────────────────────────────────────────────────────────────────
+function createNavDots() {
+  const topDots = document.getElementById('nav-dots');
+  const bottomDots = document.getElementById('nav-dots-bottom');
+  topDots.innerHTML = '';
+  bottomDots.innerHTML = '';
+  for (let i = 1; i <= totalSlides; i++) {
+    [topDots, bottomDots].forEach(container => {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot' + (i === currentSlide ? ' active' : '');
+      dot.setAttribute('aria-label', `Vai alla slide ${i}`);
+      dot.onclick = () => goToSlide(i);
+      container.appendChild(dot);
+    });
+  }
+}
+
+function stopAllAnimations() {
+  Object.values(animationIds).forEach(id => { if (id) cancelAnimationFrame(id); });
+  animationIds = {};
+}
+
+function goToSlide(n) {
+  if (n < 1 || n > totalSlides) return;
+  stopAllAnimations();
+
+  const oldSlide = document.getElementById('slide-' + currentSlide);
+  if (oldSlide) { oldSlide.classList.remove('active'); oldSlide.style.display = 'none'; }
+
+  currentSlide = n;
+  const newSlide = document.getElementById('slide-' + currentSlide);
+  if (newSlide) {
+    newSlide.style.display = 'flex';
+    newSlide.style.opacity = '0';
+    requestAnimationFrame(() => { newSlide.classList.add('active'); newSlide.style.opacity = '1'; });
+  }
+
+  createNavDots();
+  document.getElementById('slide-counter').textContent = currentSlide + ' / ' + totalSlides;
+  document.getElementById('btn-prev').style.visibility = currentSlide === 1 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = currentSlide === totalSlides ? '🎉 Fine' : 'Avanti →';
+
+  setTimeout(() => {
+    if (currentSlide === 2)  startConeFormation();
+    if (currentSlide === 3)  startCone2();
+    if (currentSlide === 4)  startCone3DInteractive();
+    if (currentSlide === 5)  startCircleAnimation();
+    if (currentSlide === 6)  startEllipseAnimation();
+    if (currentSlide === 7)  startParabolaAnimation();
+    if (currentSlide === 8)  startHyperbolaAnimation();
+    if (currentSlide === 10) startDeg3D('deg-point');
+    if (currentSlide === 11) startDeg3D('deg-line');
+    if (currentSlide === 12) startDeg3D('deg-lines');
+    if (currentSlide === 14) drawDegeneratePoint();
+    if (currentSlide === 15) drawDegenerateLine();
+    if (currentSlide === 16) drawDegenerateLines();
+    if (currentSlide === 17) populateTable();
+  }, 100);
+}
+
+document.getElementById('btn-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
+document.getElementById('btn-next').addEventListener('click', () => { if (currentSlide < totalSlides) goToSlide(currentSlide + 1); });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if (currentSlide < totalSlides) goToSlide(currentSlide + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentSlide - 1); }
+});
+
+// ─── SLIDE 1: CONE FORMATION – THREE.JS ──────────────────────────────────────
+let coneFormationScene = null;
+
+function startConeFormation() {
+  const container = document.getElementById('cone-formation-container');
+  if (!container || typeof THREE === 'undefined') return;
+
+  // Se già inizializzato, non ricreare
+  if (coneFormationScene) {
+    if (animationIds['coneFormation']) cancelAnimationFrame(animationIds['coneFormation']);
+    animateConeFormation();
+    return;
+  }
+
+  const w = container.clientWidth || 420;
+  const h = container.clientHeight || 400;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0e1a);
+
+  const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
+  camera.position.set(7, 2, 7);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  // Luci
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const pt = new THREE.PointLight(0xffffff, 1.2, 100);
+  pt.position.set(6, 6, 6);
+  scene.add(pt);
+
+  // Gruppo che ruota attorno a Y
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // ASSE verticale (retta senza frecce, solo segmento)
+  const axisGeo = new THREE.BufferGeometry();
+  axisGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0,-5,0, 0,5,0]), 3));
+  const axisMat = new THREE.LineBasicMaterial({ color: 0x44aaff, linewidth: 2 });
+  group.add(new THREE.LineSegments(axisGeo, axisMat));
+
+  // Etichetta asse (sprite text-like: piccola sfera blu in cima)
+  const axisTopGeo = new THREE.SphereGeometry(0.12, 8, 8);
+  const axisTopMat = new THREE.MeshBasicMaterial({ color: 0x44aaff });
+  const axisTopDot = new THREE.Mesh(axisTopGeo, axisTopMat);
+  axisTopDot.position.set(0, 5, 0);
+  group.add(axisTopDot);
+  const axisBottomDot = new THREE.Mesh(axisTopGeo.clone(), axisTopMat.clone());
+  axisBottomDot.position.set(0, -5, 0);
+  group.add(axisBottomDot);
+
+  // GENERATRICE rotante (una sola retta che passa per il vertice)
+  const semiAngle = Math.PI / 6; // 30°
+  const genLength = 4.5;
+  const gx = genLength * Math.sin(semiAngle);
+  const gy = genLength * Math.cos(semiAngle);
+
+  const genGeo = new THREE.BufferGeometry();
+  // La generatrice è UNA retta che va dall'estremo superiore all'estremo inferiore, passando per il vertice
+  genGeo.setAttribute('position', new THREE.BufferAttribute(
+    new Float32Array([ gx, -gy, 0,   -gx, gy, 0 ]), 3
+  ));
+  const genMat = new THREE.LineBasicMaterial({ color: 0xf0a500, linewidth: 3 });
+  const genLine = new THREE.LineSegments(genGeo, genMat);
+  group.add(genLine);
+
+  // Vertice (punto rosso al centro)
+  const vertexGeo = new THREE.SphereGeometry(0.15, 16, 16);
+  const vertexMat = new THREE.MeshStandardMaterial({ color: 0xff4444, emissive: 0xff2200, emissiveIntensity: 0.4 });
+  const vertexMesh = new THREE.Mesh(vertexGeo, vertexMat);
+  group.add(vertexMesh);
+
+  // Traccia della superficie (generatrici fantasma per dare l'idea del cono)
+  const trailCount = 24;
+  for (let i = 0; i < trailCount; i++) {
+    const a = (i / trailCount) * Math.PI * 2;
+    const tx = gx * Math.cos(a);
+    const tz = gx * Math.sin(a);
+    const trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(
+      new Float32Array([ tx, -gy, tz,   -tx, gy, -tz ]), 3
+    ));
+    const trailMat = new THREE.LineBasicMaterial({ color: 0xf0a500, transparent: true, opacity: 0.13 });
+    group.add(new THREE.LineSegments(trailGeo, trailMat));
+  }
+
+  // Cerchio base superiore
+  const circleTop = [];
+  const circleBot = [];
+  for (let i = 0; i <= 64; i++) {
+    const a = (i / 64) * Math.PI * 2;
+    circleTop.push(gx * Math.cos(a), gy, gx * Math.sin(a));
+    circleBot.push(gx * Math.cos(a), -gy, gx * Math.sin(a));
+  }
+  const cTopGeo = new THREE.BufferGeometry();
+  cTopGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(circleTop), 3));
+  const cBotGeo = new THREE.BufferGeometry();
+  cBotGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(circleBot), 3));
+  const cMat = new THREE.LineBasicMaterial({ color: 0x4a6cf7, transparent: true, opacity: 0.5 });
+  group.add(new THREE.Line(cTopGeo, cMat));
+  group.add(new THREE.Line(cBotGeo, cMat.clone()));
+
+  coneFormationScene = { scene, camera, renderer, group };
+
+  // Resize observer
+  const ro = new ResizeObserver(() => {
+    const nw = container.clientWidth, nh = container.clientHeight;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+  });
+  ro.observe(container);
+
+  animateConeFormation();
+}
+
+function animateConeFormation() {
+  if (!coneFormationScene) return;
+  const { scene, camera, renderer, group } = coneFormationScene;
+  function loop() {
+    if (currentSlide !== 2) return;
+    animationIds['coneFormation'] = requestAnimationFrame(loop);
+    group.rotation.y += 0.012;
+    renderer.render(scene, camera);
+  }
+  loop();
+}
+
+// ─── 3D CONE (for slides 3,4) ─────────────────────────────────────────────────
+function create3DCone(canvasId, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  const W = canvas.width, H = canvas.height;
+  let rotX = -0.3, rotY = 0.5;
+  let dragging = false, lastX = 0, lastY = 0;
+  const showPlane = options.showPlane || false;
+  let planeAngle = options.planeAngle || 0;
+  const coneH = 120, coneR = 60;
+  const coneHalfAngle = Math.atan2(coneR, coneH);
+  let isAnimating = true;
+
+  canvas.addEventListener('mousedown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.style.cursor = 'grabbing'; });
+  canvas.addEventListener('mousemove', (e) => { if (!dragging) return; rotY += (e.clientX - lastX) * 0.008; rotX += (e.clientY - lastY) * 0.008; rotX = Math.max(-1.2, Math.min(0.2, rotX)); lastX = e.clientX; lastY = e.clientY; });
+  canvas.addEventListener('mouseup', () => { dragging = false; canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('mouseleave', () => { dragging = false; canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!dragging) return; rotY += (e.touches[0].clientX - lastX) * 0.008; rotX += (e.touches[0].clientY - lastY) * 0.008; rotX = Math.max(-1.2, Math.min(0.2, rotX)); lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }, { passive: false });
+  canvas.addEventListener('touchend', () => { dragging = false; });
+
+  function project(x, y, z) {
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    let x1 = x * cosY - z * sinY;
+    let z1 = x * sinY + z * cosY;
+    let y1 = y * cosX - z1 * sinX;
+    let z2 = y * sinX + z1 * cosX;
+    const scale = 300 / (300 + z2);
+    return { x: W / 2 + x1 * scale, y: H / 2 + y1 * scale, z: z2 };
+  }
+
+  function drawCone() {
+    ctx.clearRect(0, 0, W, H);
+    const segments = 48;
+
+    ctx.strokeStyle = 'rgba(74,108,247,0.35)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const bx = Math.cos(angle) * coneR, bz = Math.sin(angle) * coneR;
+      const p1 = project(0, 0, 0); const p2 = project(bx, -coneH, bz);
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+      const p3 = project(bx, coneH, bz);
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p3.x, p3.y); ctx.stroke();
+    }
+
+    ctx.strokeStyle = 'rgba(74,108,247,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const p = project(Math.cos(angle) * coneR, -coneH, Math.sin(angle) * coneR);
+      if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const p = project(Math.cos(angle) * coneR, coneH, Math.sin(angle) * coneR);
+      if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+
+    const apex = project(0, 0, 0);
+    const grad = ctx.createRadialGradient(apex.x, apex.y, 0, apex.x, apex.y, 8);
+    grad.addColorStop(0, 'rgba(240,165,0,0.9)');
+    grad.addColorStop(1, 'rgba(240,165,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(apex.x, apex.y, 8, 0, Math.PI * 2); ctx.fill();
+
+    if (showPlane) {
+      const planeAngleRad = planeAngle * Math.PI / 180;
+      const planeSize = 100;
+      const planeBaseY = -30;
+      const corners = [
+        { x: -planeSize, z: -planeSize }, { x: planeSize, z: -planeSize },
+        { x: planeSize, z: planeSize }, { x: -planeSize, z: planeSize }
+      ];
+      corners.forEach(c => { c.y = planeBaseY + c.z * Math.tan(planeAngleRad); });
+      const projCorners = corners.map(c => project(c.x, c.y, c.z));
+      ctx.fillStyle = 'rgba(240,165,0,0.08)';
+      ctx.strokeStyle = 'rgba(240,165,0,0.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(projCorners[0].x, projCorners[0].y);
+      for (let i = 1; i < 4; i++) ctx.lineTo(projCorners[i].x, projCorners[i].y);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+
+      if (planeAngle > 0 && planeAngle < 90) {
+        let curveColor = 'rgba(34,197,94,1)';
+        if (planeAngle >= 57) curveColor = 'rgba(168,85,247,1)';
+        ctx.strokeStyle = curveColor;
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = curveColor.replace('1)', '0.3)');
+        ctx.shadowBlur = 4;
+        const tolerance = 6;
+        const angleSegments = 360;
+
+        if (planeAngle > 67) {
+          [{ start: -coneH, end: 0 }, { start: 0, end: coneH }].forEach(yRange => {
+            ctx.beginPath();
+            let firstPoint = true;
+            for (let i = 0; i <= angleSegments; i++) {
+              const theta = (i / angleSegments) * Math.PI * 2;
+              let bestPoint = null, bestDist = Infinity;
+              for (let yStep = yRange.start; yStep <= yRange.end; yStep += 2) {
+                const radiusAtHeight = Math.abs(yStep) * Math.tan(coneHalfAngle);
+                const coneX = radiusAtHeight * Math.cos(theta);
+                const coneZ = radiusAtHeight * Math.sin(theta);
+                const yOnPlane = planeBaseY + coneZ * Math.tan(planeAngleRad);
+                const distToPlane = Math.abs(yStep - yOnPlane);
+                if (distToPlane < bestDist) { bestDist = distToPlane; bestPoint = { x: coneX, y: yStep, z: coneZ }; }
+              }
+              if (bestPoint && bestDist < tolerance) {
+                const p = project(bestPoint.x, bestPoint.y, bestPoint.z);
+                if (firstPoint) { ctx.moveTo(p.x, p.y); firstPoint = false; } else ctx.lineTo(p.x, p.y);
+              }
+            }
+            if (!firstPoint) ctx.stroke();
+          });
+        } else {
+          ctx.beginPath();
+          let firstPoint = true;
+          for (let i = 0; i <= angleSegments; i++) {
+            const theta = (i / angleSegments) * Math.PI * 2;
+            let bestPoint = null, bestDist = Infinity;
+            for (let yStep = -coneH; yStep <= coneH; yStep += 2) {
+              const radiusAtHeight = Math.abs(yStep) * Math.tan(coneHalfAngle);
+              const coneX = radiusAtHeight * Math.cos(theta);
+              const coneZ = radiusAtHeight * Math.sin(theta);
+              const yOnPlane = planeBaseY + coneZ * Math.tan(planeAngleRad);
+              const distToPlane = Math.abs(yStep - yOnPlane);
+              if (distToPlane < bestDist) { bestDist = distToPlane; bestPoint = { x: coneX, y: yStep, z: coneZ }; }
+            }
+            if (bestPoint && bestDist < tolerance) {
+              const p = project(bestPoint.x, bestPoint.y, bestPoint.z);
+              if (firstPoint) { ctx.moveTo(p.x, p.y); firstPoint = false; } else ctx.lineTo(p.x, p.y);
+            }
+          }
+          if (!firstPoint) ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+      }
+    }
+  }
+
+  let autoRotate = !showPlane;
+  function animate() {
+    if (!dragging && autoRotate) rotY += 0.008;
+    drawCone();
+    if (isAnimating) animationIds[canvasId] = requestAnimationFrame(animate);
+  }
+  animate();
+
+  return {
+    setPlaneAngle: (a) => { planeAngle = a; },
+    stop: () => { isAnimating = false; if (animationIds[canvasId]) cancelAnimationFrame(animationIds[canvasId]); },
+    start: () => { isAnimating = true; animate(); }
+  };
+}
+
+function startCone2() {
+  if (!coneSlide2) coneSlide2 = create3DCone('cone3d-slide2', { showPlane: false, planeAngle: 0 });
+  else coneSlide2.start();
+}
+function startCone3DInteractive() {
+  if (!interactiveCone) interactiveCone = create3DCone('cone3d-interactive', { showPlane: true, planeAngle: 0 });
+  else interactiveCone.start();
+}
+
+// ─── 2D CURVES ───────────────────────────────────────────────────────────────
+function startCircleAnimation() { drawCircle(); }
+function startEllipseAnimation() { drawEllipse(); }
+function startParabolaAnimation() { drawParabola(); }
+function startHyperbolaAnimation() { drawHyperbola(); }
+
+function drawCircle() {
+  const canvas = document.getElementById('circle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height, cx = W/2, cy = H/2, r = 120;
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-170,cy);ctx.lineTo(cx+170,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy-170);ctx.lineTo(cx,cy+170);ctx.stroke();
+    ctx.fillStyle='rgba(74,108,247,0.06)';ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=3;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    const angle=Date.now()*0.001,rx=cx+Math.cos(angle)*r,ry=cy+Math.sin(angle)*r;
+    ctx.strokeStyle='rgba(74,108,247,0.8)';ctx.lineWidth=2;ctx.setLineDash([5,5]);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(rx,ry);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(74,108,247,1)';ctx.font='bold 16px Source Sans 3';ctx.fillText('r',(cx+rx)/2+8,(cy+ry)/2-8);
+    ctx.fillStyle='#f0a500';ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(240,165,0,0.8)';ctx.font='bold 14px Source Sans 3';ctx.fillText('O(0,0)',cx+10,cy-10);
+    ctx.fillStyle='#4a6cf7';ctx.beginPath();ctx.arc(rx,ry,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(232,230,240,0.5)';ctx.font='13px Source Sans 3';ctx.fillText('x',cx+160,cy-8);ctx.fillText('y',cx+8,cy-158);
+    if(currentSlide===5) animationIds['circle']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawEllipse() {
+  const canvas = document.getElementById('ellipse-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+  function draw() {
+    const ecc=parseFloat(document.getElementById('eccentricity-slider').value)/100;
+    const a=140,b=a*Math.sqrt(1-ecc*ecc),c=a*ecc;
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-190,cy);ctx.lineTo(cx+190,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-170);ctx.lineTo(cx,cy+170);ctx.stroke();
+    ctx.fillStyle='rgba(74,108,247,0.06)';ctx.beginPath();ctx.ellipse(cx,cy,a,b,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=3;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();ctx.ellipse(cx,cy,a,b,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.setLineDash([5,5]);ctx.strokeStyle='rgba(74,108,247,0.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-a,cy);ctx.lineTo(cx+a,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-b);ctx.lineTo(cx,cy+b);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(74,108,247,0.8)';ctx.font='bold 14px Source Sans 3';ctx.fillText('a',cx+a+6,cy+16);ctx.fillText('b',cx+6,cy-b-6);
+    ctx.fillStyle='#f87171';ctx.beginPath();ctx.arc(cx-c,cy,6,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx+c,cy,6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(248,113,113,0.9)';ctx.font='bold 13px Source Sans 3';ctx.fillText('F₁',cx-c-5,cy+22);ctx.fillText('F₂',cx+c-5,cy+22);
+    const t=Date.now()*0.0008,px=cx+a*Math.cos(t),py=cy+b*Math.sin(t);
+    ctx.strokeStyle='rgba(248,113,113,0.4)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(cx-c,cy);ctx.lineTo(px,py);ctx.stroke();ctx.beginPath();ctx.moveTo(cx+c,cy);ctx.lineTo(px,py);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#4ade80';ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f0a500';ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fill();
+    if(currentSlide===6) animationIds['ellipse']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawParabola() {
+  const canvas=document.getElementById('parabola-canvas');if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H*0.75;
+  const aCoeff=0.008,focusY=cy-1/(4*aCoeff),directrixY=cy+1/(4*aCoeff);
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,0);ctx.lineTo(cx+i,H);ctx.stroke();ctx.beginPath();ctx.moveTo(0,cy+i);ctx.lineTo(W,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+    ctx.strokeStyle='rgba(74,108,247,0.6)';ctx.lineWidth=2;ctx.setLineDash([8,6]);
+    ctx.beginPath();ctx.moveTo(0,directrixY);ctx.lineTo(W,directrixY);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(74,108,247,0.7)';ctx.font='bold 13px Source Sans 3';ctx.fillText('direttrice (d)',10,directrixY-8);
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=3;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();for(let px=-190;px<=190;px++){const py=cy-aCoeff*px*px;if(px===-190) ctx.moveTo(cx+px,py);else ctx.lineTo(cx+px,py);}ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#f87171';ctx.beginPath();ctx.arc(cx,focusY,6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(248,113,113,0.9)';ctx.font='bold 13px Source Sans 3';ctx.fillText('F (fuoco)',cx+12,focusY+5);
+    const animT=Date.now()*0.0006,animX=Math.sin(animT)*150,animPy=cy-aCoeff*animX*animX;
+    ctx.strokeStyle='rgba(248,113,113,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(cx+animX,animPy);ctx.lineTo(cx,focusY);ctx.stroke();
+    ctx.strokeStyle='rgba(74,108,247,0.5)';ctx.beginPath();ctx.moveTo(cx+animX,animPy);ctx.lineTo(cx+animX,directrixY);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#4ade80';ctx.beginPath();ctx.arc(cx+animX,animPy,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f0a500';ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(232,230,240,0.5)';ctx.font='13px Source Sans 3';ctx.fillText('x',W-15,cy-8);ctx.fillText('y',cx+8,15);
+    if(currentSlide===7) animationIds['parabola']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawHyperbola() {
+  const canvas=document.getElementById('hyperbola-canvas');if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+  function draw() {
+    const openVal=parseFloat(document.getElementById('hyperbola-slider').value);
+    const a=50+(openVal/80)*40,b=40+(openVal/80)*50,c=Math.sqrt(a*a+b*b);
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-190,cy);ctx.lineTo(cx+190,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-180);ctx.lineTo(cx,cy+180);ctx.stroke();
+    ctx.strokeStyle='rgba(74,108,247,0.4)';ctx.lineWidth=1.5;ctx.setLineDash([6,6]);
+    const slope=b/a;ctx.beginPath();ctx.moveTo(cx-190,cy-190*slope);ctx.lineTo(cx+190,cy+190*slope);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-190,cy+190*slope);ctx.lineTo(cx+190,cy-190*slope);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=3;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();for(let t=-2.5;t<=2.5;t+=0.05){const hx=a*Math.cosh(t),hy=b*Math.sinh(t),px=cx+hx,py=cy-hy;if(px>W+10||px<-10||py>H+10||py<-10) continue;if(t===-2.5) ctx.moveTo(px,py);else ctx.lineTo(px,py);}ctx.stroke();
+    ctx.beginPath();for(let t=-2.5;t<=2.5;t+=0.05){const hx=-a*Math.cosh(t),hy=b*Math.sinh(t),px=cx+hx,py=cy-hy;if(px>W+10||px<-10||py>H+10||py<-10) continue;if(t===-2.5) ctx.moveTo(px,py);else ctx.lineTo(px,py);}ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#f87171';ctx.beginPath();ctx.arc(cx-c,cy,6,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx+c,cy,6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(248,113,113,0.9)';ctx.font='bold 13px Source Sans 3';ctx.fillText('F₁',cx-c-5,cy+22);ctx.fillText('F₂',cx+c-5,cy+22);
+    if(currentSlide===8) animationIds['hyperbola']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ─── 3D DEGENERI (from coniche_degeneri_2.html) ───────────────────────────────
+class Vec3 {
+  constructor(x,y,z){this.x=x;this.y=y;this.z=z;}
+  rotateX(a){const c=Math.cos(a),s=Math.sin(a);return new Vec3(this.x,this.y*c-this.z*s,this.y*s+this.z*c);}
+  rotateY(a){const c=Math.cos(a),s=Math.sin(a);return new Vec3(this.x*c+this.z*s,this.y,-this.x*s+this.z*c);}
+  project(w,h,fov){const dist=Math.max(0.1,fov/(fov+this.z));return{x:w/2+this.x*dist*1.5,y:h/2-this.y*dist*1.5,d:this.z};}
+}
+
+function drawCone3D_deg(ctx,w,h,rotX,rotY){
+  const H=100,R=H*0.5,fov=200;
+  ctx.strokeStyle='rgba(150,160,180,0.3)';ctx.lineWidth=1;
+  for(let i=0;i<16;i++){
+    const a=(i/16)*Math.PI*2,x=R*Math.cos(a),z=R*Math.sin(a);
+    const p1=new Vec3(0,0,0).rotateX(rotX).rotateY(rotY).project(w,h,fov);
+    const p2=new Vec3(x,H,z).rotateX(rotX).rotateY(rotY).project(w,h,fov);
+    ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+  }
+  ctx.beginPath();
+  for(let i=0;i<=32;i++){const a=(i/32)*Math.PI*2;const p=new Vec3(R*Math.cos(a),H,R*Math.sin(a)).rotateX(rotX).rotateY(rotY).project(w,h,fov);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);}ctx.stroke();
+  ctx.strokeStyle='rgba(150,160,180,0.15)';
+  for(let i=0;i<16;i++){
+    const a=(i/16)*Math.PI*2,x=R*Math.cos(a),z=R*Math.sin(a);
+    const p1=new Vec3(0,0,0).rotateX(rotX).rotateY(rotY).project(w,h,fov);
+    const p2=new Vec3(x,-H,z).rotateX(rotX).rotateY(rotY).project(w,h,fov);
+    ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+  }
+  return{H,R,fov};
+}
+
+function drawPlaneQuad(ctx,p1,p2,p3,p4){
+  ctx.fillStyle='rgba(100,180,255,0.12)';ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p3.x,p3.y);ctx.lineTo(p4.x,p4.y);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(100,180,255,0.3)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+const deg3DState = {
+  'deg-point': { rot: {x:-0.4,y:0.3}, t: 0 },
+  'deg-line':  { rot: {x:-0.4,y:0.3}, t: 0 },
+  'deg-lines': { rot: {x:-0.4,y:0.3}, t: 0 }
+};
+
+function togglePause(key) {
+  pauseStates[key] = !pauseStates[key];
+  const btn = document.getElementById('pauseBtn-' + key);
+  if(pauseStates[key]){btn.classList.add('paused');btn.textContent='▶ Riprendi';}
+  else{btn.classList.remove('paused');btn.textContent='⏸ Pausa';}
+}
+
+function startDeg3D(key) {
+  const idMap = { 'deg-point': 'canvas-deg-point', 'deg-line': 'canvas-deg-line', 'deg-lines': 'canvas-deg-lines' };
+  const slideMap = { 'deg-point': 10, 'deg-line': 11, 'deg-lines': 12 };
+  const canvas = document.getElementById(idMap[key]);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const state = deg3DState[key];
+
+  function animate() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = w; canvas.height = h;
+    ctx.fillStyle = 'rgba(10,14,26,0.9)';
+    ctx.fillRect(0,0,w,h);
+
+    if(!pauseStates[key]) { state.rot.y += 0.003; state.t += 0.016; }
+    const {H,R,fov} = drawCone3D_deg(ctx,w,h,state.rot.x,state.rot.y);
+
+    if(key === 'deg-point') {
+      const planeSize=80;
+      const p1=new Vec3(-planeSize,-planeSize*0.4,-planeSize).rotateX(0.2).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p2=new Vec3(planeSize,-planeSize*0.4,-planeSize).rotateX(0.2).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p3=new Vec3(planeSize,planeSize*0.4,planeSize).rotateX(0.2).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p4=new Vec3(-planeSize,planeSize*0.4,planeSize).rotateX(0.2).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      drawPlaneQuad(ctx,p1,p2,p3,p4);
+      const apex=new Vec3(0,0,0).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const grad=ctx.createRadialGradient(apex.x,apex.y,0,apex.x,apex.y,40);
+      grad.addColorStop(0,'rgba(212,160,83,0.5)');grad.addColorStop(1,'rgba(212,160,83,0)');
+      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(apex.x,apex.y,40,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#d4a053';ctx.beginPath();ctx.arc(apex.x,apex.y,10,0,Math.PI*2);ctx.fill();
+    }
+    else if(key === 'deg-line') {
+      const planeSize=150;
+      const p1=new Vec3(R,H,-planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p2=new Vec3(R,H,planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p3=new Vec3(-R,-H,planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p4=new Vec3(-R,-H,-planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      drawPlaneQuad(ctx,p1,p2,p3,p4);
+      const p1L=new Vec3(R,H,0).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p2L=new Vec3(-R,-H,0).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      ctx.strokeStyle='#d4a053';ctx.lineWidth=4;ctx.shadowColor='rgba(212,160,83,0.8)';ctx.shadowBlur=15;
+      ctx.beginPath();ctx.moveTo(p1L.x,p1L.y);ctx.lineTo(p2L.x,p2L.y);ctx.stroke();ctx.shadowBlur=0;
+      const prog=(Math.sin(state.t*1.2)+1)/2,progY=H*(2*prog-1),progX=R*(2*prog-1);
+      const dot=new Vec3(progX,progY,0).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      ctx.fillStyle='#d4a053';ctx.beginPath();ctx.arc(dot.x,dot.y,6,0,Math.PI*2);ctx.fill();
+    }
+    else if(key === 'deg-lines') {
+      const planeSize=150;
+      const p1=new Vec3(0,-planeSize,-planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p2=new Vec3(0,planeSize,-planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p3=new Vec3(0,planeSize,planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p4=new Vec3(0,-planeSize,planeSize).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      drawPlaneQuad(ctx,p1,p2,p3,p4);
+      ctx.strokeStyle='#d4a053';ctx.lineWidth=4;ctx.shadowColor='rgba(212,160,83,0.8)';ctx.shadowBlur=15;
+      const p1L=new Vec3(0,H,R).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p2L=new Vec3(0,-H,-R).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      ctx.beginPath();ctx.moveTo(p1L.x,p1L.y);ctx.lineTo(p2L.x,p2L.y);ctx.stroke();
+      const p3L=new Vec3(0,H,-R).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const p4L=new Vec3(0,-H,R).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      ctx.beginPath();ctx.moveTo(p3L.x,p3L.y);ctx.lineTo(p4L.x,p4L.y);ctx.stroke();ctx.shadowBlur=0;
+      const apex=new Vec3(0,0,0).rotateX(state.rot.x).rotateY(state.rot.y).project(w,h,fov);
+      const grad=ctx.createRadialGradient(apex.x,apex.y,0,apex.x,apex.y,35);
+      grad.addColorStop(0,'rgba(212,160,83,0.6)');grad.addColorStop(1,'rgba(212,160,83,0)');
+      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(apex.x,apex.y,35,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#d4a053';ctx.beginPath();ctx.arc(apex.x,apex.y,8,0,Math.PI*2);ctx.fill();
+    }
+
+    if(currentSlide === slideMap[key]) animationIds[key] = requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ─── 2D DEGENERI ─────────────────────────────────────────────────────────────
+function drawDegeneratePoint() {
+  const canvas=document.getElementById('degenerate-point-canvas');if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-170,cy);ctx.lineTo(cx+170,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-170);ctx.lineTo(cx,cy+170);ctx.stroke();
+    const scale=Math.sin(Date.now()*0.003)*0.3+0.7;
+    ctx.shadowColor='rgba(240,165,0,0.6)';ctx.shadowBlur=20*scale;ctx.fillStyle='#f0a500';
+    ctx.beginPath();ctx.arc(cx,cy,8*scale,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(240,165,0,0.7)';ctx.font='bold 14px Source Sans 3';ctx.fillText('PUNTO',cx-28,cy-30);ctx.fillText('(singolo)',cx-25,cy+45);
+    if(currentSlide===14) animationIds['degPoint']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawDegenerateLine() {
+  const canvas=document.getElementById('degenerate-line-canvas');if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-170,cy);ctx.lineTo(cx+170,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-170);ctx.lineTo(cx,cy+170);ctx.stroke();
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=4;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();ctx.moveTo(cx-160,cy-160);ctx.lineTo(cx+160,cy+160);ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(240,165,0,0.7)';ctx.font='bold 14px Source Sans 3';ctx.fillText('RETTA',cx+60,cy-60);ctx.fillText('(tangente)',cx+60,cy-40);
+    if(currentSlide===15) animationIds['degLine']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function drawDegenerateLines() {
+  const canvas=document.getElementById('degenerate-lines-canvas');if(!canvas) return;
+  const ctx=canvas.getContext('2d');const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2;
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(74,108,247,0.08)';ctx.lineWidth=1;
+    for(let i=-200;i<=200;i+=40){ctx.beginPath();ctx.moveTo(cx+i,cy-200);ctx.lineTo(cx+i,cy+200);ctx.stroke();ctx.beginPath();ctx.moveTo(cx-200,cy+i);ctx.lineTo(cx+200,cy+i);ctx.stroke();}
+    ctx.strokeStyle='rgba(232,230,240,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-170,cy);ctx.lineTo(cx+170,cy);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-170);ctx.lineTo(cx,cy+170);ctx.stroke();
+    ctx.strokeStyle='rgba(240,165,0,0.9)';ctx.lineWidth=3;ctx.shadowColor='rgba(240,165,0,0.5)';ctx.shadowBlur=12;
+    ctx.beginPath();ctx.moveTo(cx-160,cy-160);ctx.lineTo(cx+160,cy+160);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-160,cy+160);ctx.lineTo(cx+160,cy-160);ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(240,165,0,0.7)';ctx.font='bold 14px Source Sans 3';ctx.fillText('DUE RETTE',cx-50,cy-50);ctx.fillText('(per l\'asse)',cx-50,cy-30);
+    if(currentSlide===16) animationIds['degLines']=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ─── TABLE ────────────────────────────────────────────────────────────────────
+function populateTable() {
+  const tbody = document.getElementById('comparison-tbody');
+  if(tbody.children.length > 0) return;
+  const rows = [
+    {section:'⭕ Circonferenza',plane:'Parallelo alla base',type:'Non degenere',ecc:'e = 0'},
+    {section:'🥚 Ellisse',plane:'Inclinato',type:'Non degenere',ecc:'0 < e < 1'},
+    {section:'🏹 Parabola',plane:'// generatrice',type:'Non degenere',ecc:'e = 1'},
+    {section:'♾️ Iperbole',plane:'Interseca entrambe',type:'Non degenere',ecc:'e > 1'},
+    {section:'• Punto',plane:'Passa per apice',type:'Degenere',ecc:'—'},
+    {section:'— Retta',plane:'Tangente',type:'Degenere',ecc:'—'},
+    {section:'✕ Due rette',plane:"Per l'asse",type:'Degenere',ecc:'—'}
+  ];
+  rows.forEach((row,i) => {
+    const tr=document.createElement('tr');
+    tr.className='table-row';tr.style.animationDelay=(i*0.15)+'s';tr.style.borderBottom='1px solid rgba(74,108,247,0.1)';
+    const isDeg=row.type==='Degenere';
+    tr.innerHTML=`<td class="p-4 font-semibold" style="color:${isDeg?'#b8a3ff':'var(--text-color)'};">${row.section}</td><td class="p-4" style="color:rgba(232,230,240,0.7);">${row.plane}</td><td class="p-4 text-center font-bold" style="color:${isDeg?'#d8b4fe':'var(--secondary-color)'};">${row.type}</td><td class="p-4 text-center font-bold" style="color:${isDeg?'#d8b4fe':'#4ade80'};">${row.ecc}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── SLIDERS ──────────────────────────────────────────────────────────────────
+document.getElementById('plane-angle-slider').addEventListener('input', function() {
+  const angle=parseInt(this.value);
+  document.getElementById('angle-value').textContent=angle+'°';
+  if(interactiveCone) interactiveCone.setPlaneAngle(angle);
+  let sectionName='Circonferenza';
+  if(angle>0&&angle<57) sectionName='Ellisse';
+  else if(angle>=57&&angle<=67) sectionName='Parabola';
+  else if(angle>67) sectionName='Iperbole';
+  document.getElementById('section-label').textContent=sectionName;
+});
+document.getElementById('eccentricity-slider').addEventListener('input', function() {
+  document.getElementById('ecc-value').textContent=(this.value/100).toFixed(2);
+});
+document.getElementById('hyperbola-slider').addEventListener('input', function() {
+  document.getElementById('hyp-value').textContent=this.value+'°';
+});
+
+// ─── FULLSCREEN ───────────────────────────────────────────────────────────────
+function toggleFullscreen() {
+  const btn = document.getElementById('fullscreen-btn');
+  if (!document.fullscreenElement) {
+    document.getElementById('app-wrapper').requestFullscreen().catch(() => {});
+    btn.textContent = '✕';
+    btn.title = 'Esci da schermo intero';
+  } else {
+    document.exitFullscreen();
+    btn.textContent = '⛶';
+    btn.title = 'Schermo intero';
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fullscreen-btn');
+  if (!document.fullscreenElement) {
+    btn.textContent = '⛶';
+    btn.title = 'Schermo intero';
+  }
+});
+
+// ─── TOUCH SWIPE ─────────────────────────────────────────────────────────────
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  const wrapper = document.getElementById('app-wrapper');
+  wrapper.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  wrapper.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only trigger if predominantly horizontal and > 50px
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0 && currentSlide < totalSlides) goToSlide(currentSlide + 1);
+      else if (dx > 0 && currentSlide > 1) goToSlide(currentSlide - 1);
+    }
+  }, { passive: true });
+})();
+
+// ─── RESIZE HANDLER ──────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  // Re-read CSS var for nav/footer heights (already CSS-driven, just nudge slide layout)
+  const slide = document.getElementById('slide-' + currentSlide);
+  if (slide) {
+    // Force canvas resize on next animation frame
+    requestAnimationFrame(() => {
+      const canvases = slide.querySelectorAll('canvas');
+      canvases.forEach(c => {
+        if (c.style.width === '100%') {
+          c.width = c.clientWidth;
+          c.height = c.clientHeight;
+        }
+      });
+    });
+  }
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function initApp() {
+  initParticles();
+  createNavDots();
+  document.getElementById('btn-prev').style.visibility = 'hidden';
+  goToSlide(1);
+}
+
+initApp();
+</script>
+</body>
+</html>
 
