@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="it" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disequazioni di Secondo Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #0f1729;
+  --surface: #1a2744;
+  --text: #e8edf5;
+  --primary: #f59e0b;
+  --secondary: #6366f1;
+}
+html, body { height: 100%; margin: 0; padding: 0; }
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.app-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+h1, h2, h3 { font-family: 'Crimson Pro', serif; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.formula-box {
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(245,158,11,0.1));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: border-color 0.3s;
+}
+.card:hover { border-color: rgba(245,158,11,0.4); }
+canvas { display: block; }
+.nav-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(232,237,245,0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.nav-dot.active {
+  background: var(--primary);
+  transform: scale(1.3);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #d97706);
+  color: #0f1729;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Source Sans 3', sans-serif;
+  touch-action: manipulation;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,158,11,0.3); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary {
+  background: rgba(99,102,241,0.2);
+  color: var(--text);
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(99,102,241,0.3);
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Source Sans 3', sans-serif;
+  touch-action: manipulation;
+}
+.btn-secondary:hover { background: rgba(99,102,241,0.35); border-color: rgba(99,102,241,0.5); }
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--secondary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(99,102,241,0.3);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+}
+.quiz-option {
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 1rem;
+  touch-action: manipulation;
+  min-height: 48px;
+}
+.quiz-option:hover { background: rgba(99,102,241,0.2); border-color: var(--secondary); }
+.quiz-option.correct { background: rgba(34,197,94,0.2); border-color: #22c55e; color: #86efac; }
+.quiz-option.wrong { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #fca5a5; }
+.toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 500;
+  z-index: 100; opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+.toast.success { background: rgba(34,197,94,0.9); color: #fff; }
+.toast.error { background: rgba(239,68,68,0.9); color: #fff; }
+.fade-in { animation: fadeIn 0.6s ease forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
+.slide-up { animation: slideUp 0.5s ease forwards; opacity: 0; transform: translateY(20px); }
+@keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse-glow { 0%,100% { box-shadow: 0 0 10px rgba(245,158,11,0.2); } 50% { box-shadow: 0 0 25px rgba(245,158,11,0.4); } }
+.glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+.progress-bar { height: 3px; background: var(--primary); transition: width 0.4s ease; border-radius: 2px; }
+.tab-btn {
+  padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; transition: all 0.2s; background: transparent;
+  color: rgba(232,237,245,0.6); font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem;
+  touch-action: manipulation; min-height: 40px;
+}
+.tab-btn.active { background: rgba(99,102,241,0.2); border-color: var(--secondary); color: var(--text); }
+.summary-row { transition: background 0.2s; }
+.summary-row:hover { background: rgba(99,102,241,0.1); }
+
+/* ===== FULLSCREEN BUTTON ===== */
+#btnFullscreen {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 60;
+  background: rgba(26,39,68,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(99,102,241,0.35);
+  color: var(--text);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0;
+  touch-action: manipulation;
+}
+#btnFullscreen:hover { background: rgba(99,102,241,0.3); border-color: var(--primary); }
+#btnFullscreen svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ===== RESPONSIVE TABLETS (max 1024px) ===== */
+@media (max-width: 1024px) {
+  main { padding: 1rem 1rem 4rem !important; }
+  .section-title { font-size: 1.6rem !important; }
+  h1.section-title { font-size: 2.2rem !important; }
+  .card { padding: 1.5rem; }
+}
+
+/* ===== RESPONSIVE MOBILE (max 640px) ===== */
+@media (max-width: 640px) {
+  main { padding: 0.75rem 0.75rem 5rem !important; }
+  nav[aria-label="Navigazione sezioni"] { display: none !important; }
+  .section-title { font-size: 1.35rem !important; }
+  h1.section-title { font-size: 1.7rem !important; }
+  #subtitleText { font-size: 1rem !important; }
+  .card { padding: 1rem; border-radius: 12px; }
+  .formula-box { padding: 0.85rem 1rem; font-size: 0.9rem !important; overflow-x: auto; }
+  /* Stack grids on mobile */
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  [style*="grid-template-columns:repeat(auto-fit,minmax(200px"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Bigger touch targets */
+  .btn-primary, .btn-secondary { padding: 0.75rem 1.25rem; font-size: 0.95rem; min-height: 48px; }
+  .tab-btn { padding: 0.6rem 0.85rem; font-size: 0.85rem; }
+  /* Table responsive */
+  table { font-size: 0.78rem !important; }
+  table th, table td { padding: 0.5rem 0.35rem !important; }
+  /* Toast */
+  .toast { font-size: 0.85rem; max-width: 90vw; white-space: normal; text-align: center; }
+  /* Section padding */
+  section { padding: 2rem 0 !important; }
+  section:first-child { padding: 1.5rem 0 !important; }
+  /* Mobile bottom nav */
+  #mobileBottomNav { display: flex !important; }
+}
+
+/* Mobile bottom navigation bar */
+#mobileBottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(15,23,41,0.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(99,102,241,0.2);
+  padding: 0.5rem 0.25rem;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.1rem;
+}
+.mob-nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(232,237,245,0.45);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0.3rem 0.2rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 0;
+  touch-action: manipulation;
+}
+.mob-nav-btn.active { color: var(--primary); }
+.mob-nav-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(232,237,245,0.25);
+  transition: all 0.2s;
+}
+.mob-nav-btn.active .mob-nav-dot { background: var(--primary); transform: scale(1.25); }
+.mob-nav-label { line-height: 1; }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <!-- Fullscreen button -->
+  <button id="btnFullscreen" onclick="toggleFullscreen()" title="Schermo intero">
+    <svg id="iconExpand" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    <svg id="iconCompress" viewBox="0 0 24 24" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+  </button>
+  <!-- Mobile bottom navigation -->
+  <nav id="mobileBottomNav" aria-label="Navigazione mobile">
+    <button class="mob-nav-btn active" onclick="mobileGoTo(0)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Intro</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(1)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Δ</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(2)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Δ&gt;0</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(3)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Δ=0</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(4)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Δ&lt;0</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(5)"><div class="mob-nav-dot"></div><span class="mob-nav-label">DICE</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(6)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Graf.</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(7)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Rias.</span></button>
+    <button class="mob-nav-btn" onclick="mobileGoTo(8)"><div class="mob-nav-dot"></div><span class="mob-nav-label">Quiz</span></button>
+  </nav>
+  <div class="app-wrapper" id="appWrapper"><!-- Progress bar -->
+   <div style="position:sticky;top:0;z-index:50;background:rgba(15,23,41,0.95);backdrop-filter:blur(8px);">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+   </div><!-- Navigation dots -->
+   <nav aria-label="Navigazione sezioni" style="position:fixed;right:1rem;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;">
+    <div class="nav-dot active" data-section="0" title="Introduzione" role="button" tabindex="0" aria-label="Vai a Introduzione"></div>
+    <div class="nav-dot" data-section="1" title="Discriminante" role="button" tabindex="0" aria-label="Vai a Discriminante"></div>
+    <div class="nav-dot" data-section="2" title="Δ > 0" role="button" tabindex="0" aria-label="Vai a Delta maggiore di zero"></div>
+    <div class="nav-dot" data-section="3" title="Δ = 0" role="button" tabindex="0" aria-label="Vai a Delta uguale a zero"></div>
+    <div class="nav-dot" data-section="4" title="Δ < 0" role="button" tabindex="0" aria-label="Vai a Delta minore di zero"></div>
+    <div class="nav-dot" data-section="5" title="Regola DICE" role="button" tabindex="0" aria-label="Vai a Regola DICE"></div>
+    <div class="nav-dot" data-section="6" title="Algebra e Grafico" role="button" tabindex="0" aria-label="Vai a Algebra e Grafico"></div>
+    <div class="nav-dot" data-section="7" title="Riassunto" role="button" tabindex="0" aria-label="Vai a Riassunto"></div>
+    <div class="nav-dot" data-section="8" title="Verifica" role="button" tabindex="0" aria-label="Vai a Verifica"></div>
+   </nav>
+   <main style="max-width:960px;margin:0 auto;padding:1.5rem 1.5rem 4rem;"><!-- ============ SECTION 0: INTRODUZIONE ============ -->
+    <section id="sec0" class="fade-in" style="min-height:80%;display:flex;flex-direction:column;justify-content:center;padding:3rem 0;">
+     <header>
+      <p class="section-num">Sezione 01</p>
+      <h1 id="mainTitle" class="section-title" style="font-size:2.8rem;line-height:1.1;">Disequazioni di Secondo Grado</h1>
+      <p id="subtitleText" style="font-size:1.3rem;color:rgba(232,237,245,0.65);margin-top:0.5rem;font-weight:300;">Lezione Interattiva Completa</p>
+     </header>
+     <div class="card" style="margin-top:2rem;">
+      <h2 style="font-size:1.4rem;margin-bottom:1rem;color:var(--primary);">Cos'è una disequazione di secondo grado?</h2>
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Una <strong style="color:var(--text);">disequazione di secondo grado</strong> è una disuguaglianza in cui compare un'incognita elevata al quadrato. Cerchiamo i valori di <em>x</em> che rendono vera la disuguaglianza.</p>
+      <div class="formula-box mono" style="margin-top:1.25rem;font-size:1.15rem;text-align:center;">
+       ax² + bx + c&nbsp;&nbsp; <span style="color:var(--primary);font-weight:600;">&gt; 0</span>&nbsp;&nbsp;oppure&nbsp;&nbsp; <span style="color:var(--primary);font-weight:600;">&lt; 0</span>&nbsp;&nbsp;oppure&nbsp;&nbsp; <span style="color:var(--primary);font-weight:600;">≥ 0</span>&nbsp;&nbsp;oppure&nbsp;&nbsp; <span style="color:var(--primary);font-weight:600;">≤ 0</span>
+      </div>
+      <p style="margin-top:1.25rem;line-height:1.8;color:rgba(232,237,245,0.85);">La risoluzione è strettamente legata alla <strong style="color:var(--secondary);">parabola</strong> <em>y = ax² + bx + c</em>: le soluzioni della disequazione corrispondono agli intervalli in cui la parabola è sopra (o sotto) l'asse <em>x</em>.</p>
+      <p style="margin-top:0.75rem;line-height:1.8;color:rgba(232,237,245,0.7);">La chiave di tutto è il <strong style="color:var(--primary);">discriminante Δ</strong>, che determina quante intersezioni ha la parabola con l'asse <em>x</em> — e quindi quante soluzioni ha l'equazione associata.</p>
+     </div>
+    </section><!-- ============ SECTION 1: DISCRIMINANTE ============ -->
+    <section id="sec1" style="padding:3rem 0;">
+     <p class="section-num">Sezione 02</p>
+     <h2 class="section-title">Il Discriminante</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <div class="formula-box mono" style="font-size:1.3rem;text-align:center;margin-bottom:1.5rem;">
+       Δ = b² − 4ac
+      </div>
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Il discriminante ci dice <strong style="color:var(--text);">quante soluzioni reali</strong> ha l'equazione associata <span class="mono" style="font-size:0.9rem;">ax² + bx + c = 0</span>, e quindi quante volte la parabola interseca l'asse <em>x</em>.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.5rem;">
+       <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:1.25rem;text-align:center;">
+        <div class="mono" style="font-size:1.4rem;color:#22c55e;font-weight:600;">
+         Δ &gt; 0
+        </div>
+        <p style="margin-top:0.5rem;font-size:0.95rem;color:rgba(232,237,245,0.75);">Due soluzioni reali distinte</p>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);margin-top:0.25rem;">La parabola taglia l'asse x in 2 punti</p>
+       </div>
+       <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:1.25rem;text-align:center;">
+        <div class="mono" style="font-size:1.4rem;color:var(--primary);font-weight:600;">
+         Δ = 0
+        </div>
+        <p style="margin-top:0.5rem;font-size:0.95rem;color:rgba(232,237,245,0.75);">Una soluzione reale doppia</p>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);margin-top:0.25rem;">La parabola è tangente all'asse x</p>
+       </div>
+       <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:1.25rem;text-align:center;">
+        <div class="mono" style="font-size:1.4rem;color:#ef4444;font-weight:600;">
+         Δ &lt; 0
+        </div>
+        <p style="margin-top:0.5rem;font-size:0.95rem;color:rgba(232,237,245,0.75);">Nessuna soluzione reale</p>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);margin-top:0.25rem;">La parabola non tocca l'asse x</p>
+       </div>
+      </div><!-- Animated parabola for discriminant -->
+      <div style="margin-top:2rem;">
+       <p style="font-size:0.95rem;color:rgba(232,237,245,0.6);margin-bottom:0.75rem;text-align:center;">Premi i pulsanti per vedere i tre casi:</p>
+       <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"><button class="btn-secondary" id="discBtn1" onclick="animateDiscriminant('pos')">Δ &gt; 0</button> <button class="btn-secondary" id="discBtn2" onclick="animateDiscriminant('zero')">Δ = 0</button> <button class="btn-secondary" id="discBtn3" onclick="animateDiscriminant('neg')">Δ &lt; 0</button>
+       </div>
+       <canvas id="discCanvas" width="600" height="280" style="width:100%;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas>
+       <p id="discCaption" class="mono" style="text-align:center;margin-top:0.75rem;font-size:0.85rem;color:var(--primary);min-height:1.5rem;"></p>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 2: Δ > 0 ============ -->
+    <section id="sec2" style="padding:3rem 0;">
+     <p class="section-num">Sezione 03</p>
+     <h2 class="section-title">Caso 1: Δ &gt; 0</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Quando <span class="mono" style="color:#22c55e;">Δ &gt; 0</span>, l'equazione associata ha <strong style="color:var(--text);">due soluzioni reali distinte</strong> x₁ e x₂. Il trinomio si può scomporre:</p>
+      <div class="formula-box mono" style="text-align:center;margin:1.25rem 0;font-size:1.1rem;">
+       a(x − x₁)(x − x₂) &gt; 0&nbsp;&nbsp;(oppure &lt; 0)
+      </div>
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Per determinare gli intervalli soluzione, applichiamo la <strong style="color:var(--primary);">regola del DICE</strong>:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+       <div style="background:rgba(99,102,241,0.15);border-radius:10px;padding:1rem;">
+        <div style="font-weight:600;color:var(--secondary);margin-bottom:0.5rem;">
+         🎲 DI — Discordi → Interni
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Se il segno del prodotto è diverso da quello di <em>a</em>, la soluzione è l'intervallo <strong>interno</strong> tra x₁ e x₂.</p>
+       </div>
+       <div style="background:rgba(245,158,11,0.15);border-radius:10px;padding:1rem;">
+        <div style="font-weight:600;color:var(--primary);margin-bottom:0.5rem;">
+         🎲 CE — Concordi → Esterni
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Se il segno del prodotto è uguale a quello di <em>a</em>, la soluzione è l'unione degli intervalli <strong>esterni</strong>.</p>
+       </div>
+      </div><!-- Interactive number line -->
+      <div style="margin-top:2rem;">
+       <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:0.75rem;">Visualizzazione Interattiva</h3>
+       <p style="font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:1rem;">Scegli il tipo di disequazione per vedere la soluzione sulla retta reale e sul grafico:</p>
+       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;"><button class="tab-btn active" onclick="setCase1Type(this,'gt')">&gt; 0</button> <button class="tab-btn" onclick="setCase1Type(this,'lt')">&lt; 0</button> <button class="tab-btn" onclick="setCase1Type(this,'gte')">≥ 0</button> <button class="tab-btn" onclick="setCase1Type(this,'lte')">≤ 0</button>
+       </div>
+       <canvas id="case1Canvas" width="600" height="320" style="width:100%;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas>
+       <p id="case1Solution" class="mono" style="text-align:center;margin-top:0.75rem;font-size:0.9rem;color:var(--primary);min-height:1.5rem;"></p>
+      </div><!-- Worked example -->
+      <div style="margin-top:2rem;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:#22c55e;margin-bottom:1rem;">📝 Esempio Guidato</h3>
+       <p class="mono" style="font-size:1.05rem;margin-bottom:1rem;">Risolvere: x² − 5x + 6 &gt; 0</p>
+       <div id="example1Steps" style="font-size:0.95rem;line-height:1.9;color:rgba(232,237,245,0.8);">
+        <div id="ex1step1" style="opacity:0;transition:opacity 0.4s;"><strong>1.</strong> Calcoliamo Δ = 25 − 24 = <span style="color:#22c55e;">1 &gt; 0</span> → due soluzioni
+        </div>
+        <div id="ex1step2" style="opacity:0;transition:opacity 0.4s;"><strong>2.</strong> x₁ = (5−1)/2 = <span style="color:var(--primary);">2</span>, x₂ = (5+1)/2 = <span style="color:var(--primary);">3</span>
+        </div>
+        <div id="ex1step3" style="opacity:0;transition:opacity 0.4s;"><strong>3.</strong> a = 1 &gt; 0 e chiediamo &gt; 0 → segni <span style="color:var(--primary);">concordi</span> → soluzione <span style="color:var(--primary);">esterna</span>
+        </div>
+        <div id="ex1step4" style="opacity:0;transition:opacity 0.4s;"><strong>4.</strong> Soluzione: <span class="mono" style="color:#22c55e;font-weight:600;">x &lt; 2 ∨ x &gt; 3</span>
+        </div>
+       </div><button class="btn-primary" style="margin-top:1rem;font-size:0.9rem;" onclick="revealExample1()">Mostra passo successivo</button>
+      </div><!-- Interactive exercise -->
+      <div style="margin-top:2rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:var(--secondary);margin-bottom:1rem;">🏋️ Esercizio Interattivo</h3>
+       <p style="margin-bottom:0.75rem;">Risolvi: <span class="mono" style="font-size:1.05rem;">x² − x − 6 &lt; 0</span></p>
+       <p style="font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:0.75rem;">Quale intervallo è la soluzione?</p>
+       <div style="display:flex;flex-direction:column;gap:0.5rem;" id="ex1quiz"><button class="quiz-option" onclick="checkQuiz('ex1quiz',this,false)">x &lt; −2 ∨ x &gt; 3</button> <button class="quiz-option" onclick="checkQuiz('ex1quiz',this,true)">−2 &lt; x &lt; 3</button> <button class="quiz-option" onclick="checkQuiz('ex1quiz',this,false)">x &lt; −3 ∨ x &gt; 2</button> <button class="quiz-option" onclick="checkQuiz('ex1quiz',this,false)">−3 &lt; x &lt; 2</button>
+       </div>
+       <p id="ex1quizFeedback" style="margin-top:0.75rem;font-size:0.9rem;min-height:1.5rem;"></p>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 3: Δ = 0 ============ -->
+    <section id="sec3" style="padding:3rem 0;">
+     <p class="section-num">Sezione 04</p>
+     <h2 class="section-title">Caso 2: Δ = 0</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Quando <span class="mono" style="color:var(--primary);">Δ = 0</span>, l'equazione ha una <strong style="color:var(--text);">soluzione reale doppia</strong> x₀ = −b/(2a). La parabola è <strong style="color:var(--primary);">tangente</strong> all'asse x.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem;">
+       <div style="background:rgba(34,197,94,0.1);border-radius:10px;padding:1rem;">
+        <div class="mono" style="color:#22c55e;font-weight:600;margin-bottom:0.5rem;">
+         ax² + bx + c &gt; 0
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Verificata ∀x ≠ x₀ (se a &gt; 0)</p>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);">Sol: x ∈ ℝ \ {x₀}</p>
+       </div>
+       <div style="background:rgba(239,68,68,0.1);border-radius:10px;padding:1rem;">
+        <div class="mono" style="color:#ef4444;font-weight:600;margin-bottom:0.5rem;">
+         ax² + bx + c &lt; 0
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Mai verificata (se a &gt; 0)</p>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);">Sol: ∅</p>
+       </div>
+      </div>
+      <p style="margin-top:1rem;font-size:0.9rem;color:rgba(232,237,245,0.6);">Con ≥ e ≤ il punto x₀ viene incluso o meno nella soluzione.</p><!-- Visual -->
+      <canvas id="case2Canvas" width="600" height="280" style="width:100%;margin-top:1.5rem;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas><!-- Worked example -->
+      <div style="margin-top:1.5rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:1rem;">📝 Esempio Svolto</h3>
+       <p class="mono" style="font-size:1.05rem;margin-bottom:1rem;">x² − 6x + 9 ≤ 0</p>
+       <div style="font-size:0.95rem;line-height:1.9;color:rgba(232,237,245,0.8);">
+        <p><strong>1.</strong> Δ = 36 − 36 = <span style="color:var(--primary);">0</span> → soluzione doppia</p>
+        <p><strong>2.</strong> x₀ = 6/2 = <span style="color:var(--primary);">3</span></p>
+        <p><strong>3.</strong> a = 1 &gt; 0 → parabola rivolta verso l'alto, sempre ≥ 0</p>
+        <p><strong>4.</strong> Chiediamo ≤ 0: la parabola tocca zero solo in x₀</p>
+        <p><strong>5.</strong> Soluzione: <span class="mono" style="color:#22c55e;font-weight:600;">x = 3</span></p>
+       </div>
+      </div><!-- Quiz -->
+      <div style="margin-top:1.5rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:var(--secondary);margin-bottom:1rem;">🧩 Mini Quiz</h3>
+       <p style="margin-bottom:0.75rem;">Se <span class="mono">Δ = 0</span> e <span class="mono">a &gt; 0</span>, la disequazione <span class="mono">ax² + bx + c &gt; 0</span> ha come soluzione:</p>
+       <div style="display:flex;flex-direction:column;gap:0.5rem;" id="sec3quiz"><button class="quiz-option" onclick="checkQuiz('sec3quiz',this,false)">Nessuna soluzione (∅)</button> <button class="quiz-option" onclick="checkQuiz('sec3quiz',this,true)">Tutti i reali tranne x₀ (ℝ \ {x₀})</button> <button class="quiz-option" onclick="checkQuiz('sec3quiz',this,false)">Solo x = x₀</button> <button class="quiz-option" onclick="checkQuiz('sec3quiz',this,false)">Tutti i numeri reali (ℝ)</button>
+       </div>
+       <p id="sec3quizFeedback" style="margin-top:0.75rem;font-size:0.9rem;min-height:1.5rem;"></p>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 4: Δ < 0 ============ -->
+    <section id="sec4" style="padding:3rem 0;">
+     <p class="section-num">Sezione 05</p>
+     <h2 class="section-title">Caso 3: Δ &lt; 0</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);">Quando <span class="mono" style="color:#ef4444;">Δ &lt; 0</span>, l'equazione associata <strong style="color:var(--text);">non ha soluzioni reali</strong>. La parabola è completamente sopra o sotto l'asse x.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem;">
+       <div style="background:rgba(34,197,94,0.1);border-radius:10px;padding:1rem;">
+        <div style="font-weight:600;color:#22c55e;margin-bottom:0.5rem;">
+         Se a &gt; 0
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Parabola tutta sopra l'asse x</p>
+        <p style="font-size:0.85rem;margin-top:0.25rem;"><span style="color:#22c55e;">&gt; 0</span> → ∀x ∈ ℝ &nbsp;|&nbsp; <span style="color:#ef4444;">&lt; 0</span> → ∅</p>
+       </div>
+       <div style="background:rgba(239,68,68,0.1);border-radius:10px;padding:1rem;">
+        <div style="font-weight:600;color:#ef4444;margin-bottom:0.5rem;">
+         Se a &lt; 0
+        </div>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.7);">Parabola tutta sotto l'asse x</p>
+        <p style="font-size:0.85rem;margin-top:0.25rem;"><span style="color:#22c55e;">&lt; 0</span> → ∀x ∈ ℝ &nbsp;|&nbsp; <span style="color:#ef4444;">&gt; 0</span> → ∅</p>
+       </div>
+      </div><!-- Interactive canvas -->
+      <div style="margin-top:1.5rem;">
+       <p style="font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:0.75rem;">Cambia il segno di <em>a</em> per vedere come cambia il risultato:</p>
+       <div style="display:flex;gap:0.75rem;margin-bottom:1rem;"><button class="tab-btn active" onclick="setCase3Sign(this,1)">a &gt; 0</button> <button class="tab-btn" onclick="setCase3Sign(this,-1)">a &lt; 0</button>
+       </div>
+       <canvas id="case3Canvas" width="600" height="280" style="width:100%;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas>
+       <p id="case3Caption" class="mono" style="text-align:center;margin-top:0.75rem;font-size:0.9rem;color:var(--primary);min-height:1.5rem;"></p>
+      </div><!-- Example -->
+      <div style="margin-top:1.5rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:#ef4444;margin-bottom:1rem;">📝 Esempio Guidato</h3>
+       <p class="mono" style="font-size:1.05rem;margin-bottom:1rem;">x² + 2x + 5 &gt; 0</p>
+       <div style="font-size:0.95rem;line-height:1.9;color:rgba(232,237,245,0.8);">
+        <p><strong>1.</strong> Δ = 4 − 20 = <span style="color:#ef4444;">−16 &lt; 0</span> → nessuna soluzione reale</p>
+        <p><strong>2.</strong> a = 1 &gt; 0 → parabola tutta sopra l'asse x</p>
+        <p><strong>3.</strong> Chiediamo &gt; 0: <span style="color:#22c55e;font-weight:600;">sempre verificata</span></p>
+        <p><strong>4.</strong> Soluzione: <span class="mono" style="color:#22c55e;font-weight:600;">∀x ∈ ℝ</span></p>
+       </div>
+      </div><!-- Quiz -->
+      <div style="margin-top:1.5rem;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1.5rem;">
+       <h3 style="font-size:1.1rem;color:var(--secondary);margin-bottom:1rem;">🎯 Attività Interattiva</h3>
+       <p style="margin-bottom:0.75rem;">La disequazione <span class="mono">−x² + 3x − 5 &lt; 0</span> è:</p>
+       <div style="display:flex;flex-direction:column;gap:0.5rem;" id="sec4quiz"><button class="quiz-option" onclick="checkQuiz('sec4quiz',this,true)">Sempre verificata (∀x ∈ ℝ)</button> <button class="quiz-option" onclick="checkQuiz('sec4quiz',this,false)">Mai verificata (∅)</button> <button class="quiz-option" onclick="checkQuiz('sec4quiz',this,false)">Verificata solo per alcuni x</button>
+       </div>
+       <p id="sec4quizFeedback" style="margin-top:0.75rem;font-size:0.9rem;min-height:1.5rem;"></p>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 5: REGOLA DEL DICE ============ -->
+    <section id="sec5" style="padding:3rem 0;">
+     <p class="section-num">Sezione 06</p>
+     <h2 class="section-title">La Regola del DICE</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);margin-bottom:1.5rem;">La regola del DICE è un metodo mnemonico per ricordare rapidamente se la soluzione è <strong>interna</strong> o <strong>esterna</strong> rispetto alle radici x₁ e x₂ (con x₁ &lt; x₂).</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;"><!-- DISCORDI -->
+       <div class="glow-pulse" style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(99,102,241,0.05));border:1px solid rgba(99,102,241,0.4);border-radius:16px;padding:1.5rem;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">
+         🎲
+        </div>
+        <h3 style="font-size:1.5rem;color:var(--secondary);font-weight:700;">DI</h3>
+        <p style="font-size:1.1rem;font-weight:600;color:var(--text);margin:0.5rem 0;">Discordi → Interni</p>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.65);">Il segno richiesto è <strong>opposto</strong> al segno di <em>a</em></p>
+        <div class="formula-box mono" style="margin-top:1rem;font-size:0.95rem;">
+         x₁ &lt; x &lt; x₂
+        </div>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);margin-top:0.75rem;">Es: a &gt; 0 e chiediamo &lt; 0</p>
+       </div><!-- CONCORDI -->
+       <div class="glow-pulse" style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(245,158,11,0.05));border:1px solid rgba(245,158,11,0.4);border-radius:16px;padding:1.5rem;text-align:center;animation-delay:1s;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">
+         🎲
+        </div>
+        <h3 style="font-size:1.5rem;color:var(--primary);font-weight:700;">CE</h3>
+        <p style="font-size:1.1rem;font-weight:600;color:var(--text);margin:0.5rem 0;">Concordi → Esterni</p>
+        <p style="font-size:0.9rem;color:rgba(232,237,245,0.65);">Il segno richiesto è <strong>uguale</strong> al segno di <em>a</em></p>
+        <div class="formula-box mono" style="margin-top:1rem;font-size:0.95rem;">
+         x &lt; x₁ ∨ x &gt; x₂
+        </div>
+        <p style="font-size:0.85rem;color:rgba(232,237,245,0.5);margin-top:0.75rem;">Es: a &gt; 0 e chiediamo &gt; 0</p>
+       </div>
+      </div><!-- Animated visual -->
+      <div style="margin-top:2rem;">
+       <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:1rem;">Visualizzazione Animata</h3>
+       <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;"><button class="tab-btn active" onclick="setDiceDemo(this,'disc')">Discordi (Interni)</button> <button class="tab-btn" onclick="setDiceDemo(this,'conc')">Concordi (Esterni)</button>
+       </div>
+       <canvas id="diceCanvas" width="600" height="260" style="width:100%;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 6: ALGEBRA E GRAFICO ============ -->
+    <section id="sec6" style="padding:3rem 0;">
+     <p class="section-num">Sezione 07</p>
+     <h2 class="section-title">Algebra e Grafico</h2>
+     <div class="card" style="margin-top:1.5rem;">
+      <p style="line-height:1.8;color:rgba(232,237,245,0.85);margin-bottom:1.5rem;">Modifica i coefficienti con gli slider e osserva come cambiano simultaneamente il discriminante, il grafico della parabola e le soluzioni.</p><!-- Sliders -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem;">
+       <div><label for="sliderA" style="display:block;font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:0.5rem;"> a = <span id="valA" class="mono" style="color:var(--primary);">1</span> </label> <input type="range" id="sliderA" min="-5" max="5" step="0.5" value="1" oninput="updateInteractive()">
+       </div>
+       <div><label for="sliderB" style="display:block;font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:0.5rem;"> b = <span id="valB" class="mono" style="color:var(--primary);">-2</span> </label> <input type="range" id="sliderB" min="-10" max="10" step="0.5" value="-2" oninput="updateInteractive()">
+       </div>
+       <div><label for="sliderC" style="display:block;font-size:0.9rem;color:rgba(232,237,245,0.6);margin-bottom:0.5rem;"> c = <span id="valC" class="mono" style="color:var(--primary);">-3</span> </label> <input type="range" id="sliderC" min="-10" max="10" step="0.5" value="-3" oninput="updateInteractive()">
+       </div>
+      </div><!-- Inequality type -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;"><button class="tab-btn active" onclick="setInterType(this,'gt')">&gt; 0</button> <button class="tab-btn" onclick="setInterType(this,'lt')">&lt; 0</button> <button class="tab-btn" onclick="setInterType(this,'gte')">≥ 0</button> <button class="tab-btn" onclick="setInterType(this,'lte')">≤ 0</button>
+      </div><!-- Info panel -->
+      <div id="interInfo" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1rem;"></div><!-- Canvas -->
+      <canvas id="interCanvas" width="600" height="360" style="width:100%;border-radius:12px;background:rgba(15,23,41,0.6);"></canvas>
+      <p id="interSolution" class="mono" style="text-align:center;margin-top:0.75rem;font-size:0.95rem;color:var(--primary);min-height:1.5rem;"></p>
+     </div>
+    </section><!-- ============ SECTION 7: RIASSUNTO ============ -->
+    <section id="sec7" style="padding:3rem 0;">
+     <p class="section-num">Sezione 08</p>
+     <h2 class="section-title">Riassunto Finale</h2>
+     <div class="card" style="margin-top:1.5rem;overflow-x:auto;">
+      <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:1rem;">Tabella Riepilogativa</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+       <thead>
+        <tr style="border-bottom:2px solid rgba(99,102,241,0.3);">
+         <th style="padding:0.75rem;text-align:left;color:var(--secondary);">Condizione</th>
+         <th style="padding:0.75rem;text-align:center;color:var(--secondary);">Parabola</th>
+         <th style="padding:0.75rem;text-align:center;color:var(--secondary);">&gt; 0 (a&gt;0)</th>
+         <th style="padding:0.75rem;text-align:center;color:var(--secondary);">&lt; 0 (a&gt;0)</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr class="summary-row" style="border-bottom:1px solid rgba(99,102,241,0.15);">
+         <td class="mono" style="padding:0.75rem;color:#22c55e;">Δ &gt; 0</td>
+         <td style="padding:0.75rem;text-align:center;color:rgba(232,237,245,0.7);">Taglia asse x in 2 punti</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">x&lt;x₁ ∨ x&gt;x₂</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">x₁&lt;x&lt;x₂</td>
+        </tr>
+        <tr class="summary-row" style="border-bottom:1px solid rgba(99,102,241,0.15);">
+         <td class="mono" style="padding:0.75rem;color:var(--primary);">Δ = 0</td>
+         <td style="padding:0.75rem;text-align:center;color:rgba(232,237,245,0.7);">Tangente all'asse x</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">ℝ \ {x₀}</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">∅</td>
+        </tr>
+        <tr class="summary-row">
+         <td class="mono" style="padding:0.75rem;color:#ef4444;">Δ &lt; 0</td>
+         <td style="padding:0.75rem;text-align:center;color:rgba(232,237,245,0.7);">Non tocca l'asse x</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">∀x ∈ ℝ</td>
+         <td style="padding:0.75rem;text-align:center;" class="mono">∅</td>
+        </tr>
+       </tbody>
+      </table><!-- Decision flowchart -->
+      <h3 style="font-size:1.1rem;color:var(--primary);margin:2rem 0 1rem;">Schema Decisionale</h3>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+       <div style="background:var(--secondary);color:white;padding:0.6rem 1.5rem;border-radius:10px;font-weight:600;">
+        Calcola Δ = b² − 4ac
+       </div>
+       <div style="width:2px;height:20px;background:rgba(232,237,245,0.3);"></div>
+       <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+        <div style="text-align:center;">
+         <div style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);padding:0.5rem 1rem;border-radius:8px;font-size:0.9rem;">
+          Δ &gt; 0
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:rgba(232,237,245,0.6);">
+          Trova x₁, x₂
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:var(--primary);">
+          Applica DICE
+         </div>
+        </div>
+        <div style="text-align:center;">
+         <div style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);padding:0.5rem 1rem;border-radius:8px;font-size:0.9rem;">
+          Δ = 0
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:rgba(232,237,245,0.6);">
+          Trova x₀
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:var(--primary);">
+          Analizza segno di a
+         </div>
+        </div>
+        <div style="text-align:center;">
+         <div style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);padding:0.5rem 1rem;border-radius:8px;font-size:0.9rem;">
+          Δ &lt; 0
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:rgba(232,237,245,0.6);">
+          Nessuna radice
+         </div>
+         <div style="width:2px;height:15px;background:rgba(232,237,245,0.2);margin:0 auto;"></div>
+         <div style="font-size:0.8rem;color:var(--primary);">
+          Segno di a decide tutto
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- ============ SECTION 8: VERIFICA FINALE ============ -->
+    <section id="sec8" style="padding:3rem 0 4rem;">
+     <p class="section-num">Sezione 09</p>
+     <h2 class="section-title">Verifica Finale</h2>
+     <div id="finalExercises"></div>
+    </section>
+   </main>
+  </div><!-- Toast -->
+  <div class="toast" id="toast"></div>
+  <script>
+// ====== CONFIG & ELEMENT SDK ======
+const defaultConfig = {
+  main_title: 'Disequazioni di Secondo Grado',
+  subtitle: 'Lezione Interattiva Completa',
+  background_color: '#0f1729',
+  surface_color: '#1a2744',
+  text_color: '#e8edf5',
+  primary_color: '#f59e0b',
+  secondary_color: '#6366f1',
+  font_family: 'Crimson Pro',
+  font_size: 16
+};
+
+function applyConfig(config) {
+  const bg = config.background_color || defaultConfig.background_color;
+  const surface = config.surface_color || defaultConfig.surface_color;
+  const text = config.text_color || defaultConfig.text_color;
+  const primary = config.primary_color || defaultConfig.primary_color;
+  const secondary = config.secondary_color || defaultConfig.secondary_color;
+  const fontFamily = config.font_family || defaultConfig.font_family;
+  const fontSize = config.font_size || defaultConfig.font_size;
+
+  document.documentElement.style.setProperty('--bg', bg);
+  document.documentElement.style.setProperty('--surface', surface);
+  document.documentElement.style.setProperty('--text', text);
+  document.documentElement.style.setProperty('--primary', primary);
+  document.documentElement.style.setProperty('--secondary', secondary);
+
+  const wrapper = document.getElementById('appWrapper');
+  if (wrapper) wrapper.style.background = bg;
+  document.body.style.background = bg;
+  document.body.style.color = text;
+
+  const mainTitle = document.getElementById('mainTitle');
+  if (mainTitle) {
+    mainTitle.textContent = config.main_title || defaultConfig.main_title;
+    mainTitle.style.fontFamily = `${fontFamily}, serif`;
+    mainTitle.style.fontSize = `${fontSize * 2.8 / 16}rem`;
+    mainTitle.style.background = `linear-gradient(135deg, ${primary}, #fbbf24)`;
+    mainTitle.style.webkitBackgroundClip = 'text';
+    mainTitle.style.webkitTextFillColor = 'transparent';
+    mainTitle.style.backgroundClip = 'text';
+  }
+  const subtitleText = document.getElementById('subtitleText');
+  if (subtitleText) {
+    subtitleText.textContent = config.subtitle || defaultConfig.subtitle;
+    subtitleText.style.fontSize = `${fontSize * 1.3 / 16}rem`;
+  }
+
+  document.querySelectorAll('h2.section-title').forEach(el => {
+    el.style.fontFamily = `${fontFamily}, serif`;
+    el.style.fontSize = `${fontSize * 2 / 16}rem`;
+    el.style.background = `linear-gradient(135deg, ${primary}, #fbbf24)`;
+    el.style.webkitBackgroundClip = 'text';
+    el.style.webkitTextFillColor = 'transparent';
+    el.style.backgroundClip = 'text';
+  });
+
+  document.querySelectorAll('.card').forEach(el => {
+    el.style.background = surface;
+    el.style.borderColor = `${secondary}33`;
+  });
+
+  document.querySelectorAll('.section-num').forEach(el => { el.style.color = secondary; });
+
+  document.querySelectorAll('.btn-primary').forEach(el => {
+    el.style.background = `linear-gradient(135deg, ${primary}, ${primary}cc)`;
+  });
+  document.querySelectorAll('.btn-secondary').forEach(el => {
+    el.style.borderColor = `${secondary}4d`;
+    el.style.background = `${secondary}33`;
+  });
+
+  document.querySelectorAll('.nav-dot.active').forEach(el => {
+    el.style.background = primary;
+  });
+  document.querySelector('.progress-bar').style.background = primary;
+
+  // Redraw canvases with new colors
+  redrawAllCanvases();
+}
+
+if (window.elementSdk) {
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => { applyConfig(config); },
+    mapToCapabilities: (config) => ({
+      recolorables: [
+        { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+        { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+        { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+        { get: () => config.primary_color || defaultConfig.primary_color, set: (v) => { config.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+        { get: () => config.secondary_color || defaultConfig.secondary_color, set: (v) => { config.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } }
+      ],
+      borderables: [],
+      fontEditable: {
+        get: () => config.font_family || defaultConfig.font_family,
+        set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+      },
+      fontSizeable: {
+        get: () => config.font_size || defaultConfig.font_size,
+        set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+      }
+    }),
+    mapToEditPanelValues: (config) => new Map([
+      ['main_title', config.main_title || defaultConfig.main_title],
+      ['subtitle', config.subtitle || defaultConfig.subtitle]
+    ])
+  });
+}
+
+// ====== HELPERS ======
+function getColors() {
+  const s = getComputedStyle(document.documentElement);
+  return {
+    bg: s.getPropertyValue('--bg').trim() || '#0f1729',
+    surface: s.getPropertyValue('--surface').trim() || '#1a2744',
+    text: s.getPropertyValue('--text').trim() || '#e8edf5',
+    primary: s.getPropertyValue('--primary').trim() || '#f59e0b',
+    secondary: s.getPropertyValue('--secondary').trim() || '#6366f1',
+    green: '#22c55e',
+    red: '#ef4444',
+    textMuted: 'rgba(232,237,245,0.5)'
+  };
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function hexToRGBA(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ====== PROGRESS & NAVIGATION ======
+const sections = document.querySelectorAll('section[id^="sec"]');
+const dots = document.querySelectorAll('.nav-dot');
+const wrapper = document.getElementById('appWrapper');
+
+function updateProgress() {
+  const scrollTop = wrapper.scrollTop;
+  const scrollHeight = wrapper.scrollHeight - wrapper.clientHeight;
+  const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  let active = 0;
+  sections.forEach((sec, i) => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < wrapper.clientHeight * 0.5) active = i;
+  });
+  const c = getColors();
+  dots.forEach((d, i) => {
+    d.classList.toggle('active', i === active);
+    d.style.background = i === active ? c.primary : 'rgba(232,237,245,0.2)';
+  });
+}
+wrapper.addEventListener('scroll', updateProgress);
+
+dots.forEach(d => {
+  d.addEventListener('click', () => {
+    const idx = parseInt(d.dataset.section);
+    sections[idx].scrollIntoView({ behavior: 'smooth' });
+  });
+  d.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      d.click();
+    }
+  });
+});
+
+// ====== CANVAS DRAWING UTILS ======
+function getCanvasScale(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+function drawGrid(ctx, w, h, colors) {
+  ctx.strokeStyle = hexToRGBA(colors.secondary, 0.1);
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+  for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+}
+
+function drawAxes(ctx, w, h, colors, originX, originY) {
+  ctx.strokeStyle = hexToRGBA(colors.text, 0.3);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, originY); ctx.lineTo(w, originY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(originX, 0); ctx.lineTo(originX, h); ctx.stroke();
+  // Arrow heads
+  ctx.fillStyle = hexToRGBA(colors.text, 0.3);
+  ctx.beginPath(); ctx.moveTo(w-8, originY-4); ctx.lineTo(w, originY); ctx.lineTo(w-8, originY+4); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(originX-4, 8); ctx.lineTo(originX, 0); ctx.lineTo(originX+4, 8); ctx.fill();
+}
+
+function drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors, highlight) {
+  ctx.beginPath();
+  ctx.strokeStyle = highlight || colors.secondary;
+  ctx.lineWidth = 2.5;
+  for (let px = 0; px <= w; px++) {
+    const x = (px - originX) / scaleX;
+    const y = a * x * x + b * x + c;
+    const py = originY - y * scaleY;
+    if (px === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+}
+
+function drawNumberLine(ctx, y, w, x1, x2, type, scaleX, originX, colors, includeEndpoints) {
+  const px1 = originX + x1 * scaleX;
+  const px2 = originX + x2 * scaleX;
+  const isInternal = (type === 'lt' || type === 'lte');
+  const closed = (type === 'gte' || type === 'lte');
+
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+
+  if (isInternal) {
+    ctx.strokeStyle = hexToRGBA(colors.green, 0.7);
+    ctx.beginPath(); ctx.moveTo(px1, y); ctx.lineTo(px2, y); ctx.stroke();
+  } else {
+    ctx.strokeStyle = hexToRGBA(colors.green, 0.7);
+    ctx.beginPath(); ctx.moveTo(10, y); ctx.lineTo(px1, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px2, y); ctx.lineTo(w - 10, y); ctx.stroke();
+  }
+
+  // Endpoints
+  [px1, px2].forEach(px => {
+    ctx.beginPath();
+    ctx.arc(px, y, 5, 0, Math.PI * 2);
+    if (closed) {
+      ctx.fillStyle = colors.primary;
+      ctx.fill();
+    } else {
+      ctx.strokeStyle = colors.primary;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+}
+
+// ====== SECTION 1: DISCRIMINANT ANIMATION ======
+let discState = 'pos';
+function animateDiscriminant(state) {
+  discState = state;
+  drawDiscriminant();
+}
+function drawDiscriminant() {
+  const canvas = document.getElementById('discCanvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  const colors = getColors();
+  ctx.clearRect(0, 0, w, h);
+  drawGrid(ctx, w, h, colors);
+
+  const originX = w / 2, originY = h * 0.7;
+  drawAxes(ctx, w, h, colors, originX, originY);
+
+  let a = 1, b, c, caption;
+  if (discState === 'pos') { b = -2; c = -3; caption = 'Δ > 0 — Due intersezioni con l\'asse x'; }
+  else if (discState === 'zero') { b = -4; c = 4; caption = 'Δ = 0 — Tangente all\'asse x'; }
+  else { b = 0; c = 3; caption = 'Δ < 0 — Nessuna intersezione con l\'asse x'; }
+
+  const scaleX = 30, scaleY = 15;
+  drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors);
+
+  // Mark roots
+  const disc = b * b - 4 * a * c;
+  if (disc > 0) {
+    const r1 = (-b - Math.sqrt(disc)) / (2 * a);
+    const r2 = (-b + Math.sqrt(disc)) / (2 * a);
+    [r1, r2].forEach(r => {
+      const px = originX + r * scaleX;
+      ctx.beginPath(); ctx.arc(px, originY, 6, 0, Math.PI * 2);
+      ctx.fillStyle = colors.primary; ctx.fill();
+      ctx.fillStyle = colors.text; ctx.font = '12px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(r.toFixed(1), px, originY + 20);
+    });
+  } else if (disc === 0) {
+    const r = -b / (2 * a);
+    const px = originX + r * scaleX;
+    ctx.beginPath(); ctx.arc(px, originY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = colors.primary; ctx.fill();
+    ctx.fillStyle = colors.text; ctx.font = '12px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(r.toFixed(1), px, originY + 20);
+  }
+
+  // Shade above x-axis
+  ctx.fillStyle = hexToRGBA(colors.green, 0.08);
+  ctx.fillRect(0, 0, w, originY);
+
+  // Label y
+  ctx.fillStyle = hexToRGBA(colors.text, 0.4);
+  ctx.font = '11px Source Sans 3';
+  ctx.textAlign = 'left';
+  ctx.fillText('y > 0', 8, 16);
+  ctx.fillText('y < 0', 8, originY + 20);
+  ctx.fillText('x', w - 14, originY - 8);
+  ctx.fillText('y', originX + 8, 14);
+
+  document.getElementById('discCaption').textContent = caption;
+}
+
+// ====== SECTION 2: CASE Δ > 0 ======
+let case1Type = 'gt';
+function setCase1Type(btn, type) {
+  case1Type = type;
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawCase1();
+}
+function drawCase1() {
+  const canvas = document.getElementById('case1Canvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  const colors = getColors();
+  ctx.clearRect(0, 0, w, h);
+
+  const a = 1, b = -1, c = -6;
+  const disc = b * b - 4 * a * c;
+  const x1 = (-b - Math.sqrt(disc)) / (2 * a);
+  const x2 = (-b + Math.sqrt(disc)) / (2 * a);
+
+  const originX = w / 2, originY = h * 0.55;
+  const scaleX = 35, scaleY = 8;
+
+  drawGrid(ctx, w, h, colors);
+  drawAxes(ctx, w, h, colors, originX, originY);
+
+  // Shade solution region on parabola
+  const isAbove = (case1Type === 'gt' || case1Type === 'gte');
+  ctx.beginPath();
+  for (let px = 0; px <= w; px++) {
+    const x = (px - originX) / scaleX;
+    const y = a * x * x + b * x + c;
+    const py = originY - y * scaleY;
+    const above = y > 0;
+    if ((isAbove && above) || (!isAbove && !above)) {
+      ctx.fillStyle = hexToRGBA(colors.green, 0.12);
+      const top = isAbove ? Math.min(py, originY) : originY;
+      const bot = isAbove ? originY : Math.max(py, originY);
+      ctx.fillRect(px, top, 1, bot - top);
+    }
+  }
+
+  drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors);
+
+  // Roots
+  [x1, x2].forEach(r => {
+    const px = originX + r * scaleX;
+    ctx.beginPath(); ctx.arc(px, originY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = colors.primary; ctx.fill();
+    ctx.fillStyle = colors.text; ctx.font = '12px JetBrains Mono'; ctx.textAlign = 'center';
+    ctx.fillText(r.toFixed(0), px, originY + 18);
+  });
+
+  // Number line at bottom
+  const nlY = h - 30;
+  ctx.strokeStyle = hexToRGBA(colors.text, 0.2); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(20, nlY); ctx.lineTo(w - 20, nlY); ctx.stroke();
+  drawNumberLine(ctx, nlY, w, x1, x2, case1Type, scaleX, originX, colors);
+
+  // Labels
+  ctx.fillStyle = hexToRGBA(colors.text, 0.5); ctx.font = '11px Source Sans 3'; ctx.textAlign = 'center';
+  ctx.fillText('Retta reale delle soluzioni', w / 2, nlY - 12);
+
+  // Solution text
+  let sol;
+  const eq = (case1Type === 'gte' || case1Type === 'lte');
+  if (case1Type === 'gt' || case1Type === 'gte') {
+    sol = eq ? `x ≤ ${x1} ∨ x ≥ ${x2}` : `x < ${x1} ∨ x > ${x2}`;
+  } else {
+    sol = eq ? `${x1} ≤ x ≤ ${x2}` : `${x1} < x < ${x2}`;
+  }
+  document.getElementById('case1Solution').textContent = `Soluzione: ${sol}  (a=1, concordi→esterni / discordi→interni)`;
+}
+
+// ====== EXAMPLE 1 REVEAL ======
+let ex1Step = 0;
+function revealExample1() {
+  ex1Step++;
+  if (ex1Step <= 4) {
+    document.getElementById('ex1step' + ex1Step).style.opacity = '1';
+  }
+  if (ex1Step >= 4) showToast('Esempio completato! ✅', 'success');
+}
+
+// ====== SECTION 3: CASE Δ = 0 ======
+function drawCase2() {
+  const canvas = document.getElementById('case2Canvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  const colors = getColors();
+  ctx.clearRect(0, 0, w, h);
+
+  const a = 1, b = -6, c = 9;
+  const x0 = -b / (2 * a);
+  const originX = w / 2, originY = h * 0.7;
+  const scaleX = 35, scaleY = 10;
+
+  drawGrid(ctx, w, h, colors);
+  drawAxes(ctx, w, h, colors, originX, originY);
+
+  // Shade above
+  ctx.fillStyle = hexToRGBA(colors.green, 0.08);
+  ctx.fillRect(0, 0, w, originY);
+
+  drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors);
+
+  // Tangent point
+  const px0 = originX + x0 * scaleX;
+  ctx.beginPath(); ctx.arc(px0, originY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = colors.primary; ctx.fill();
+
+  ctx.fillStyle = colors.text; ctx.font = '13px JetBrains Mono'; ctx.textAlign = 'center';
+  ctx.fillText(`x₀ = ${x0}`, px0, originY + 22);
+
+  // Annotations
+  ctx.fillStyle = hexToRGBA(colors.green, 0.7); ctx.font = '12px Source Sans 3';
+  ctx.fillText('y > 0 (quasi ovunque)', w / 2, 24);
+  ctx.fillStyle = hexToRGBA(colors.primary, 0.9);
+  ctx.fillText('y = 0 solo in x₀', px0 + 60, originY - 10);
+}
+
+// ====== SECTION 4: CASE Δ < 0 ======
+let case3Sign = 1;
+function setCase3Sign(btn, sign) {
+  case3Sign = sign;
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawCase3();
+}
+function drawCase3() {
+  const canvas = document.getElementById('case3Canvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  const colors = getColors();
+  ctx.clearRect(0, 0, w, h);
+
+  const a = case3Sign, b = 0, c = case3Sign * 3;
+  const originX = w / 2, originY = h / 2;
+  const scaleX = 30, scaleY = 12;
+
+  drawGrid(ctx, w, h, colors);
+  drawAxes(ctx, w, h, colors, originX, originY);
+
+  // Shade solution region
+  if (a > 0) {
+    ctx.fillStyle = hexToRGBA(colors.green, 0.08);
+    ctx.fillRect(0, 0, w, originY); // above for >0
+  } else {
+    ctx.fillStyle = hexToRGBA(colors.green, 0.08);
+    ctx.fillRect(0, originY, w, h - originY); // below for <0
+  }
+
+  drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors);
+
+  // Caption
+  if (a > 0) {
+    document.getElementById('case3Caption').textContent = 'a > 0, Δ < 0: parabola sempre sopra l\'asse x → > 0 sempre vera, < 0 impossibile';
+  } else {
+    document.getElementById('case3Caption').textContent = 'a < 0, Δ < 0: parabola sempre sotto l\'asse x → < 0 sempre vera, > 0 impossibile';
+  }
+
+  ctx.fillStyle = hexToRGBA(colors.text, 0.4); ctx.font = '11px Source Sans 3'; ctx.textAlign = 'left';
+  ctx.fillText('x', w - 14, originY - 8); ctx.fillText('y', originX + 8, 14);
+}
+
+// ====== SECTION 5: DICE DEMO ======
+let diceMode = 'disc';
+function setDiceDemo(btn, mode) {
+  diceMode = mode;
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawDice();
+}
+function drawDice() {
+  const canvas = document.getElementById('diceCanvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  const colors = getColors();
+  ctx.clearRect(0, 0, w, h);
+
+  const a = 1, b = -1, c = -6;
+  const x1 = -2, x2 = 3;
+  const originX = w / 2, originY = h * 0.45;
+  const scaleX = 40, scaleY = 6;
+
+  drawGrid(ctx, w, h, colors);
+  drawAxes(ctx, w, h, colors, originX, originY);
+
+  const isInternal = diceMode === 'disc';
+
+  // Shade
+  for (let px = 0; px <= w; px++) {
+    const x = (px - originX) / scaleX;
+    const y = a * x * x + b * x + c;
+    const py = originY - y * scaleY;
+    const above = y > 0;
+    if ((!isInternal && above) || (isInternal && !above)) {
+      ctx.fillStyle = hexToRGBA(colors.green, 0.12);
+      const top = !isInternal ? Math.min(py, originY) : originY;
+      const bot = !isInternal ? originY : Math.max(py, originY);
+      ctx.fillRect(px, top, 1, bot - top);
+    }
+  }
+
+  drawParabola(ctx, w, h, a, b, c, originX, originY, scaleX, scaleY, colors);
+
+  [x1, x2].forEach(r => {
+    const px = originX + r * scaleX;
+    ctx.beginPath(); ctx.arc(px, originY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = colors.primary; ctx.fill();
+    ctx.fillStyle = colors.text; ctx.font = '12px JetBrains Mono'; ctx.textAlign = 'center';
+    ctx.fillText(r, px, originY + 18);
+  });
+
+  // Number line
+  const nlY = h - 28;
+  ctx.strokeStyle = hexToRGBA(colors.text, 0.2); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(20, nlY); ctx.lineTo(w - 20, nlY); ctx.stroke();
+  drawNumberLine(ctx, nlY, w, x1, x2, isInternal ? 'lt' : 'gt', scaleX, originX, colors);
+
+  // Labels
+  ctx.font = '13px Source Sans 3'; ctx.textAlign = 'center';
+  if (isInternal) {
+    ctx.fillStyle = hexToRGBA(colors.secondary, 0.9);
+    ctx.fillText('DISCORDI → soluzione INTERNA', w / 2, 20);
+    ctx.fillStyle = hexToRGBA(colors.text, 0.5);
+    ctx.fillText('a > 0, chiediamo < 0 → segni opposti', w / 2, 38);
+  } else {
+    ctx.fillStyle = hexToRGBA(colors.primary, 0.9);
+    ctx.fillText('CONCORDI → soluzione ESTERNA', w / 2, 20);
+    ctx.fillStyle = hexToRGBA(colors.text, 0.5);
+    ctx.fillText('a > 0, chiediamo > 0 → segni uguali', w / 2, 38);
+  }
+}
+
+// ====== SECTION 6: INTERACTIVE EXPLORER ======
+let interType = 'gt';
+function setInterType(btn, type) {
+  interType = type;
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateInteractive();
+}
+function updateInteractive() {
+  const a = parseFloat(document.getElementById('sliderA').value);
+  const b = parseFloat(document.getElementById('sliderB').value);
+  const c = parseFloat(document.getElementById('sliderC').value);
+  document.getElementById('valA').textContent = a;
+  document.getElementById('valB').textContent = b;
+  document.getElementById('valC').textContent = c;
+
+  if (a === 0) {
+    document.getElementById('interSolution').textContent = 'a non può essere 0 (non sarebbe di secondo grado)';
+    return;
+  }
+
+  const disc = b * b - 4 * a * c;
+  const colors = getColors();
+
+  // Info panel
+  let discColor = disc > 0 ? colors.green : disc === 0 ? colors.primary : colors.red;
+  let discLabel = disc > 0 ? 'Δ > 0' : disc === 0 ? 'Δ = 0' : 'Δ < 0';
+
+  let rootsText;
+  if (disc > 0) {
+    const r1 = (-b - Math.sqrt(disc)) / (2 * a);
+    const r2 = (-b + Math.sqrt(disc)) / (2 * a);
+    rootsText = `x₁ = ${r1.toFixed(2)}, x₂ = ${r2.toFixed(2)}`;
+  } else if (disc === 0) {
+    const r = -b / (2 * a);
+    rootsText = `x₀ = ${r.toFixed(2)}`;
+  } else {
+    rootsText = 'Nessuna radice reale';
+  }
+
+  const infoDiv = document.getElementById('interInfo');
+  infoDiv.innerHTML = `
+    <div style="background:${hexToRGBA(discColor,0.15)};border:1px solid ${hexToRGBA(discColor,0.3)};border-radius:10px;padding:0.75rem;text-align:center;">
+      <div style="font-size:0.8rem;color:${hexToRGBA(colors.text,0.5)}">Discriminante</div>
+      <div class="mono" style="font-size:1.1rem;color:${discColor};font-weight:600;">${disc.toFixed(2)}</div>
+      <div style="font-size:0.8rem;color:${discColor};">${discLabel}</div>
+    </div>
+    <div style="background:${hexToRGBA(colors.secondary,0.1)};border:1px solid ${hexToRGBA(colors.secondary,0.2)};border-radius:10px;padding:0.75rem;text-align:center;">
+      <div style="font-size:0.8rem;color:${hexToRGBA(colors.text,0.5)}">Radici</div>
+      <div class="mono" style="font-size:0.85rem;color:${colors.text};margin-top:0.25rem;">${rootsText}</div>
+    </div>
+    <div style="background:${hexToRGBA(colors.primary,0.1)};border:1px solid ${hexToRGBA(colors.primary,0.2)};border-radius:10px;padding:0.75rem;text-align:center;">
+      <div style="font-size:0.8rem;color:${hexToRGBA(colors.text,0.5)}">Vertice</div>
+      <div class="mono" style="font-size:0.85rem;color:${colors.text};margin-top:0.25rem;">V(${(-b/(2*a)).toFixed(2)}, ${(-(disc)/(4*a)).toFixed(2)})</div>
+    </div>
+  `;
+
+  // Draw canvas
+  const canvas = document.getElementById('interCanvas');
+  const { ctx, w, h } = getCanvasScale(canvas);
+  ctx.clearRect(0, 0, w, h);
+
+  const vx = -b / (2 * a);
+  const vy = a * vx * vx + b * vx + c;
+
+  // Auto-scale
+  let scaleX = 30, scaleY = 10;
+  const originX = w / 2 - vx * scaleX;
+  const originY = h * 0.55;
+
+  // Clamp originX
+  const ox = Math.max(w * 0.2, Math.min(w * 0.8, originX));
+
+  drawGrid(ctx, w, h, colors);
+  drawAxes(ctx, w, h, colors, ox, originY);
+
+  // Shade solution area
+  const isAbove = (interType === 'gt' || interType === 'gte');
+  for (let px = 0; px <= w; px++) {
+    const x = (px - ox) / scaleX;
+    const y = a * x * x + b * x + c;
+    const py = originY - y * scaleY;
+    const above = y > 0;
+    if ((isAbove && above) || (!isAbove && !above)) {
+      ctx.fillStyle = hexToRGBA(colors.green, 0.1);
+      const top = above ? Math.min(py, originY) : originY;
+      const bot = above ? originY : Math.max(py, originY);
+      if (bot > top) ctx.fillRect(px, top, 1, bot - top);
+    }
+  }
+
+  drawParabola(ctx, w, h, a, b, c, ox, originY, scaleX, scaleY, colors);
+
+  // Roots and number line
+  if (disc > 0) {
+    const r1 = (-b - Math.sqrt(disc)) / (2 * a);
+    const r2 = (-b + Math.sqrt(disc)) / (2 * a);
+    const rMin = Math.min(r1, r2), rMax = Math.max(r1, r2);
+
+    [rMin, rMax].forEach(r => {
+      const px = ox + r * scaleX;
+      ctx.beginPath(); ctx.arc(px, originY, 5, 0, Math.PI * 2);
+      ctx.fillStyle = colors.primary; ctx.fill();
+      ctx.fillStyle = colors.text; ctx.font = '11px JetBrains Mono'; ctx.textAlign = 'center';
+      ctx.fillText(r.toFixed(2), px, originY + 18);
+    });
+
+    const nlY = h - 25;
+    ctx.strokeStyle = hexToRGBA(colors.text, 0.2); ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(20, nlY); ctx.lineTo(w - 20, nlY); ctx.stroke();
+
+    // Determine solution type based on sign of a and inequality
+    let solType;
+    if (a > 0) {
+      solType = interType; // same mapping
+    } else {
+      // a < 0 flips: >0 becomes internal, <0 becomes external
+      if (interType === 'gt') solType = 'lt';
+      else if (interType === 'lt') solType = 'gt';
+      else if (interType === 'gte') solType = 'lte';
+      else solType = 'gte';
+    }
+    drawNumberLine(ctx, nlY, w, rMin, rMax, solType, scaleX, ox, colors);
+  } else if (disc === 0) {
+    const r = -b / (2 * a);
+    const px = ox + r * scaleX;
+    ctx.beginPath(); ctx.arc(px, originY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = colors.primary; ctx.fill();
+    ctx.fillStyle = colors.text; ctx.font = '11px JetBrains Mono'; ctx.textAlign = 'center';
+    ctx.fillText(r.toFixed(2), px, originY + 18);
+  }
+
+  // Solution text
+  let solText = '';
+  const eq = (interType === 'gte' || interType === 'lte');
+  const wantPositive = (interType === 'gt' || interType === 'gte');
+
+  if (disc > 0) {
+    const r1 = (-b - Math.sqrt(disc)) / (2 * a);
+    const r2 = (-b + Math.sqrt(disc)) / (2 * a);
+    const rMin = Math.min(r1, r2).toFixed(2), rMax = Math.max(r1, r2).toFixed(2);
+    const concordi = (a > 0 && wantPositive) || (a < 0 && !wantPositive);
+    if (concordi) {
+      solText = eq ? `x ≤ ${rMin} ∨ x ≥ ${rMax}` : `x < ${rMin} ∨ x > ${rMax}`;
+      solText += '  (Concordi → Esterni)';
+    } else {
+      solText = eq ? `${rMin} ≤ x ≤ ${rMax}` : `${rMin} < x < ${rMax}`;
+      solText += '  (Discordi → Interni)';
+    }
+  } else if (disc === 0) {
+    const r = (-b / (2 * a)).toFixed(2);
+    const paraboUp = a > 0;
+    if (wantPositive) {
+      if (paraboUp) solText = eq ? '∀x ∈ ℝ' : `ℝ \\ {${r}}`;
+      else solText = eq ? `x = ${r}` : '∅';
+    } else {
+      if (paraboUp) solText = eq ? `x = ${r}` : '∅';
+      else solText = eq ? '∀x ∈ ℝ' : `ℝ \\ {${r}}`;
+    }
+  } else {
+    const paraboUp = a > 0;
+    if (wantPositive) {
+      solText = paraboUp ? '∀x ∈ ℝ (sempre vera)' : '∅ (mai verificata)';
+    } else {
+      solText = paraboUp ? '∅ (mai verificata)' : '∀x ∈ ℝ (sempre vera)';
+    }
+  }
+  document.getElementById('interSolution').textContent = `Soluzione: ${solText}`;
+}
+
+// ====== QUIZ HANDLER ======
+function checkQuiz(containerId, btn, correct) {
+  const container = document.getElementById(containerId);
+  const btns = container.querySelectorAll('.quiz-option');
+  btns.forEach(b => { b.disabled = true; b.style.pointerEvents = 'none'; });
+  if (correct) {
+    btn.classList.add('correct');
+    const fb = document.getElementById(containerId + 'Feedback');
+    if (fb) { fb.textContent = '✅ Corretto! Ottimo lavoro!'; fb.style.color = '#22c55e'; }
+    showToast('Risposta esatta! 🎉', 'success');
+  } else {
+    btn.classList.add('wrong');
+    const fb = document.getElementById(containerId + 'Feedback');
+    if (fb) { fb.textContent = '❌ Non corretto. Riprova la prossima volta!'; fb.style.color = '#ef4444'; }
+    // Highlight correct
+    btns.forEach(b => {
+      if (b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+    });
+    showToast('Non esatto, controlla la risposta corretta.', 'error');
+  }
+}
+
+// ====== FINAL VERIFICATION ======
+const finalProblems = [
+  {
+    text: 'Risolvi: 2x² − 7x + 3 > 0',
+    options: ['x < 0.5 ∨ x > 3', '0.5 < x < 3', 'x < −3 ∨ x > −0.5', '∀x ∈ ℝ'],
+    correct: 0,
+    difficulty: '⭐',
+    explanation: 'Δ = 49 − 24 = 25 > 0. x₁ = 0.5, x₂ = 3. a > 0 e chiediamo > 0 → concordi → esterni. Soluzione: x < 0.5 ∨ x > 3.'
+  },
+  {
+    text: 'Risolvi: −x² + 4x − 4 ≥ 0',
+    options: ['∀x ∈ ℝ', 'x = 2', '∅', 'x ≤ 0 ∨ x ≥ 4'],
+    correct: 1,
+    difficulty: '⭐⭐',
+    explanation: 'Δ = 16 − 16 = 0. x₀ = 2. a < 0 → parabola rivolta verso il basso, sempre ≤ 0. Chiediamo ≥ 0: l\'unico punto dove vale 0 è x₀. Soluzione: x = 2.'
+  },
+  {
+    text: 'Risolvi: 3x² + x + 2 < 0',
+    options: ['∀x ∈ ℝ', '−1 < x < 2/3', '∅', 'x < −1 ∨ x > 2/3'],
+    correct: 2,
+    difficulty: '⭐⭐⭐',
+    explanation: 'Δ = 1 − 24 = −23 < 0. a > 0 → parabola sempre sopra l\'asse x. Chiediamo < 0: impossibile. Soluzione: ∅.'
+  }
+];
+
+function buildFinalExercises() {
+  const container = document.getElementById('finalExercises');
+  const colors = getColors();
+  container.innerHTML = '';
+  finalProblems.forEach((prob, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginTop = i === 0 ? '1.5rem' : '1.25rem';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3 style="font-size:1.1rem;color:${colors.primary};">Esercizio ${i + 1}</h3>
+        <span style="font-size:0.85rem;color:${hexToRGBA(colors.text, 0.5)};">Difficoltà: ${prob.difficulty}</span>
+      </div>
+      <p class="mono" style="font-size:1.05rem;margin-bottom:1rem;">${prob.text}</p>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;" id="final${i}">
+        ${prob.options.map((opt, j) => `
+          <button class="quiz-option" onclick="checkFinal(${i},${j})">${opt}</button>
+        `).join('')}
+      </div>
+      <p id="final${i}Feedback" style="margin-top:0.75rem;font-size:0.9rem;min-height:1.5rem;"></p>
+      <div id="final${i}Explanation" style="display:none;margin-top:1rem;background:${hexToRGBA(colors.secondary, 0.1)};border:1px solid ${hexToRGBA(colors.secondary, 0.2)};border-radius:10px;padding:1rem;">
+        <p style="font-size:0.9rem;line-height:1.7;color:${hexToRGBA(colors.text, 0.8)};">${prob.explanation}</p>
+      </div>
+      <button class="btn-secondary" style="margin-top:0.75rem;font-size:0.85rem;" onclick="document.getElementById('final${i}Explanation').style.display='block';this.style.display='none';">
+        Mostra svolgimento
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function checkFinal(probIdx, optIdx) {
+  const container = document.getElementById('final' + probIdx);
+  const btns = container.querySelectorAll('.quiz-option');
+  const correct = finalProblems[probIdx].correct === optIdx;
+  btns.forEach((b, j) => {
+    b.disabled = true; b.style.pointerEvents = 'none';
+    if (j === finalProblems[probIdx].correct) b.classList.add('correct');
+    if (j === optIdx && !correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('final' + probIdx + 'Feedback');
+  if (correct) {
+    fb.textContent = '✅ Corretto!'; fb.style.color = '#22c55e';
+    showToast('Esatto! 🎉', 'success');
+  } else {
+    fb.textContent = '❌ Non corretto. Guarda lo svolgimento per capire.'; fb.style.color = '#ef4444';
+    showToast('Sbagliato, controlla lo svolgimento.', 'error');
+  }
+}
+
+// ====== REDRAW ALL ======
+function redrawAllCanvases() {
+  drawDiscriminant();
+  drawCase1();
+  drawCase2();
+  drawCase3();
+  drawDice();
+  updateInteractive();
+  buildFinalExercises();
+}
+
+// ====== INIT ======
+function init() {
+  redrawAllCanvases();
+  updateProgress();
+}
+
+// Handle resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(redrawAllCanvases, 150);
+});
+
+// ====== FULLSCREEN ======
+function toggleFullscreen() {
+  const iconE = document.getElementById('iconExpand');
+  const iconC = document.getElementById('iconCompress');
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().then(() => {
+      iconE.style.display = 'none';
+      iconC.style.display = '';
+    }).catch(() => {});
+  } else {
+    document.exitFullscreen().then(() => {
+      iconE.style.display = '';
+      iconC.style.display = 'none';
+    }).catch(() => {});
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  const inFS = !!document.fullscreenElement;
+  document.getElementById('iconExpand').style.display = inFS ? 'none' : '';
+  document.getElementById('iconCompress').style.display = inFS ? '' : 'none';
+});
+
+// ====== MOBILE BOTTOM NAV ======
+function mobileGoTo(idx) {
+  const secs = document.querySelectorAll('section[id^="sec"]');
+  if (secs[idx]) secs[idx].scrollIntoView({ behavior: 'smooth' });
+}
+
+// Update mobile nav active state on scroll
+const _origUpdateProgress = updateProgress;
+wrapper.addEventListener('scroll', () => {
+  const mobBtns = document.querySelectorAll('.mob-nav-btn');
+  if (!mobBtns.length) return;
+  let active = 0;
+  sections.forEach((sec, i) => {
+    const rect = sec.getBoundingClientRect();
+    if (rect.top < wrapper.clientHeight * 0.5) active = i;
+  });
+  mobBtns.forEach((b, i) => b.classList.toggle('active', i === active));
+});
+
+init();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd39e405448ed5e',t:'MTc3MDk3ODI4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
