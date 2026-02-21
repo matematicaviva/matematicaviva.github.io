@@ -1,0 +1,1889 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheda Esercizi — Parallele & Perpendicolari</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0c14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --border: rgba(255,255,255,0.07);
+      --text: #e4e2f0;
+      --muted: #9895b5;
+      --pri: #7c6af7;
+      --pri-glow: rgba(124,106,247,0.20);
+      --sec: #2dd4a4;
+      --sec-glow: rgba(45,212,164,0.15);
+      --amber: #f5c842;
+      --amber-glow: rgba(245,200,66,0.15);
+      --red: #f06080;
+      --blue: #4fa3f7;
+      --radius: 14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* bg decorations */
+    body::before {
+      content:''; position:fixed; top:-200px; right:-200px;
+      width:600px; height:600px;
+      background:radial-gradient(circle,rgba(124,106,247,0.07) 0%,transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+    body::after {
+      content:''; position:fixed; bottom:-150px; left:-150px;
+      width:500px; height:500px;
+      background:radial-gradient(circle,rgba(45,212,164,0.05) 0%,transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position:sticky; top:0; z-index:100;
+      background:rgba(12,12,20,0.88);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      padding:0.9rem 1.5rem 0.7rem;
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      flex-wrap:wrap;
+    }
+    .brand { display:flex; align-items:center; gap:0.7rem; }
+    .brand-icon {
+      width:36px; height:36px;
+      background:linear-gradient(135deg,var(--pri),var(--sec));
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+    }
+    .brand-text { font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; color:#fff; }
+    .brand-sub { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+
+    .header-meta {
+      display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    }
+    .meta-pill {
+      font-family:'DM Mono',monospace; font-size:0.72rem;
+      padding:0.3rem 0.75rem; border-radius:999px;
+      border:1.5px solid var(--border); color:var(--muted);
+      white-space:nowrap;
+    }
+    .score-pill {
+      font-family:'DM Mono',monospace; font-size:0.75rem;
+      padding:0.3rem 0.85rem; border-radius:999px;
+      background:var(--pri-glow); color:var(--pri);
+      border:1.5px solid rgba(124,106,247,0.35);
+      white-space:nowrap; transition:all 0.3s;
+    }
+
+    /* ── MAIN ── */
+    main {
+      position:relative; z-index:1;
+      padding:1.5rem 1.2rem 3rem;
+      max-width:900px; margin:0 auto;
+    }
+
+    /* ── SECTION TITLES ── */
+    .chapter {
+      margin:2.2rem 0 1rem;
+      display:flex; align-items:center; gap:0.8rem;
+    }
+    .chapter-line { flex:1; height:1px; background:var(--border); }
+    .chapter-label {
+      font-family:'Fraunces',serif; font-size:1.1rem; font-weight:700;
+      color:#fff; white-space:nowrap;
+    }
+    .chapter-label span { color:var(--pri); }
+    .chapter-num {
+      font-family:'DM Mono',monospace; font-size:0.65rem;
+      color:var(--pri); background:var(--pri-glow);
+      padding:0.2rem 0.55rem; border-radius:999px;
+      letter-spacing:0.1em; flex-shrink:0;
+    }
+
+    /* ── EXERCISE CARD ── */
+    .ex {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:1.1rem 1.2rem 1rem;
+      margin-bottom:0.85rem;
+      transition:border-color 0.2s, box-shadow 0.2s;
+      position:relative;
+    }
+    .ex:hover { border-color:rgba(124,106,247,0.3); box-shadow:0 4px 24px rgba(124,106,247,0.07); }
+    .ex.answered-ok  { border-color:rgba(45,212,164,0.45); }
+    .ex.answered-err { border-color:rgba(240,96,128,0.45); }
+
+    .ex-header {
+      display:flex; align-items:flex-start; gap:0.65rem; margin-bottom:0.75rem;
+    }
+    .ex-num {
+      font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700;
+      color:var(--pri); background:var(--pri-glow);
+      padding:0.22rem 0.55rem; border-radius:999px;
+      flex-shrink:0; white-space:nowrap; margin-top:0.1rem;
+    }
+    .ex-type {
+      font-size:0.67rem; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase; color:var(--muted);
+      margin-top:0.22rem; flex:1;
+    }
+    .ex-tags { display:flex; gap:0.35rem; flex-wrap:wrap; }
+    .tag {
+      font-size:0.64rem; font-weight:700; letter-spacing:0.06em;
+      text-transform:uppercase; padding:0.18rem 0.5rem; border-radius:999px;
+    }
+    .tag-t { background:rgba(124,106,247,0.15); color:var(--pri); }
+    .tag-c { background:rgba(45,212,164,0.12); color:var(--sec); }
+    .tag-a { background:rgba(245,200,66,0.12); color:var(--amber); }
+    .tag-r { background:rgba(240,96,128,0.12); color:var(--red); }
+    .tag-b { background:rgba(79,163,247,0.12); color:var(--blue); }
+
+    .ex-body { font-size:0.9rem; line-height:1.65; color:var(--text); }
+    .ex-body strong { color:#fff; }
+    .ex-body em { color:var(--amber); font-style:normal; font-weight:600; }
+
+    /* enunciato da analizzare */
+    .enunciato {
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:10px; padding:0.8rem 1rem;
+      margin:0.7rem 0; font-style:italic;
+      font-size:0.9rem; line-height:1.65;
+      border-left:3px solid var(--amber);
+    }
+
+    /* formula inline */
+    .fm {
+      font-family:'DM Mono',monospace; font-size:0.88rem;
+      color:var(--pri); background:var(--pri-glow);
+      padding:0.15rem 0.5rem; border-radius:6px;
+      display:inline-block;
+    }
+
+    /* list inside exercise */
+    .ex-list {
+      margin:0.6rem 0 0.3rem 0.2rem;
+      display:flex; flex-direction:column; gap:0.35rem;
+    }
+    .ex-list-item {
+      display:flex; align-items:flex-start; gap:0.55rem;
+      font-size:0.88rem; line-height:1.5;
+    }
+    .ex-list-item::before {
+      content:attr(data-n);
+      font-family:'DM Mono',monospace; font-size:0.72rem;
+      color:var(--pri); background:var(--pri-glow);
+      border-radius:999px; padding:0.1rem 0.45rem;
+      flex-shrink:0; margin-top:0.15rem;
+    }
+
+    /* ── INPUT AREA ── */
+    .answer-area { margin-top:0.9rem; }
+
+    /* open text */
+    textarea.ans-text {
+      width:100%; min-height:72px;
+      background:var(--surface2); border:1.5px solid var(--border);
+      border-radius:9px; color:var(--text);
+      font-family:'Plus Jakarta Sans',sans-serif; font-size:0.88rem;
+      padding:0.6rem 0.8rem; resize:vertical; outline:none;
+      transition:border-color 0.2s;
+    }
+    textarea.ans-text:focus { border-color:var(--pri); }
+
+    /* number input */
+    input.ans-num {
+      background:var(--surface2); border:1.5px solid var(--border);
+      border-radius:8px; color:var(--text);
+      font-family:'DM Mono',monospace; font-size:0.92rem;
+      padding:0.42rem 0.7rem; width:90px; outline:none;
+      transition:border-color 0.2s;
+      -moz-appearance:textfield; appearance:textfield;
+    }
+    input.ans-num::-webkit-outer-spin-button,
+    input.ans-num::-webkit-inner-spin-button { -webkit-appearance:none; }
+    input.ans-num:focus { border-color:var(--pri); }
+
+    /* radio/checkbox choices */
+    .choices-grid {
+      display:grid; gap:0.4rem;
+      grid-template-columns:1fr;
+      margin:0.6rem 0;
+    }
+    @media(min-width:560px){ .choices-grid.two-col { grid-template-columns:1fr 1fr; } }
+    .choice-label {
+      display:flex; align-items:flex-start; gap:0.5rem;
+      padding:0.5rem 0.85rem; border-radius:9px;
+      border:1.5px solid var(--border); background:var(--surface2);
+      cursor:pointer; transition:all 0.18s; font-size:0.87rem; line-height:1.4;
+    }
+    .choice-label:hover { border-color:rgba(124,106,247,0.45); }
+    .choice-label input { accent-color:var(--pri); margin-top:0.15rem; flex-shrink:0; }
+    .choice-label.sel-ok  { background:rgba(45,212,164,0.12); border-color:rgba(45,212,164,0.45); }
+    .choice-label.sel-err { background:rgba(240,96,128,0.10); border-color:rgba(240,96,128,0.40); }
+
+    /* match rows */
+    .match-row {
+      display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:9px; padding:0.55rem 0.8rem; margin-bottom:0.4rem;
+    }
+    .match-row span { flex:1; min-width:130px; font-size:0.85rem; line-height:1.4; }
+    .match-row select {
+      background:var(--surface); border:1.5px solid var(--border);
+      border-radius:7px; color:var(--text);
+      font-family:'Plus Jakarta Sans',sans-serif; font-size:0.82rem;
+      padding:0.35rem 0.5rem; cursor:pointer; outline:none;
+      transition:border-color 0.2s;
+    }
+    .match-row select:focus { border-color:var(--pri); }
+
+    /* tf row */
+    .tf-row {
+      display:flex; align-items:flex-start; gap:0.6rem;
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:9px; padding:0.6rem 0.9rem; margin-bottom:0.4rem;
+    }
+    .tf-row-text { flex:1; font-size:0.87rem; line-height:1.5; }
+    .tf-btns { display:flex; gap:0.4rem; flex-shrink:0; margin-top:0.05rem; }
+    .tf-btn {
+      font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:700;
+      padding:0.25rem 0.7rem; border-radius:7px; cursor:pointer; border:none;
+      transition:all 0.18s;
+    }
+    .tf-btn.v { background:rgba(45,212,164,0.15); color:var(--sec); }
+    .tf-btn.f { background:rgba(240,96,128,0.12); color:var(--red); }
+    .tf-btn.v.selected { background:var(--sec); color:#0c0c14; }
+    .tf-btn.f.selected { background:var(--red); color:#fff; }
+
+    /* ── BUTTONS ── */
+    .btn-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem; }
+    .btn {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      border-radius:999px; padding:0.42rem 1rem;
+      font-size:0.8rem; font-weight:700;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      cursor:pointer; border:none; transition:all 0.18s;
+    }
+    .btn-check { background:var(--pri); color:#fff; box-shadow:0 4px 14px var(--pri-glow); }
+    .btn-check:hover { transform:translateY(-1px); box-shadow:0 6px 18px var(--pri-glow); }
+    .btn-sol { background:transparent; color:var(--sec); border:1.5px solid var(--sec); }
+    .btn-sol:hover { background:var(--sec-glow); }
+    .btn-reset { background:var(--surface2); color:var(--muted); border:1.5px solid var(--border); }
+    .btn-reset:hover { color:var(--text); }
+
+    /* ── RESULT ── */
+    .result {
+      font-family:'DM Mono',monospace; font-size:0.82rem;
+      margin-top:0.55rem; min-height:1.2em; line-height:1.4;
+    }
+    .result.ok  { color:var(--sec); }
+    .result.err { color:var(--red); }
+
+    /* ── SOLUTION BOX ── */
+    .sol-box {
+      display:none; margin-top:0.65rem;
+      padding:0.75rem 1rem;
+      background:rgba(45,212,164,0.07);
+      border:1px solid rgba(45,212,164,0.2);
+      border-radius:10px; font-size:0.86rem; line-height:1.6;
+      color:var(--text);
+    }
+    .sol-box.visible { display:block; }
+    .sol-box strong { color:var(--sec); }
+    .sol-box .fm { color:var(--sec); background:rgba(45,212,164,0.12); }
+
+    /* ── HINT ── */
+    details.hint { margin-top:0.6rem; }
+    details.hint summary {
+      font-size:0.78rem; font-weight:700; color:var(--muted);
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:0.3rem;
+      user-select:none;
+    }
+    details.hint summary::before { content:'💡'; }
+    details.hint summary::-webkit-details-marker { display:none; }
+    details.hint p {
+      margin-top:0.5rem; font-size:0.84rem; line-height:1.55;
+      color:var(--muted); padding-left:0.3rem;
+    }
+
+    /* ── PROGRESS BAR (top) ── */
+    .top-progress {
+      height:3px; background:var(--border);
+      border-radius:999px; overflow:hidden; margin-top:0.5rem;
+    }
+    .top-progress-fill {
+      height:100%;
+      background:linear-gradient(90deg,var(--pri),var(--sec));
+      transition:width 0.4s ease; width:0%;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display:flex; flex-wrap:wrap; gap:0.5rem 1rem;
+      padding:0.9rem 1.1rem;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius); margin-bottom:2rem;
+      font-size:0.78rem;
+    }
+    .legend-item { display:flex; align-items:center; gap:0.35rem; color:var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .ex { animation:fadeUp 0.3s ease both; }
+    .ex:nth-child(2)  { animation-delay:0.03s; }
+    .ex:nth-child(3)  { animation-delay:0.06s; }
+    .ex:nth-child(4)  { animation-delay:0.09s; }
+    .ex:nth-child(5)  { animation-delay:0.12s; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — MOBILE / TABLET / DESKTOP
+    ══════════════════════════════════════════ */
+
+    /* ── Touch targets (qualsiasi dispositivo touch) ── */
+    @media (pointer: coarse) {
+      .btn, .tf-btn, .choice-label { min-height: 44px; }
+      .btn  { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
+      .tf-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+      textarea.ans-text { font-size: 1rem; min-height: 90px; }
+      input.ans-num { min-height: 44px; font-size: 1rem; width: 100px; }
+      .match-row select { min-height: 44px; font-size: 0.88rem; padding: 0.5rem 0.6rem; }
+      .choice-label { padding: 0.65rem 1rem; font-size: 0.9rem; }
+    }
+
+    /* ── Mobile piccolo (< 480px) ── */
+    @media (max-width: 479px) {
+      :root { --radius: 11px; }
+
+      header {
+        padding: 0.6rem 0.85rem 0.5rem;
+        gap: 0.5rem;
+      }
+      .brand-sub { display: none; }
+      .brand-text { font-size: 0.92rem; }
+      .brand-icon { width: 30px; height: 30px; font-size: 15px; }
+      .header-meta { gap: 0.45rem; }
+      .meta-pill { font-size: 0.65rem; padding: 0.22rem 0.55rem; }
+      .score-pill { font-size: 0.68rem; padding: 0.22rem 0.65rem; }
+
+      main { padding: 0.9rem 0.65rem 3rem; }
+
+      .chapter { margin: 1.6rem 0 0.75rem; gap: 0.5rem; }
+      .chapter-label { font-size: 0.95rem; }
+
+      .ex { padding: 0.9rem 0.85rem 0.85rem; margin-bottom: 0.65rem; }
+      .ex-header { gap: 0.45rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+      .ex-type { font-size: 0.62rem; }
+      .ex-body { font-size: 0.87rem; line-height: 1.6; }
+
+      .enunciato { padding: 0.65rem 0.85rem; font-size: 0.86rem; }
+      .fm { font-size: 0.82rem; }
+
+      /* Bottoni: colonna piena */
+      .btn-row { flex-direction: column; gap: 0.4rem; }
+      .btn-row .btn { width: 100%; justify-content: center; }
+
+      /* Input numerici: allineamento */
+      .answer-area > div { flex-wrap: wrap; gap: 0.4rem; }
+      input.ans-num { width: 85px; }
+
+      /* Match: select a larghezza piena sotto il testo */
+      .match-row { flex-direction: column; align-items: flex-start; gap: 0.45rem; }
+      .match-row select { width: 100%; }
+
+      /* TF: bottoni sotto il testo su schermi stretti */
+      .tf-row { flex-direction: column; gap: 0.45rem; }
+      .tf-btns { align-self: flex-end; }
+
+      /* Legenda: compatta */
+      .legend { gap: 0.35rem 0.65rem; padding: 0.7rem 0.85rem; font-size: 0.72rem; }
+
+      /* choices */
+      .choices-grid.two-col { grid-template-columns: 1fr; }
+
+      /* Banner finale */
+      #final-banner { padding: 1.1rem 1rem; }
+      #final-banner h2 { font-size: 1.25rem; }
+      #final-banner .big-score { font-size: 2rem; }
+    }
+
+    /* ── Mobile medio / phablet (480–639px) ── */
+    @media (min-width: 480px) and (max-width: 639px) {
+      main { padding: 1.1rem 0.9rem 3rem; }
+      header { padding: 0.75rem 1.1rem 0.6rem; }
+      .ex { padding: 1rem 1.05rem; }
+      .btn-row { flex-direction: column; gap: 0.4rem; }
+      .btn-row .btn { width: 100%; justify-content: center; }
+      .match-row { flex-direction: column; align-items: flex-start; }
+      .match-row select { width: 100%; }
+    }
+
+    /* ── Tablet portrait (640–899px) ── */
+    @media (min-width: 640px) and (max-width: 899px) {
+      main { padding: 1.3rem 1.3rem 3rem; max-width: 100%; }
+      header { padding: 0.85rem 1.5rem 0.65rem; }
+      .ex { padding: 1.1rem 1.2rem; }
+      .choices-grid.two-col { grid-template-columns: 1fr 1fr; }
+      /* match: select su stessa riga ma più ampia */
+      .match-row select { min-width: 160px; }
+    }
+
+    /* ── Desktop (≥ 900px) ── */
+    @media (min-width: 900px) {
+      main { padding: 1.8rem 2rem 4rem; max-width: 900px; }
+      header { padding: 1rem 2.2rem 0.75rem; }
+      .ex { padding: 1.25rem 1.4rem 1.1rem; }
+      .chapter { margin: 2.5rem 0 1.1rem; }
+
+      /* hover solo su dispositivi non-touch */
+      .btn-check:hover { transform: translateY(-2px); }
+      .ex:hover { box-shadow: 0 6px 28px rgba(124,106,247,0.09); }
+      .choice-label:hover { background: rgba(124,106,247,0.06); }
+    }
+
+    /* ── Wide desktop (≥ 1200px) ── */
+    @media (min-width: 1200px) {
+      main { max-width: 960px; padding: 2rem 0 4rem; }
+    }
+
+    /* ── Landscape phone (larghezza > altezza, altezza < 500px) ── */
+    @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+      header { position: relative; padding: 0.45rem 1rem 0.35rem; }
+      .brand-sub { display: none; }
+      main { padding: 0.75rem 1rem 2rem; }
+      .ex { padding: 0.75rem 1rem; margin-bottom: 0.5rem; }
+      .chapter { margin: 1.2rem 0 0.6rem; }
+      .btn-row { flex-direction: row; }
+      .btn-row .btn { width: auto; }
+    }
+
+    /* ── Accessibilità: riduzione movimento ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Accessibilità: alto contrasto ── */
+    @media (prefers-contrast: high) {
+      :root { --border: rgba(255,255,255,0.3); --muted: #c8c5de; }
+      .enunciato { border-left-width: 4px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background:#fff; color:#000; }
+      header { position:relative; background:#fff; border-bottom:2px solid #000; }
+      .btn-row, .answer-area, details.hint { display:none !important; }
+      .ex { border:1px solid #ccc; break-inside:avoid; }
+      .enunciato { border-left:3px solid #333; background:#f5f5f5; }
+      .brand-text, .chapter-label { color:#000; }
+    }
+
+    /* final score banner */
+    #final-banner {
+      display:none; margin-top:2rem;
+      padding:1.5rem 1.8rem;
+      background:linear-gradient(135deg,rgba(124,106,247,0.15),rgba(45,212,164,0.10));
+      border:1px solid rgba(124,106,247,0.3);
+      border-radius:var(--radius); text-align:center;
+    }
+    #final-banner h2 { font-family:'Fraunces',serif; font-size:1.6rem; color:#fff; margin-bottom:0.4rem; }
+    #final-banner p { color:var(--muted); font-size:0.9rem; }
+    #final-banner .big-score { font-family:'DM Mono',monospace; font-size:2.5rem; color:var(--pri); font-weight:700; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">📐</div>
+    <div>
+      <div class="brand-text">Scheda Esercizi</div>
+      <div class="brand-sub">Parallele · Perpendicolari · Trasversale · Triangoli</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="meta-pill">Classe prima</span>
+    <span class="meta-pill">35 esercizi</span>
+    <span class="score-pill" id="global-score">0 / 0</span>
+  </div>
+  <div style="width:100%; flex-basis:100%;">
+    <div class="top-progress"><div class="top-progress-fill" id="top-bar"></div></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- LEGENDA -->
+  <div class="legend">
+    <span style="font-weight:700; color:var(--text); margin-right:0.4rem;">Legenda:</span>
+    <span class="legend-item"><span class="tag tag-t">Teorema</span> applicazione diretta</span>
+    <span class="legend-item"><span class="tag tag-c">Criterio</span> parallelismo/congruenza</span>
+    <span class="legend-item"><span class="tag tag-a">Analisi</span> ipotesi & tesi</span>
+    <span class="legend-item"><span class="tag tag-r">Ragionamento</span> deduzione</span>
+    <span class="legend-item"><span class="tag tag-b">Calcolo</span> numerico</span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       BLOCCO A — IPOTESI E TESI
+  ══════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="chapter-num">A</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-label">Riconoscimento di <span>Ipotesi e Tesi</span></div>
+    <div class="chapter-line"></div>
+  </div>
+
+  <!-- 1 -->
+  <div class="ex" id="ex1">
+    <div class="ex-header">
+      <span class="ex-num">01</span>
+      <span class="ex-type">Analisi dell'enunciato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Leggi il seguente enunciato e individua con precisione <strong>ipotesi</strong> e <strong>tesi</strong>.
+      <div class="enunciato">
+        «Se due rette sono entrambe perpendicolari a una terza retta, allora sono parallele tra loro.»
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Scrivi: IPOTESI = ... / TESI = ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol1')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol1">
+        <strong>Ipotesi:</strong> le rette r e s sono entrambe perpendicolari a una terza retta t.<br>
+        <strong>Tesi:</strong> r ∥ s.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="ex" id="ex2">
+    <div class="ex-header">
+      <span class="ex-num">02</span>
+      <span class="ex-type">Analisi dell'enunciato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Individua <strong>ipotesi</strong> e <strong>tesi</strong>:
+      <div class="enunciato">
+        «Due rette tagliate da una trasversale sono parallele se e solo se gli angoli alterni interni sono congruenti.»
+      </div>
+      Attenzione: l'enunciato contiene un «se e solo se». Cosa implica questo per ipotesi e tesi?
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Scrivi le due implicazioni distinte..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol2')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol2">
+        Il «se e solo se» indica una <strong>doppia implicazione</strong>:<br>
+        <strong>(→)</strong> Ipotesi: r ∥ s. Tesi: gli alterni interni sono congruenti.<br>
+        <strong>(←)</strong> Ipotesi: gli alterni interni sono congruenti. Tesi: r ∥ s.<br>
+        Entrambe le direzioni devono essere dimostrate separatamente.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="ex" id="ex3">
+    <div class="ex-header">
+      <span class="ex-num">03</span>
+      <span class="ex-type">Analisi dell'enunciato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Individua <strong>ipotesi</strong> e <strong>tesi</strong>:
+      <div class="enunciato">
+        «La somma delle ampiezze degli angoli interni di un triangolo è uguale a 180°.»
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="IPOTESI = ... / TESI = ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol3')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol3">
+        <strong>Ipotesi:</strong> ABC è un triangolo.<br>
+        <strong>Tesi:</strong> <span class="fm">α + β + γ = 180°</span>, dove α, β, γ sono i tre angoli interni.
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="ex" id="ex4">
+    <div class="ex-header">
+      <span class="ex-num">04</span>
+      <span class="ex-type">Analisi dell'enunciato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Leggi l'enunciato del teorema dell'angolo esterno e individua <strong>ipotesi</strong> e <strong>tesi</strong>:
+      <div class="enunciato">
+        «Ciascun angolo esterno di un triangolo è congruente alla somma degli angoli interni non adiacenti a esso.»
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="IPOTESI = ... / TESI = ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol4')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol4">
+        <strong>Ipotesi:</strong> ABC è un triangolo; δ è un angolo esterno al vertice B (cioè il supplementare di β).<br>
+        <strong>Tesi:</strong> <span class="fm">δ = α + γ</span>, dove α e γ sono gli angoli in A e C (non adiacenti a δ).
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="ex" id="ex5">
+    <div class="ex-header">
+      <span class="ex-num">05</span>
+      <span class="ex-type">Analisi dell'enunciato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Leggi e analizza il V postulato di Euclide:
+      <div class="enunciato">
+        «Per un punto P esterno a una retta r passa una e una sola retta parallela a r.»
+      </div>
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="a">Quali sono ipotesi e tesi?</div>
+        <div class="ex-list-item" data-n="b">Perché si chiama <em>postulato</em> e non <em>teorema</em>?</div>
+        <div class="ex-list-item" data-n="c">Come cambierebbe l'enunciato in geometria iperbolica?</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:100px;" placeholder="Rispondi ai tre punti..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol5')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol5">
+        <strong>a) Ipotesi:</strong> P è un punto esterno a r. <strong>Tesi:</strong> esiste un'unica retta per P parallela a r.<br>
+        <strong>b)</strong> È un postulato perché <em>non si dimostra</em> a partire dagli altri assiomi euclidei; va assunto come verità primitiva.<br>
+        <strong>c)</strong> In geometria iperbolica per P passano <em>infinite</em> rette parallele a r.
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="ex" id="ex6">
+    <div class="ex-header">
+      <span class="ex-num">06</span>
+      <span class="ex-type">Vera o Falsa — ipotesi/tesi</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Per ciascuna affermazione, stabilisci se l'identificazione di ipotesi e tesi è <strong>corretta</strong> o <strong>errata</strong> e motiva la risposta.
+    </div>
+    <div id="tf6-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkTF6()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res6"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       BLOCCO B — PERPENDICOLARI
+  ══════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="chapter-num">B</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-label">Rette <span>Perpendicolari</span></div>
+    <div class="chapter-line"></div>
+  </div>
+
+  <!-- 7 -->
+  <div class="ex" id="ex7">
+    <div class="ex-header">
+      <span class="ex-num">07</span>
+      <span class="ex-type">Calcolo angoli</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      La retta <em>r</em> è perpendicolare alla retta <em>s</em>. Una terza retta <em>t</em> incontra <em>r</em> formando un angolo di <strong>38°</strong>. Quanti gradi misura l'angolo che <em>t</em> forma con <em>s</em>?<br><br>
+      <em>(Ricorda: r ⟂ s, quindi l'angolo tra r e s è 90°.)</em>
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+        <span style="font-size:0.88rem;">Angolo tra <em>t</em> e <em>s</em> =</span>
+        <input class="ans-num" type="number" id="ans7" placeholder="°">
+        <span style="font-size:0.88rem;">gradi</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans7', 52, 'res7')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol7')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res7"></div>
+      <div class="sol-box" id="sol7">
+        Poiché r ⊥ s, i rispettivi angoli con qualsiasi trasversale t sono complementari: <span class="fm">90° − 38° = 52°</span>.
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>La somma degli angoli interni ad L formati da r e s misura 90°. Considera la trasversale t che li incrocia.</p></details>
+  </div>
+
+  <!-- 8 -->
+  <div class="ex" id="ex8">
+    <div class="ex-header">
+      <span class="ex-num">08</span>
+      <span class="ex-type">Scelta multipla</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span></div>
+    </div>
+    <div class="ex-body">
+      Due rette <em>r</em> e <em>s</em> si incontrano nel punto O. Quale condizione è <strong>necessaria e sufficiente</strong> affinché r ⊥ s?
+    </div>
+    <div class="choices-grid" id="cg8"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkRadio('cg8','r8_b','res8')">✓ Verifica</button>
+    </div>
+    <div class="result" id="res8"></div>
+  </div>
+
+  <!-- 9 -->
+  <div class="ex" id="ex9">
+    <div class="ex-header">
+      <span class="ex-num">09</span>
+      <span class="ex-type">Completamento</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Completa le affermazioni seguenti scegliendo il termine corretto.
+    </div>
+    <div id="tf9-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkTF9()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res9"></div>
+  </div>
+
+  <!-- 10 -->
+  <div class="ex" id="ex10">
+    <div class="ex-header">
+      <span class="ex-num">10</span>
+      <span class="ex-type">Ragionamento — vero/falso motivato</span>
+      <div class="ex-tags"><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Stabilisci se l'affermazione è <strong>vera</strong> o <strong>falsa</strong> e spiega perché:
+      <div class="enunciato">«Se due rette formano quattro angoli congruenti, allora sono perpendicolari.»</div>
+    </div>
+    <div id="tf10-container"></div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Motivazione..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkTF10()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol10')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res10"></div>
+      <div class="sol-box" id="sol10">
+        <strong>Vera.</strong> Se quattro angoli sono uguali e la loro somma è 360°, ciascuno è 90°. Angoli di 90° sono per definizione angoli retti, quindi le rette sono perpendicolari.
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="ex" id="ex11">
+    <div class="ex-header">
+      <span class="ex-num">11</span>
+      <span class="ex-type">Calcolo — catena di perpendicolari</span>
+      <div class="ex-tags"><span class="tag tag-b">Calcolo</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Le rette <em>r, s, t</em> sono tali che <strong>r ⊥ s</strong> e <strong>s ⊥ t</strong>.<br>
+      Una retta <em>u</em> taglia <em>r</em> con un angolo acuto di 27°. Calcola l'angolo che <em>u</em> forma con <em>t</em>. Spiega il ragionamento usato.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+        <span style="font-size:0.88rem;">Angolo tra u e t =</span>
+        <input class="ans-num" type="number" id="ans11" placeholder="°">
+        <span style="font-size:0.88rem;">°</span>
+      </div>
+      <textarea class="ans-text" style="margin-top:0.5rem;" placeholder="Motivazione del ragionamento..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans11', 27, 'res11')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol11')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res11"></div>
+      <div class="sol-box" id="sol11">
+        r ⊥ s e s ⊥ t implicano <strong>r ∥ t</strong> (due rette entrambe perpendicolari a s). Se u forma 27° con r, forma lo stesso angolo con t (angoli corrispondenti, dato che r ∥ t). Risposta: <span class="fm">27°</span>.
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>Cosa puoi dedurre sulla relazione tra r e t se entrambe sono perpendicolari a s?</p></details>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       BLOCCO C — PARALLELE E TRASVERSALE
+  ══════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="chapter-num">C</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-label">Parallele e <span>Trasversale</span></div>
+    <div class="chapter-line"></div>
+  </div>
+
+  <!-- 12 -->
+  <div class="ex" id="ex12">
+    <div class="ex-header">
+      <span class="ex-num">12</span>
+      <span class="ex-type">Calcolo angoli — trasversale</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      Le rette <em>r ∥ s</em> sono tagliate dalla trasversale <em>t</em>. L'angolo <strong>α = 112°</strong> è un angolo formato tra t e r.
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="a">Angolo alterno interno a α (tra t e s)</div>
+        <div class="ex-list-item" data-n="b">Angolo corrispondente a α (tra t e s)</div>
+        <div class="ex-list-item" data-n="c">Angolo coniugato interno a α (tra t e s)</div>
+        <div class="ex-list-item" data-n="d">Angolo supplementare di α (tra t e r)</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">a) <input class="ans-num" type="number" id="ans12a" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">b) <input class="ans-num" type="number" id="ans12b" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">c) <input class="ans-num" type="number" id="ans12c" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">d) <input class="ans-num" type="number" id="ans12d" placeholder="°"> °</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkEx12()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol12')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res12"></div>
+      <div class="sol-box" id="sol12">
+        a) Alterno interno = <span class="fm">112°</span> (angoli alterni interni sono congruenti se r ∥ s)<br>
+        b) Corrispondente = <span class="fm">112°</span> (angoli corrispondenti sono congruenti)<br>
+        c) Coniugato interno = <span class="fm">68°</span> (supplementari: 180° − 112°)<br>
+        d) Supplementare di α = <span class="fm">68°</span> (180° − 112°)
+      </div>
+    </div>
+  </div>
+
+  <!-- 13 -->
+  <div class="ex" id="ex13">
+    <div class="ex-header">
+      <span class="ex-num">13</span>
+      <span class="ex-type">Criterio di parallelismo — applicazione</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Per ciascuna situazione, stabilisci se le due rette <strong>sono o non sono parallele</strong> e indica quale criterio hai usato.
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="a">Gli alterni interni misurano rispettivamente 73° e 73°.</div>
+        <div class="ex-list-item" data-n="b">Gli angoli corrispondenti misurano 101° e 79°.</div>
+        <div class="ex-list-item" data-n="c">I coniugati interni misurano 95° e 85°.</div>
+        <div class="ex-list-item" data-n="d">Gli alterni esterni misurano 140° e 40°.</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:100px;" placeholder="Per ciascun caso scrivi: PARALLELE / NON PARALLELE + criterio usato"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol13')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol13">
+        a) <strong>Parallele</strong> — alterni interni congruenti (73° = 73°).<br>
+        b) <strong>Non parallele</strong> — corrispondenti non congruenti (101° ≠ 79°).<br>
+        c) <strong>Non parallele</strong> — coniugati interni non supplementari (95° + 85° = 180°… <em>attenzione:</em> somma = 180° → <strong>parallele</strong>!).<br>
+        d) <strong>Non parallele</strong> — alterni esterni non congruenti (140° ≠ 40°).
+        <br><small style="color:var(--muted);">Nota: nel caso c) la somma è esattamente 180°, quindi le rette <em>sono</em> parallele (coniugati interni supplementari). Verifica il tuo ragionamento!</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14 -->
+  <div class="ex" id="ex14">
+    <div class="ex-header">
+      <span class="ex-num">14</span>
+      <span class="ex-type">Abbinamento — coppie di angoli</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Abbina ciascuna coppia di angoli alla relazione corretta (congruenti / supplementari / nessuna delle due, quando r ∥ s).
+    </div>
+    <div id="match14"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkMatch14()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res14"></div>
+  </div>
+
+  <!-- 15 -->
+  <div class="ex" id="ex15">
+    <div class="ex-header">
+      <span class="ex-num">15</span>
+      <span class="ex-type">Calcolo con espressioni algebriche</span>
+      <div class="ex-tags"><span class="tag tag-b">Calcolo</span><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Due rette parallele sono tagliate da una trasversale. Due angoli coniugati interni misurano rispettivamente <span class="fm">(3x + 15)°</span> e <span class="fm">(2x + 45)°</span>.<br>
+      Trova il valore di <strong>x</strong> e calcola l'ampiezza dei due angoli.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">x = <input class="ans-num" type="number" id="ans15x" placeholder=""> </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Angolo 1 = <input class="ans-num" type="number" id="ans15a" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Angolo 2 = <input class="ans-num" type="number" id="ans15b" placeholder="°"> °</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkEx15()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol15')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res15"></div>
+      <div class="sol-box" id="sol15">
+        Coniugati interni sono supplementari: <span class="fm">(3x+15)+(2x+45)=180</span><br>
+        5x + 60 = 180 → 5x = 120 → <strong>x = 24</strong><br>
+        Angolo 1: 3·24+15 = <span class="fm">87°</span> — Angolo 2: 2·24+45 = <span class="fm">93°</span>. Verifica: 87°+93° = 180° ✓
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>I coniugati interni (tra le due rette parallele) sono supplementari: la loro somma è 180°.</p></details>
+  </div>
+
+  <!-- 16 -->
+  <div class="ex" id="ex16">
+    <div class="ex-header">
+      <span class="ex-num">16</span>
+      <span class="ex-type">Ragionamento — contrapposizione</span>
+      <div class="ex-tags"><span class="tag tag-r">Ragionamento</span><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Il criterio dice: «Se gli alterni interni sono congruenti, allora le rette sono parallele.»<br>
+      Scrivi la <strong>contronominale</strong> (contrapposizione) di questo enunciato e spiegane il significato geometrico.
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Contronominale: Se NON ... allora NON ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol16')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol16">
+        <strong>Contronominale:</strong> «Se le rette <em>non</em> sono parallele, allora gli angoli alterni interni <em>non</em> sono congruenti.»<br>
+        Un enunciato e la sua contronominale sono <em>logicamente equivalenti</em>: se uno è vero, lo è anche l'altro. Geometricamente: rette non parallele tagliate da una trasversale generano sempre alterni interni di ampiezza diversa.
+      </div>
+    </div>
+  </div>
+
+  <!-- 17 -->
+  <div class="ex" id="ex17">
+    <div class="ex-header">
+      <span class="ex-num">17</span>
+      <span class="ex-type">Errore da individuare</span>
+      <div class="ex-tags"><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Un alunno afferma: «<em>Poiché l'angolo corrispondente è di 90°, le due rette sono perpendicolari tra loro.</em>» Individua l'errore nell'affermazione.
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Descrivi l'errore..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol17')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol17">
+        L'errore è concettuale: un angolo corrispondente a 90° indica che la trasversale è <strong>perpendicolare a una delle due rette parallele</strong>, non che le due rette siano perpendicolari tra loro. Se r ∥ s e t ⊥ r, allora anche t ⊥ s — ma r e s rimangono <em>parallele</em>, non perpendicolari.
+      </div>
+    </div>
+  </div>
+
+  <!-- 18 -->
+  <div class="ex" id="ex18">
+    <div class="ex-header">
+      <span class="ex-num">18</span>
+      <span class="ex-type">Calcolo — angolo con espressione</span>
+      <div class="ex-tags"><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      Due rette parallele sono tagliate da una trasversale. Un angolo alterno esterno misura <span class="fm">(5x − 10)°</span>, l'altro misura <span class="fm">(3x + 22)°</span>. Calcola <strong>x</strong> e le ampiezze degli angoli.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">x = <input class="ans-num" type="number" id="ans18x" placeholder=""></div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Ampiezza = <input class="ans-num" type="number" id="ans18a" placeholder="°"> °</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkEx18()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol18')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res18"></div>
+      <div class="sol-box" id="sol18">
+        Alterni esterni congruenti: 5x − 10 = 3x + 22 → 2x = 32 → <strong>x = 16</strong><br>
+        Ampiezza: 5·16 − 10 = <span class="fm">70°</span>. Verifica: 3·16+22 = 70° ✓
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       BLOCCO D — TEOREMI SUI TRIANGOLI
+  ══════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="chapter-num">D</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-label">Teoremi sui <span>Triangoli</span></div>
+    <div class="chapter-line"></div>
+  </div>
+
+  <!-- 19 -->
+  <div class="ex" id="ex19">
+    <div class="ex-header">
+      <span class="ex-num">19</span>
+      <span class="ex-type">Calcolo — terzo angolo</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      In un triangolo ABC, si sa che <strong>α = 48°</strong> e <strong>β = 77°</strong>. Calcola γ.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        γ = <input class="ans-num" type="number" id="ans19" placeholder="°"> °
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans19', 55, 'res19')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol19')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res19"></div>
+      <div class="sol-box" id="sol19">
+        <span class="fm">γ = 180° − 48° − 77° = 55°</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 20 -->
+  <div class="ex" id="ex20">
+    <div class="ex-header">
+      <span class="ex-num">20</span>
+      <span class="ex-type">Angolo esterno — calcolo e inversione</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      In un triangolo, l'angolo esterno al vertice C vale <strong>134°</strong>. L'angolo interno in A vale <strong>72°</strong>. Calcola l'angolo interno in B.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        β = <input class="ans-num" type="number" id="ans20" placeholder="°"> °
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans20', 62, 'res20')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol20')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res20"></div>
+      <div class="sol-box" id="sol20">
+        Per il teorema dell'angolo esterno: δ = α + β → 134° = 72° + β → <span class="fm">β = 62°</span>.<br>
+        Verifica: γ = 180° − 134° = 46°; 72° + 62° + 46° = 180° ✓
+      </div>
+    </div>
+  </div>
+
+  <!-- 21 -->
+  <div class="ex" id="ex21">
+    <div class="ex-header">
+      <span class="ex-num">21</span>
+      <span class="ex-type">Vera o Falsa — teorema angolo esterno</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">Stabilisci se le seguenti affermazioni sono vere o false:</div>
+    <div id="tf21-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkTF21()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res21"></div>
+  </div>
+
+  <!-- 22 -->
+  <div class="ex" id="ex22">
+    <div class="ex-header">
+      <span class="ex-num">22</span>
+      <span class="ex-type">Dimostrazione guida — somma angoli</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      La dimostrazione del teorema sulla somma degli angoli interni di un triangolo usa le rette parallele. Ordina i passi nella sequenza corretta scrivendo i numeri da 1 a 5:
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="P">Per C si traccia la retta <em>p</em> parallela al lato AB.</div>
+        <div class="ex-list-item" data-n="Q">α′ + γ + β′ = 180° (angolo piatto sulla retta p).</div>
+        <div class="ex-list-item" data-n="R">Dato il triangolo ABC con angoli α (in A), β (in B), γ (in C).</div>
+        <div class="ex-list-item" data-n="S">Quindi α + β + γ = 180°.</div>
+        <div class="ex-list-item" data-n="T">Per gli alterni interni: α′ ≅ α e β′ ≅ β.</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="Ordine corretto: lettera, lettera, lettera, lettera, lettera"></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol22')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol22">
+        Ordine corretto: <strong>R → P → T → Q → S</strong><br>
+        Prima enunci la situazione (R), poi costruisci la parallela (P), applichi gli alterni interni (T), usi l'angolo piatto (Q), e concludi (S).
+      </div>
+    </div>
+  </div>
+
+  <!-- 23 -->
+  <div class="ex" id="ex23">
+    <div class="ex-header">
+      <span class="ex-num">23</span>
+      <span class="ex-type">Calcolo con espressione — angoli triangolo</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      In un triangolo gli angoli misurano <span class="fm">x°</span>, <span class="fm">(x+20)°</span> e <span class="fm">(2x−8)°</span>. Trova <strong>x</strong> e le ampiezze dei tre angoli. Verifica che il triangolo sia valido.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">x = <input class="ans-num" type="number" id="ans23x" placeholder=""></div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Angolo 1 = <input class="ans-num" type="number" id="ans23a" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Angolo 2 = <input class="ans-num" type="number" id="ans23b" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">Angolo 3 = <input class="ans-num" type="number" id="ans23c" placeholder="°"> °</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkEx23()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol23')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res23"></div>
+      <div class="sol-box" id="sol23">
+        x + (x+20) + (2x−8) = 180 → 4x+12 = 180 → 4x = 168 → <strong>x = 42</strong><br>
+        Angoli: <span class="fm">42°</span>, <span class="fm">62°</span>, <span class="fm">76°</span>. Tutti positivi e somma = 180° ✓
+      </div>
+    </div>
+  </div>
+
+  <!-- 24 -->
+  <div class="ex" id="ex24">
+    <div class="ex-header">
+      <span class="ex-num">24</span>
+      <span class="ex-type">Corollario — triangolo equilatero</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Il corollario del teorema dell'angolo esterno afferma che in un triangolo equilatero ogni angolo interno è 60°. Scrivi la <strong>dimostrazione completa</strong> di questo corollario usando il teorema sulla somma degli angoli interni.
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:110px;" placeholder="Scrivi la dimostrazione passo per passo..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol24')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol24">
+        <strong>Ipotesi:</strong> triangolo ABC equilatero (AB = BC = CA, quindi anche α = β = γ).<br>
+        <strong>Dimostrazione:</strong> Per il teorema sulla somma: α + β + γ = 180°. Poiché α = β = γ, si ha 3α = 180°, quindi <span class="fm">α = 60°</span>. ∎
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       BLOCCO E — CRITERI DI CONGRUENZA
+  ══════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="chapter-num">E</div>
+    <div class="chapter-line"></div>
+    <div class="chapter-label">Criteri di <span>Congruenza</span></div>
+    <div class="chapter-line"></div>
+  </div>
+
+  <!-- 25 -->
+  <div class="ex" id="ex25">
+    <div class="ex-header">
+      <span class="ex-num">25</span>
+      <span class="ex-type">Abbinamento — criteri di congruenza</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Abbina ciascuna descrizione al criterio di congruenza corretto.
+    </div>
+    <div id="match25"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkMatch25()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res25"></div>
+  </div>
+
+  <!-- 26 -->
+  <div class="ex" id="ex26">
+    <div class="ex-header">
+      <span class="ex-num">26</span>
+      <span class="ex-type">Analisi ipotesi/tesi — II criterio di congruenza generalizzato</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Leggi l'enunciato del II criterio di congruenza generalizzato:
+      <div class="enunciato">
+        «Due triangoli che hanno due angoli e un lato ordinatamente congruenti sono congruenti.»
+      </div>
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="a">Individua ipotesi e tesi.</div>
+        <div class="ex-list-item" data-n="b">Perché si dice «ordinatamente» congruenti? Cosa significa in pratica?</div>
+        <div class="ex-list-item" data-n="c">Quanti elementi minimi servono per determinare completamente un triangolo con questo criterio?</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:100px;" placeholder="Rispondi ai tre punti..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol26')">&#128214; Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol26">
+        <strong>a) Ipotesi:</strong> i triangoli ABC e A'B'C' hanno due angoli ordinatamente congruenti
+        (ad es. &alpha; &#8773; &alpha;' e &gamma; &#8773; &gamma;') e il lato compreso tra quei due angoli
+        ordinatamente congruente (AB &#8773; A'B'). <strong>Tesi:</strong> i triangoli ABC e A'B'C' sono congruenti.<br><br>
+        <strong>b)</strong> «Ordinatamente» significa che le corrispondenze rispettano la posizione:
+        il primo angolo di un triangolo corrisponde al primo angolo dell'altro, il lato al lato,
+        il secondo angolo al secondo angolo. Se si scelgono angoli e lato in posizioni diverse
+        (non corrispondenti), la congruenza non è garantita.<br><br>
+        <strong>c)</strong> Bastano 3 elementi: 2 angoli + 1 lato (nella posizione corretta).
+        Il terzo angolo si ricava automaticamente sottraendo gli altri due da 180&deg;,
+        quindi il triangolo risulta completamente determinato.
+      </div>
+    </div>
+  </div>
+
+  <!-- 27 -->
+  <div class="ex" id="ex27">
+    <div class="ex-header">
+      <span class="ex-num">27</span>
+      <span class="ex-type">Vera o Falsa — congruenza triangoli rettangoli</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">Stabilisci se ciascuna affermazione è vera o falsa:</div>
+    <div id="tf27-container"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkTF27()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res27"></div>
+  </div>
+
+  <!-- 28 -->
+  <div class="ex" id="ex28">
+    <div class="ex-header">
+      <span class="ex-num">28</span>
+      <span class="ex-type">Problema aperto — criterio di congruenza dei triangoli rettangoli</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      Due triangoli rettangoli hanno l'ipotenusa congruente (<strong>10 cm</strong>) e un cateto congruente (<strong>6 cm</strong>). Usando il criterio di congruenza dei triangoli rettangoli, dimostra che sono congruenti e calcola il secondo cateto.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        Secondo cateto = <input class="ans-num" type="number" id="ans28" placeholder="cm"> cm
+      </div>
+      <textarea class="ans-text" style="margin-top:0.5rem;" placeholder="Scrivi la giustificazione con il criterio di congruenza dei triangoli rettangoli..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans28', 8, 'res28')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol28')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res28"></div>
+      <div class="sol-box" id="sol28">
+        Per il <strong>criterio di congruenza dei triangoli rettangoli</strong>: ipotenusa (10 cm) e un cateto (6 cm) ordinatamente congruenti → triangoli congruenti.<br>
+        Secondo cateto: dal teorema di Pitagora → <span class="fm">c = √(10²−6²) = √(100−36) = √64 = 8 cm</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- 29 -->
+  <div class="ex" id="ex29">
+    <div class="ex-header">
+      <span class="ex-num">29</span>
+      <span class="ex-type">Ragionamento — catena logica</span>
+      <div class="ex-tags"><span class="tag tag-r">Ragionamento</span><span class="tag tag-t">Teorema</span></div>
+    </div>
+    <div class="ex-body">
+      Completa la catena logica inserendo le giustificazioni mancanti (teorema / criterio usato):
+      <div class="enunciato" style="border-left-color:var(--pri);">
+        r ⊥ t &nbsp;&amp;&nbsp; s ⊥ t &nbsp;→&nbsp; [<strong>1</strong>] &nbsp;→&nbsp; r ∥ s &nbsp;→&nbsp; [<strong>2</strong>] &nbsp;→&nbsp; angoli alterni interni ≅
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" placeholder="[1] = ... / [2] = ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol29')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol29">
+        <strong>[1]</strong>: «Due rette entrambe perpendicolari a una terza sono parallele tra loro» (teorema delle perpendicolari alla stessa retta).<br>
+        <strong>[2]</strong>: Criterio generale di parallelismo — direzione inversa: «Se due rette sono parallele, le coppie di angoli alterni interni formati con qualsiasi trasversale sono congruenti.»
+      </div>
+    </div>
+  </div>
+
+  <!-- 30 -->
+  <div class="ex" id="ex30">
+    <div class="ex-header">
+      <span class="ex-num">30</span>
+      <span class="ex-type">Problema sintetico — angoli e parallelismo</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-c">Criterio</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      Nel triangolo ABC, il lato BC è prolungato oltre C nel punto D. Si sa che l'angolo esterno in C (∠ACD) misura <strong>115°</strong> e l'angolo in A è congruente a quello in B (<strong>triangolo isoscele in C</strong>). Calcola tutti gli angoli interni del triangolo e l'angolo in B.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">γ (angolo in C) = <input class="ans-num" type="number" id="ans30c" placeholder="°"> °</div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">α = β = <input class="ans-num" type="number" id="ans30a" placeholder="°"> °</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkEx30()">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol30')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res30"></div>
+      <div class="sol-box" id="sol30">
+        Angolo esterno in C: ∠ACD = 115°, quindi γ = 180° − 115° = <span class="fm">65°</span>.<br>
+        Poiché α = β (triangolo isoscele in C): α + β = 180° − 65° = 115° → <span class="fm">α = β = 57.5°</span>.<br>
+        Verifica angolo esterno: α + β = 57.5° + 57.5° = 115° = ∠ACD ✓
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>Usa il teorema dell'angolo esterno per trovare γ, poi sfrutta l'isoscelia (α = β) e la somma degli angoli interni.</p></details>
+  </div>
+
+  <!-- 31 -->
+  <div class="ex" id="ex31">
+    <div class="ex-header">
+      <span class="ex-num">31</span>
+      <span class="ex-type">Ipotesi e tesi — criterio dei corrispondenti</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Leggi i tre enunciati e, per ciascuno, individua <strong>ipotesi</strong> e <strong>tesi</strong>.
+      <div class="enunciato">
+        (I) «Se due rette parallele sono tagliate da una trasversale, gli angoli corrispondenti sono congruenti.»
+      </div>
+      <div class="enunciato" style="margin-top:0.5rem;">
+        (II) «Se gli angoli corrispondenti formati da una trasversale con due rette sono congruenti, allora le due rette sono parallele.»
+      </div>
+      <div class="enunciato" style="margin-top:0.5rem;">
+        (III) «Se una trasversale è perpendicolare a una delle due rette parallele, allora è perpendicolare anche all'altra.»
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:120px;" placeholder="Per ciascun enunciato scrivi: IPOTESI = ... / TESI = ..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol31')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol31">
+        <strong>(I)</strong> Ipotesi: r ∥ s, t è trasversale. Tesi: gli angoli corrispondenti sono congruenti.<br>
+        <strong>(II)</strong> Ipotesi: gli angoli corrispondenti formati da t con r e s sono congruenti. Tesi: r ∥ s.<br>
+        <strong>(III)</strong> Ipotesi: r ∥ s, t ⊥ r. Tesi: t ⊥ s.<br>
+        <em>Nota: (I) e (II) sono l'una la reciproca dell'altra. (III) è una conseguenza diretta dei corrispondenti: se t ⊥ r, l'angolo corrispondente su s è anch'esso 90°.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- 32 -->
+  <div class="ex" id="ex32">
+    <div class="ex-header">
+      <span class="ex-num">32</span>
+      <span class="ex-type">Riconoscimento angoli congruenti — figura con trasversale</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-a">Analisi</span></div>
+    </div>
+    <div class="ex-body">
+      Le rette <em>r ∥ s</em> sono tagliate dalla trasversale <em>t</em>. Gli otto angoli formati sono numerati 1–4 (intorno all'intersezione con r) e 5–8 (intorno all'intersezione con s), con la stessa disposizione: 1 sopra-sinistra, 2 sopra-destra, 3 sotto-destra, 4 sotto-sinistra.<br><br>
+      Compila la tabella: per ciascuna coppia indica se gli angoli sono <strong>congruenti (≅)</strong>, <strong>supplementari (suppl.)</strong> o <strong>né l'uno né l'altro</strong>.
+    </div>
+    <div id="match32"></div>
+    <div class="btn-row">
+      <button class="btn btn-check" onclick="checkMatch32()">✓ Verifica</button>
+    </div>
+    <div class="result" id="res32"></div>
+  </div>
+
+  <!-- 33 -->
+  <div class="ex" id="ex33">
+    <div class="ex-header">
+      <span class="ex-num">33</span>
+      <span class="ex-type">Ipotesi e tesi — criteri di congruenza triangoli</span>
+      <div class="ex-tags"><span class="tag tag-a">Analisi</span><span class="tag tag-c">Criterio</span></div>
+    </div>
+    <div class="ex-body">
+      Per ciascun criterio di congruenza, scrivi l'enunciato in forma «Se … allora …» e individua ipotesi e tesi.
+      <div class="ex-list">
+        <div class="ex-list-item" data-n="I">I criterio di congruenza (lato-angolo-lato)</div>
+        <div class="ex-list-item" data-n="II gen.">II criterio di congruenza (angolo-lato-angolo)</div>
+        <div class="ex-list-item" data-n="Rett.">Criterio di congruenza dei triangoli rettangoli (ipotenusa-cateto)</div>
+      </div>
+    </div>
+    <div class="answer-area">
+      <textarea class="ans-text" style="min-height:130px;" placeholder="Per ciascun criterio scrivi: Se [IPOTESI] allora [TESI]..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-sol" onclick="toggleSol('sol33')">📖 Soluzione</button>
+      </div>
+      <div class="sol-box" id="sol33">
+        <strong>I criterio di congruenza:</strong> «Se due triangoli hanno due lati e l'angolo fra essi compreso ordinatamente congruenti, allora i triangoli sono congruenti.»<br>
+        Ipotesi: AB&#8773;A'B', &#8736;A&#8773;&#8736;A', AC&#8773;A'C'. Tesi: i triangoli ABC e A'B'C' sono congruenti.<br><br>
+        <strong>II criterio di congruenza:</strong> «Se due triangoli hanno due angoli e il lato compreso ordinatamente congruenti, allora sono congruenti.»<br>
+        Ipotesi: &#8736;A&#8773;&#8736;A', AB&#8773;A'B', &#8736;B&#8773;&#8736;B'. Tesi: i triangoli ABC e A'B'C' sono congruenti.<br><br>
+        <strong>Criterio di congruenza dei triangoli rettangoli:</strong> «Se due triangoli rettangoli hanno l'ipotenusa e un cateto ordinatamente congruenti, allora sono congruenti.»<br>
+        Ipotesi: angolo retto in A e A'; BC&#8773;B'C' (ipotenusa); AB&#8773;A'B' (cateto). Tesi: i triangoli ABC e A'B'C' sono congruenti.
+      </div>
+    </div>
+  </div>
+
+  <!-- 34 -->
+  <div class="ex" id="ex34">
+    <div class="ex-header">
+      <span class="ex-num">34</span>
+      <span class="ex-type">Riconoscimento angoli congruenti — catena di ragionamenti</span>
+      <div class="ex-tags"><span class="tag tag-c">Criterio</span><span class="tag tag-r">Ragionamento</span><span class="tag tag-b">Calcolo</span></div>
+    </div>
+    <div class="ex-body">
+      Le rette <em>r ∥ s ∥ u</em> sono tagliate da una trasversale <em>t</em>. L'angolo che <em>t</em> forma con <em>r</em> nel punto P è <strong>α = 53°</strong>. Elenca <strong>tutti</strong> gli angoli congruenti ad α nella figura (specificando in quale intersezione si trovano e il loro tipo: alterno, corrispondente, ecc.) e calcola l'ampiezza degli angoli supplementari ad α.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+        <span style="font-size:0.88rem;">Angolo supplementare ad α =</span>
+        <input class="ans-num" type="number" id="ans34" placeholder="°"> °
+      </div>
+      <textarea class="ans-text" style="margin-top:0.5rem;" placeholder="Elenca gli angoli congruenti ad α specificando tipo e posizione..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans34', 127, 'res34')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol34')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res34"></div>
+      <div class="sol-box" id="sol34">
+        <strong>Angoli congruenti ad α = 53°:</strong><br>
+        — In P (su r): l'angolo verticamente opposto ad α (opposto al vertice).<br>
+        — In Q (su s): l'angolo <em>corrispondente</em> ad α; l'angolo <em>alterno interno</em> (stesso lato opposto della trasversale); l'angolo <em>alterno esterno</em> al corrispondente.<br>
+        — In R (su u): stessi angoli congruenti ad α per le stesse ragioni (r ∥ u).<br>
+        In totale vi sono <strong>6 angoli congruenti ad α</strong> oltre ad α stesso (uno per ogni vertice opposto e uno corrispondente/alterno per ciascuna delle due altre intersezioni).<br><br>
+        <strong>Supplementare:</strong> <span class="fm">180° − 53° = 127°</span>. Ogni angolo adiacente ad α (stesso vertice) e ogni coniugato interno misura 127°.
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>Con tre rette parallele e una trasversale si formano 12 angoli in tutto. Ricorda che angoli opposti al vertice sono sempre congruenti.</p></details>
+  </div>
+
+  <!-- 35 -->
+  <div class="ex" id="ex35">
+    <div class="ex-header">
+      <span class="ex-num">35</span>
+      <span class="ex-type">Problema sintetico avanzato</span>
+      <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-c">Criterio</span><span class="tag tag-r">Ragionamento</span></div>
+    </div>
+    <div class="ex-body">
+      Due rette parallele r e s sono tagliate da due trasversali t₁ e t₂ che si incontrano nel punto P (tra le due rette). Gli angoli che t₁ e t₂ formano con r sono rispettivamente <strong>50°</strong> e <strong>70°</strong>. Calcola l'angolo ∠(t₁, t₂) = ∠P al vertice P del triangolo formato dalle due trasversali e dalla retta r. Spiega il metodo.
+    </div>
+    <div class="answer-area">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        ∠P = <input class="ans-num" type="number" id="ans35" placeholder="°"> °
+      </div>
+      <textarea class="ans-text" style="margin-top:0.5rem;" placeholder="Spiega il metodo usato..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-check" onclick="checkNum('ans35', 60, 'res35')">✓ Verifica</button>
+        <button class="btn btn-sol" onclick="toggleSol('sol35')">📖 Soluzione</button>
+      </div>
+      <div class="result" id="res35"></div>
+      <div class="sol-box" id="sol35">
+        t₁ e t₂ tagliano r formando angoli di 50° e 70°. Questi angoli più ∠P formano il triangolo. Per la somma degli angoli interni: <span class="fm">50° + 70° + ∠P = 180°</span> → <span class="fm">∠P = 60°</span>.<br>
+        In alternativa: per il teorema dell'angolo esterno, ∠P (angolo esterno al triangolo sul lato di s) = 50° + 70° = 120°... no: ∠P è interno, non esterno. Il metodo diretto (somma angoli) è quello corretto.
+      </div>
+    </div>
+    <details class="hint"><summary>Suggerimento</summary><p>t₁, t₂ e r formano un triangolo. Usa il teorema sulla somma degli angoli interni.</p></details>
+  </div>
+
+  <!-- BANNER FINALE -->
+  <div id="final-banner">
+    <h2>🎉 Scheda completata!</h2>
+    <div class="big-score" id="final-score-text">—</div>
+    <p style="margin-top:0.4rem;">Controlla le soluzioni per gli esercizi aperti e consolida i punti deboli.</p>
+  </div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════
+   GLOBAL SCORE
+═══════════════════════════════════════ */
+const autoChecks = {}; // id → boolean
+function updateGlobal() {
+  const done = Object.keys(autoChecks).length;
+  const ok   = Object.values(autoChecks).filter(Boolean).length;
+  document.getElementById('global-score').textContent = ok + ' / ' + done;
+  const pct = done ? (ok / done * 100) : 0;
+  document.getElementById('top-bar').style.width = pct + '%';
+  if (done >= 15) {
+    const banner = document.getElementById('final-banner');
+    banner.style.display = 'block';
+    document.getElementById('final-score-text').textContent = ok + ' / ' + done + ' corretti';
+  }
+}
+
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+function toggleSol(id) {
+  const b = document.getElementById(id);
+  b.classList.toggle('visible');
+}
+
+function checkNum(inputId, correct, resultId, tolerance=0) {
+  const v = parseFloat(document.getElementById(inputId).value);
+  const res = document.getElementById(resultId);
+  const exId = resultId.replace('res','ex');
+  if (isNaN(v)) {
+    res.textContent = '⚠ Inserisci un valore.'; res.className='result err'; return;
+  }
+  const ok = Math.abs(v - correct) <= tolerance;
+  res.textContent = ok ? '✓ Corretto!' : `✗ Non corretto. Riprova.`;
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks[exId] = ok;
+  const card = document.getElementById(exId);
+  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
+  updateGlobal();
+}
+
+function checkRadio(containerId, correctValue, resultId) {
+  const sel = document.querySelector(`#${containerId} input[type=radio]:checked`);
+  const res = document.getElementById(resultId);
+  const exId = resultId.replace('res','ex');
+  if (!sel) { res.textContent='⚠ Seleziona una risposta.'; res.className='result err'; return; }
+  const ok = sel.id === correctValue;
+  res.textContent = ok ? '✓ Esatto!' : '✗ Non corretto. Riprova.';
+  res.className = ok ? 'result ok' : 'result err';
+  // visual feedback
+  document.querySelectorAll(`#${containerId} .choice-label`).forEach(l => {
+    l.classList.remove('sel-ok','sel-err');
+    const inp = l.querySelector('input');
+    if (inp && inp.checked) l.classList.add(ok ? 'sel-ok' : 'sel-err');
+  });
+  autoChecks[exId] = ok;
+  const card = document.getElementById(exId);
+  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
+  updateGlobal();
+}
+
+function buildRadio(containerId, options) {
+  // options: [{id, text, correct?}]
+  const c = document.getElementById(containerId);
+  c.className = 'choices-grid two-col';
+  options.forEach(o => {
+    const label = document.createElement('label');
+    label.className = 'choice-label';
+    label.htmlFor = o.id;
+    label.innerHTML = `<input type="radio" name="${containerId}" id="${o.id}" value="${o.id}"> ${o.text}`;
+    c.appendChild(label);
+  });
+}
+
+function buildTFWidget(containerId, items) {
+  // items: [{text, ans:true/false}]
+  const c = document.getElementById(containerId);
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-row';
+    div.innerHTML = `<span class="tf-row-text">${item.text}</span>
+      <div class="tf-btns">
+        <button class="tf-btn v" id="${containerId}_v${i}" onclick="selectTF('${containerId}',${i},'v')">V</button>
+        <button class="tf-btn f" id="${containerId}_f${i}" onclick="selectTF('${containerId}',${i},'f')">F</button>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+const tfSelections = {};
+function selectTF(cid, i, val) {
+  const key = cid+'_'+i;
+  tfSelections[key] = val;
+  document.getElementById(cid+'_v'+i).classList.toggle('selected', val==='v');
+  document.getElementById(cid+'_f'+i).classList.toggle('selected', val==='f');
+}
+
+function checkTFWidget(containerId, items, resultId) {
+  let correct = 0;
+  items.forEach((item, i) => {
+    const key = containerId+'_'+i;
+    const sel = tfSelections[key];
+    if ((sel==='v') === item.ans) correct++;
+  });
+  const res = document.getElementById(resultId);
+  const exId = resultId.replace('res','ex');
+  const ok = correct === items.length;
+  res.textContent = ok
+    ? `✓ Perfetto! Tutte le risposte corrette.`
+    : `✗ ${correct} su ${items.length} corrette. Ricontrolla!`;
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks[exId] = ok;
+  const card = document.getElementById(exId);
+  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
+  updateGlobal();
+}
+
+/* ═══════════════════════════════════════
+   BUILD EXERCISES
+═══════════════════════════════════════ */
+
+// EX 6 — tf
+const tf6Items = [
+  { text: '«Se due rette formano angoli retti, allora sono perpendicolari.» IPOTESI: le rette formano angoli retti. TESI: r ⊥ s. ← Identificazione corretta?', ans: true },
+  { text: '«Se α + β = 180°, le rette sono parallele.» IPOTESI: le rette sono parallele. TESI: α + β = 180°. ← Identificazione corretta?', ans: false },
+  { text: '«Se il triangolo è equilatero, ogni angolo è 60°.» IPOTESI: triangolo equilatero. TESI: angoli = 60°. ← Identificazione corretta?', ans: true },
+];
+buildTFWidget('tf6-container', tf6Items);
+function checkTF6() { checkTFWidget('tf6-container', tf6Items, 'res6'); }
+
+// EX 8 — radio
+buildRadio('cg8', [
+  { id:'r8_a', text:'Formano almeno due angoli congruenti.' },
+  { id:'r8_b', text:'Formano quattro angoli retti.' },
+  { id:'r8_c', text:'Si incontrano in un punto.' },
+  { id:'r8_d', text:'Formano due coppie di angoli supplementari.' },
+]);
+
+// EX 9 — tf (completamento)
+const tf9Items = [
+  { text: 'Se r ⊥ s e t ⊥ s, allora r ∥ t. — VERO?', ans: true },
+  { text: 'Due rette perpendicolari possono essere anche parallele. — VERO?', ans: false },
+  { text: 'La perpendicolare a una retta per un punto dato è unica. — VERO?', ans: true },
+  { text: 'Se r e s si incontrano in O formando angoli di 45°, allora r ⊥ s. — VERO?', ans: false },
+];
+buildTFWidget('tf9-container', tf9Items);
+function checkTF9() { checkTFWidget('tf9-container', tf9Items, 'res9'); }
+
+// EX 10 — tf single
+const tf10Items = [
+  { text: '«Se due rette formano quattro angoli congruenti, allora sono perpendicolari.» — VERO?', ans: true }
+];
+buildTFWidget('tf10-container', tf10Items);
+function checkTF10() { checkTFWidget('tf10-container', tf10Items, 'res10'); }
+
+// EX 12
+function checkEx12() {
+  const a = parseInt(document.getElementById('ans12a').value);
+  const b = parseInt(document.getElementById('ans12b').value);
+  const c = parseInt(document.getElementById('ans12c').value);
+  const d = parseInt(document.getElementById('ans12d').value);
+  const res = document.getElementById('res12');
+  const ok = a===112 && b===112 && c===68 && d===68;
+  let msg = '';
+  if (a!==112) msg+='a) Alterno interno errato. ';
+  if (b!==112) msg+='b) Corrispondente errato. ';
+  if (c!==68)  msg+='c) Coniugato errato. ';
+  if (d!==68)  msg+='d) Supplementare errato. ';
+  res.textContent = ok ? '✓ Perfetto! Tutti gli angoli corretti.' : '✗ '+msg;
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks['ex12'] = ok;
+  document.getElementById('ex12').classList.toggle('answered-ok', ok);
+  document.getElementById('ex12').classList.toggle('answered-err', !ok);
+  updateGlobal();
+}
+
+// EX 14 — match
+const match14Defs = [
+  { text: 'Alterni interni (r ∥ s)', ans: 'Congruenti' },
+  { text: 'Corrispondenti (r ∥ s)',  ans: 'Congruenti' },
+  { text: 'Coniugati interni (r ∥ s)', ans: 'Supplementari' },
+  { text: 'Alterni esterni (r ∥ s)', ans: 'Congruenti' },
+  { text: 'Coniugati esterni (r ∥ s)', ans: 'Supplementari' },
+];
+const match14Opts = ['Congruenti','Supplementari','Nessuna delle due'];
+(function buildMatch14() {
+  const c = document.getElementById('match14');
+  match14Defs.forEach((item,i) => {
+    const row = document.createElement('div');
+    row.className = 'match-row';
+    const shuffled = [...match14Opts].sort(()=>Math.random()-0.5);
+    row.innerHTML = `<span>${item.text}</span>
+      <select id="m14_${i}">
+        <option value="">— scegli —</option>
+        ${shuffled.map(o=>`<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+    c.appendChild(row);
+  });
+})();
+function checkMatch14() {
+  let ok = 0;
+  match14Defs.forEach((item,i) => {
+    if ((document.getElementById('m14_'+i)||{}).value === item.ans) ok++;
+  });
+  const res = document.getElementById('res14');
+  const good = ok === match14Defs.length;
+  res.textContent = good ? '✓ Perfetto!' : `✗ ${ok}/${match14Defs.length} corretti.`;
+  res.className = good ? 'result ok' : 'result err';
+  autoChecks['ex14'] = good;
+  document.getElementById('ex14').classList.toggle('answered-ok', good);
+  document.getElementById('ex14').classList.toggle('answered-err', !good);
+  updateGlobal();
+}
+
+// EX 15
+function checkEx15() {
+  const x = parseInt(document.getElementById('ans15x').value);
+  const a = parseInt(document.getElementById('ans15a').value);
+  const b = parseInt(document.getElementById('ans15b').value);
+  const res = document.getElementById('res15');
+  const ok = x===24 && a===87 && b===93;
+  res.textContent = ok ? '✓ Perfetto!' : '✗ Qualcosa non torna. Ricalcola.';
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks['ex15'] = ok;
+  document.getElementById('ex15').classList.toggle('answered-ok', ok);
+  document.getElementById('ex15').classList.toggle('answered-err', !ok);
+  updateGlobal();
+}
+
+// EX 18
+function checkEx18() {
+  const x = parseInt(document.getElementById('ans18x').value);
+  const a = parseInt(document.getElementById('ans18a').value);
+  const res = document.getElementById('res18');
+  const ok = x===16 && a===70;
+  res.textContent = ok ? '✓ Corretto!' : '✗ Ricontrolla il calcolo.';
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks['ex18'] = ok;
+  document.getElementById('ex18').classList.toggle('answered-ok', ok);
+  document.getElementById('ex18').classList.toggle('answered-err', !ok);
+  updateGlobal();
+}
+
+// EX 21 — tf
+const tf21Items = [
+  { text: 'L\'angolo esterno di un triangolo è sempre maggiore di ciascun angolo interno non adiacente.', ans: true },
+  { text: 'Un angolo esterno di un triangolo può essere minore dell\'angolo interno adiacente.', ans: false },
+  { text: 'La somma di un angolo interno e del corrispondente angolo esterno è sempre 180°.', ans: true },
+  { text: 'In un triangolo rettangolo, l\'angolo esterno all\'angolo retto è 90°.', ans: true },
+];
+buildTFWidget('tf21-container', tf21Items);
+function checkTF21() { checkTFWidget('tf21-container', tf21Items, 'res21'); }
+
+// EX 23
+function checkEx23() {
+  const x = parseInt(document.getElementById('ans23x').value);
+  const a = parseInt(document.getElementById('ans23a').value);
+  const b = parseInt(document.getElementById('ans23b').value);
+  const cc = parseInt(document.getElementById('ans23c').value);
+  const res = document.getElementById('res23');
+  const ok = x===42 && a===42 && b===62 && cc===76;
+  res.textContent = ok ? '✓ Perfetto!' : '✗ Ricontrolla l\'equazione e i calcoli.';
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks['ex23'] = ok;
+  document.getElementById('ex23').classList.toggle('answered-ok', ok);
+  document.getElementById('ex23').classList.toggle('answered-err', !ok);
+  updateGlobal();
+}
+
+// EX 25 — match
+const match25Defs = [
+  { text: 'Due triangoli con due lati e l\'angolo fra essi compreso ordinatamente congruenti.', ans: 'I criterio di congruenza' },
+  { text: 'Due triangoli con due angoli e il lato compreso ordinatamente congruenti.', ans: 'II criterio di congruenza' },
+  { text: 'Triangoli rettangoli con ipotenusa e un cateto ordinatamente congruenti.', ans: 'Criterio di congruenza dei triangoli rettangoli' },
+  { text: 'Triangoli rettangoli con entrambi i cateti ordinatamente congruenti.', ans: 'I criterio di congruenza (caso particolare)' },
+  { text: 'Triangoli rettangoli con ipotenusa e un angolo acuto ordinatamente congruenti.', ans: 'II criterio di congruenza generalizzato' },
+];
+const match25Opts = [
+  'I criterio di congruenza',
+  'II criterio di congruenza',
+  'Criterio di congruenza dei triangoli rettangoli',
+  'I criterio di congruenza (caso particolare)',
+  'II criterio di congruenza generalizzato',
+];
+(function buildMatch25() {
+  const c = document.getElementById('match25');
+  match25Defs.forEach((item,i) => {
+    const row = document.createElement('div');
+    row.className = 'match-row';
+    const shuffled = [...match25Opts].sort(()=>Math.random()-0.5);
+    row.innerHTML = `<span>${item.text}</span>
+      <select id="m25_${i}">
+        <option value="">— scegli —</option>
+        ${shuffled.map(o=>`<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+    c.appendChild(row);
+  });
+})();
+function checkMatch25() {
+  let ok = 0;
+  match25Defs.forEach((item,i) => {
+    if ((document.getElementById('m25_'+i)||{}).value === item.ans) ok++;
+  });
+  const res = document.getElementById('res25');
+  const good = ok === match25Defs.length;
+  res.textContent = good ? '✓ Tutti gli abbinamenti corretti!' : `✗ ${ok}/${match25Defs.length} corretti.`;
+  res.className = good ? 'result ok' : 'result err';
+  autoChecks['ex25'] = good;
+  document.getElementById('ex25').classList.toggle('answered-ok', good);
+  document.getElementById('ex25').classList.toggle('answered-err', !good);
+  updateGlobal();
+}
+
+// EX 27 — tf
+const tf27Items = [
+  { text: 'Nel criterio di congruenza dei triangoli rettangoli, l\'angolo retto è già congruente per definizione e non va verificato esplicitamente.', ans: true },
+  { text: 'Il criterio di congruenza dei triangoli rettangoli (ipotenusa + cateto) vale anche per triangoli non rettangoli se si sostituisce "ipotenusa" con "lato maggiore".', ans: false },
+  { text: 'Due triangoli rettangoli con un cateto e un angolo acuto ordinatamente congruenti sono congruenti (II criterio generalizzato applicato ai rettangoli).', ans: true },
+  { text: 'Il I criterio di congruenza si può applicare direttamente ai triangoli rettangoli senza alcuna modifica.', ans: true },
+];
+buildTFWidget('tf27-container', tf27Items);
+function checkTF27() { checkTFWidget('tf27-container', tf27Items, 'res27'); }
+
+// EX 30
+function checkEx30() {
+  const c = parseInt(document.getElementById('ans30c').value);
+  const a = parseFloat(document.getElementById('ans30a').value);
+  const res = document.getElementById('res30');
+  const ok = c===65 && Math.abs(a-57.5)<=0.6;
+  res.textContent = ok ? '✓ Corretto!' : '✗ Ricalcola usando il teorema dell\'angolo esterno e l\'isoscelia.';
+  res.className = ok ? 'result ok' : 'result err';
+  autoChecks['ex30'] = ok;
+  document.getElementById('ex30').classList.toggle('answered-ok', ok);
+  document.getElementById('ex30').classList.toggle('answered-err', !ok);
+  updateGlobal();
+}
+
+// EX 32 — match angoli congruenti/supplementari
+const match32Defs = [
+  { text: 'Angoli 1 e 5 (corrispondenti)', ans: 'Congruenti (≅)' },
+  { text: 'Angoli 3 e 5 (alterni interni)', ans: 'Congruenti (≅)' },
+  { text: 'Angoli 1 e 7 (alterni esterni)', ans: 'Congruenti (≅)' },
+  { text: 'Angoli 3 e 6 (coniugati interni)', ans: 'Supplementari (suppl.)' },
+  { text: 'Angoli 2 e 7 (coniugati esterni)', ans: 'Supplementari (suppl.)' },
+  { text: 'Angoli 1 e 3 (opposti al vertice, stessa intersezione)', ans: 'Congruenti (≅)' },
+  { text: 'Angoli 1 e 2 (adiacenti, stessa intersezione)', ans: 'Supplementari (suppl.)' },
+  { text: 'Angoli 2 e 5 (non classificati tra le coppie standard)', ans: 'Né l\'uno né l\'altro' },
+];
+const match32Opts = ['Congruenti (≅)', 'Supplementari (suppl.)', 'Né l\'uno né l\'altro'];
+(function buildMatch32() {
+  const c = document.getElementById('match32');
+  match32Defs.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'match-row';
+    const shuffled = [...match32Opts].sort(() => Math.random() - 0.5);
+    row.innerHTML = `<span>${item.text}</span>
+      <select id="m32_${i}">
+        <option value="">— scegli —</option>
+        ${shuffled.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+    c.appendChild(row);
+  });
+})();
+function checkMatch32() {
+  let ok = 0;
+  match32Defs.forEach((item, i) => {
+    if ((document.getElementById('m32_' + i) || {}).value === item.ans) ok++;
+  });
+  const res = document.getElementById('res32');
+  const good = ok === match32Defs.length;
+  res.textContent = good ? '✓ Perfetto! Tutti gli angoli classificati correttamente.' : `✗ ${ok}/${match32Defs.length} corretti. Ricontrolla le definizioni.`;
+  res.className = good ? 'result ok' : 'result err';
+  autoChecks['ex32'] = good;
+  document.getElementById('ex32').classList.toggle('answered-ok', good);
+  document.getElementById('ex32').classList.toggle('answered-err', !good);
+  updateGlobal();
+}
+
+// EX 11 — overwrite checkNum for tolerance
+document.querySelector('[onclick="checkNum(\'ans11\', 27, \'res11\')"]')
+  .setAttribute('onclick', "checkNum('ans11', 27, 'res11', 0)");
+
+// initial render
+updateGlobal();
+</script>
+</body>
+</html>
