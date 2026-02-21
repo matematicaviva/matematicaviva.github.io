@@ -1,10 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-  <title>Il mio sito</title>
+  <meta charset="UTF-8">
+  <title>Il mio sito scolastico</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6fb;
+      color: #333;
+    }
+
+    header {
+      background-color: #6c63ff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #4e4abf;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ddd;
+      margin-top: 30px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Ciao! 🎉</h1>
-  <p>Questo è il mio primo sito su GitHub Pages.</p>
+
+<header>
+  <h1>Il mio sito scolastico 📚</h1>
+  <p>Appunti, materie e progetti</p>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#materie">Materie</a>
+  <a href="#appunti">Appunti</a>
+  <a href="#progetti">Progetti</a>
+</nav>
+
+<section id="home">
+  <h2>👋 Chi sono</h2>
+  <div class="card">
+    <p>Ciao! Questo è il mio sito dove raccolgo appunti e materiali scolastici.</p>
+  </div>
+</section>
+
+<section id="materie">
+  <h2>📖 Materie</h2>
+
+  <div class="card">
+    <h3>Matematica</h3>
+    <p>Appunti e esercizi di matematica.</p>
+  </div>
+
+  <div class="card">
+    <h3>Storia</h3>
+    <p>Riassunti e schemi.</p>
+  </div>
+
+</section>
+
+<section id="appunti">
+  <h2>📝 Appunti</h2>
+
+  <div class="card">
+    <p>📄 <a href="#">Scarica appunti di matematica</a></p>
+  </div>
+
+  <div class="card">
+    <p>📄 <a href="#">Scarica appunti di storia</a></p>
+  </div>
+
+</section>
+
+<section id="progetti">
+  <h2>💡 Progetti</h2>
+
+  <div class="card">
+    <h3>Ricerca di scienze</h3>
+    <p>Progetto sul sistema solare.</p>
+  </div>
+
+</section>
+
+<footer>
+  <p>© 2026 - Il mio sito</p>
+</footer>
+
 </body>
 </html>
