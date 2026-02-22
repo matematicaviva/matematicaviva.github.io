@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="it" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>I Quadrilateri - Lezione Interattiva</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Crimson Pro', Georgia, serif; background-color: #0f172a; }
+    
+    :root {
+      --bg-color: #0f172a;
+      --surface-color: #1e293b;
+      --text-color: #f1f5f9;
+      --primary-color: #f59e0b;
+      --secondary-color: #6366f1;
+    }
+    
+    #app { height: 100%; width: 100%; display: flex; flex-direction: column; }
+    
+    .mono-font { font-family: 'JetBrains Mono', monospace; }
+    
+    .geometric-pattern {
+      background-image: 
+        linear-gradient(30deg, rgba(99, 102, 241, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(99, 102, 241, 0.05) 87.5%),
+        linear-gradient(150deg, rgba(99, 102, 241, 0.05) 12%, transparent 12.5%, transparent 87%, rgba(99, 102, 241, 0.05) 87.5%);
+      background-size: 80px 140px;
+    }
+    
+    .slide-enter { animation: slideIn 0.5s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); } 50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.6); } }
+    
+    .shape-hover { transition: all 0.3s ease; }
+    .shape-hover:hover { transform: scale(1.05); filter: brightness(1.2); }
+    
+    .nav-btn { transition: all 0.2s ease; }
+    .nav-btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    
+    .theorem-box { border-left: 4px solid var(--primary-color); background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent); }
+    .definition-box { border-left: 4px solid var(--secondary-color); background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent); }
+    
+    .scroll-container { overflow-y: auto; overflow-x: hidden; flex: 1; }
+    
+    header { background-color: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--surface-color); }
+    footer { background-color: rgba(15, 23, 42, 0.9); border-top: 1px solid var(--surface-color); }
+    
+    main { flex: 1; overflow-y: auto; }
+    
+    /* Mobile Optimizations */
+    @media (max-width: 640px) {
+      html, body { font-size: 14px; }
+      
+      h1 { font-size: 1.1rem; }
+      h2 { font-size: 1.5rem; }
+      h3 { font-size: 1rem; }
+      h4 { font-size: 0.9rem; }
+      p { font-size: 0.9rem; }
+      
+      header { padding-left: 0.75rem; padding-right: 0.75rem; }
+      footer { padding-left: 0.75rem; padding-right: 0.75rem; }
+      
+      .max-w-6xl { max-width: 100%; }
+      .px-4 { padding-left: 0.75rem; padding-right: 0.75rem; }
+      .py-8 { padding-top: 1rem; padding-bottom: 1rem; }
+      .mb-8 { margin-bottom: 1rem; }
+      .mb-6 { margin-bottom: 1rem; }
+      
+      .text-4xl { font-size: 1.75rem; }
+      .text-3xl { font-size: 1.5rem; }
+      .text-2xl { font-size: 1.25rem; }
+      .text-xl { font-size: 1rem; }
+      .text-lg { font-size: 0.95rem; }
+      
+      .nav-btn { padding: 0.5rem 0.75rem; font-size: 0.8rem; }
+      .slide-dot { width: 2.5px !important; height: 2.5px !important; }
+      
+      .grid.md\:grid-cols-2 { grid-template-columns: 1fr; }
+      .grid.md\:grid-cols-3 { grid-template-columns: 1fr; }
+      .grid.grid-cols-2 { grid-template-columns: 1fr; }
+      
+      .gap-6 { gap: 1rem; }
+      .gap-4 { gap: 0.75rem; }
+      .p-6 { padding: 1rem; }
+      .p-4 { padding: 0.75rem; }
+      
+      .rounded-xl { border-radius: 0.75rem; }
+      .rounded-lg { border-radius: 0.5rem; }
+      
+      svg { max-width: 90vw; height: auto; }
+      
+      table { font-size: 0.8rem; }
+      table th, table td { padding: 0.5rem; }
+      
+      .flex.flex-wrap { gap: 0.5rem; }
+      
+      .hidden-mobile { display: none; }
+      
+      input, textarea, select { font-size: 16px; padding: 0.75rem; }
+      
+      .mono-font { font-size: 0.8rem; }
+    }
+    
+    @media (max-width: 480px) {
+      h1 { font-size: 1rem; }
+      h2 { font-size: 1.3rem; }
+      h3 { font-size: 0.9rem; }
+      
+      .text-4xl { font-size: 1.5rem; }
+      .text-3xl { font-size: 1.25rem; }
+      .text-2xl { font-size: 1.1rem; }
+      .text-xl { font-size: 0.95rem; }
+      
+      .nav-btn { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+      .p-6 { padding: 0.75rem; }
+      .p-4 { padding: 0.5rem; }
+      
+      .gap-6 { gap: 0.75rem; }
+      .mb-8 { margin-bottom: 0.75rem; }
+      
+      .flex.items-center.gap-3 { gap: 0.5rem; }
+      
+      .theorem-box, .definition-box { border-left-width: 3px; }
+      
+      table { font-size: 0.75rem; }
+      table th, table td { padding: 0.35rem; }
+    }
+    
+    /* Tablet */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .max-w-6xl { max-width: 95%; }
+    }
+  </style>
+ </head>
+ <body class="h-full" style="background-color: var(--bg-color);">
+  <div id="app" class="h-full w-full geometric-pattern"><!-- HEADER -->
+   <header class="sticky top-0 z-50 backdrop-blur-md flex-shrink-0">
+    <div class="w-full px-4 py-2 sm:py-3">
+     <div class="flex items-center justify-between mb-2 sm:mb-3">
+      <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+       <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: var(--primary-color);">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" style="color: var(--bg-color);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+        </svg>
+       </div>
+       <div class="min-w-0 flex-1">
+        <h1 id="header-title" class="text-sm sm:text-lg font-bold truncate" style="color: var(--text-color);">I Quadrilateri</h1>
+        <p class="text-xs" style="color: var(--secondary-color);">Lezione</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-1 ml-2"><button onclick="toggleFullscreen()" class="p-1.5 sm:p-2 rounded-lg hover:opacity-80" style="background-color: var(--surface-color); color: var(--text-color);" title="Fullscreen">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6v4m12-4h4v4M6 18h4v-4m12 4h-4v-4" />
+        </svg></button> <span id="slide-indicator" class="mono-font text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full" style="background-color: var(--surface-color); color: var(--primary-color);">1/9</span>
+      </div>
+     </div>
+     <div class="h-1" style="background-color: var(--surface-color);">
+      <div id="progress-bar" class="h-full transition-all duration-300" style="background-color: var(--primary-color); width: 11.11%;"></div>
+     </div>
+    </div>
+   </header><!-- MAIN CONTENT -->
+   <main class="flex-1 w-full overflow-auto">
+    <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8"><!-- SLIDE 1 -->
+     <section id="slide-1" class="slide-enter">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 1</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Attivazione delle Conoscenze</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Richiamiamo insieme ciò che già sappiamo</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2" style="color: var(--primary-color);"><span>❓</span> Domande</h3>
+        <ul class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <li class="flex gap-2 sm:gap-3"><span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background-color: var(--primary-color); color: var(--bg-color);">1</span> <span>Cos'è un <strong>poligono</strong>?</span></li>
+         <li class="flex gap-2 sm:gap-3"><span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background-color: var(--primary-color); color: var(--bg-color);">2</span> <span>Differenza tra <strong>triangolo</strong> e <strong>quadrilatero</strong>?</span></li>
+         <li class="flex gap-2 sm:gap-3"><span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background-color: var(--primary-color); color: var(--bg-color);">3</span> <span>Cosa sono <strong>lato, angolo, diagonale</strong>?</span></li>
+         <li class="flex gap-2 sm:gap-3"><span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background-color: var(--primary-color); color: var(--bg-color);">4</span> <span>Somma angoli triangolo?</span></li>
+        </ul>
+       </div>
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2" style="color: var(--secondary-color);"><span>💡</span> Brainstorming</h3>
+        <p class="text-sm mb-2" style="color: var(--text-color);">Forme a 4 lati:</p>
+        <div id="brainstorm-area" class="min-h-16 sm:min-h-24 rounded-lg p-3 mb-3" style="background-color: var(--bg-color);">
+         <div class="flex flex-wrap gap-2" id="tags-container"></div>
+        </div>
+        <div class="flex gap-2"><input type="text" id="tag-input" placeholder="Es: quadrato..." class="flex-1 px-2 sm:px-3 py-2 rounded-lg border-2 focus:outline-none transition-colors text-sm" style="background-color: var(--bg-color); border-color: var(--surface-color); color: var(--text-color);" onkeypress="if(event.key==='Enter')addTag()"> <button onclick="addTag()" class="px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-80 text-sm" style="background-color: var(--secondary-color); color: var(--text-color);">+</button>
+        </div>
+       </div>
+      </div>
+      <div class="theorem-box rounded-xl p-4 sm:p-6">
+       <h3 class="text-base sm:text-xl font-bold mb-3 flex items-center gap-2" style="color: var(--primary-color);"><span>🎯</span> Obiettivi</h3>
+       <div class="grid md:grid-cols-3 gap-3 sm:gap-4 text-sm sm:text-base" style="color: var(--text-color);">
+        <div class="flex items-start gap-2">
+         <span style="color: var(--primary-color);">✓</span> <span>Proprietà dei quadrilateri</span>
+        </div>
+        <div class="flex items-start gap-2">
+         <span style="color: var(--primary-color);">✓</span> <span>Classificazione</span>
+        </div>
+        <div class="flex items-start gap-2">
+         <span style="color: var(--primary-color);">✓</span> <span>Piccolo Teorema di Talete</span>
+        </div>
+       </div>
+      </div>
+     </section><!-- SLIDE 2 -->
+     <section id="slide-2" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 2</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Definizione di Quadrilatero</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Le basi fondamentali</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-8">
+       <div>
+        <div class="definition-box rounded-xl p-4 sm:p-6 mb-4">
+         <h3 class="text-base sm:text-xl font-bold mb-3" style="color: var(--secondary-color);">📐 Definizione</h3>
+         <p class="text-sm sm:text-base" style="color: var(--text-color);">Un <strong>quadrilatero</strong> è un poligono con <strong>quattro lati</strong> e <strong>quattro vertici</strong>.</p>
+        </div>
+        <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+         <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">📊 Elementi</h3>
+         <ul class="space-y-2 text-sm sm:text-base" style="color: var(--text-color);">
+          <li class="flex items-center gap-2 sm:gap-3"><span class="w-2 h-2 rounded-full" style="background-color: var(--primary-color);"></span> <strong>4 Vertici</strong></li>
+          <li class="flex items-center gap-2 sm:gap-3"><span class="w-2 h-2 rounded-full" style="background-color: var(--secondary-color);"></span> <strong>4 Lati</strong></li>
+          <li class="flex items-center gap-2 sm:gap-3"><span class="w-2 h-2 rounded-full" style="background-color: var(--primary-color);"></span> <strong>4 Angoli</strong></li>
+          <li class="flex items-center gap-2 sm:gap-3"><span class="w-2 h-2 rounded-full" style="background-color: var(--secondary-color);"></span> <strong>2 Diagonali</strong></li>
+         </ul>
+        </div>
+       </div>
+       <div class="flex flex-col items-center justify-center">
+        <svg viewbox="0 0 300 250" class="w-full max-w-xs sm:max-w-md shape-hover" style="max-height: 200px;"><polygon points="50,180 100,50 250,80 220,200" fill="none" stroke="var(--secondary-color)" stroke-width="3" /> <line x1="50" y1="180" x2="250" y2="80" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="8,4" /> <line x1="100" y1="50" x2="220" y2="200" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="8,4" /> <circle cx="50" cy="180" r="6" fill="var(--primary-color)" /> <circle cx="100" cy="50" r="6" fill="var(--primary-color)" /> <circle cx="250" cy="80" r="6" fill="var(--primary-color)" /> <circle cx="220" cy="200" r="6" fill="var(--primary-color)" /> <text x="35" y="200" fill="var(--text-color)" font-size="16" font-weight="bold">
+          A
+         </text> <text x="95" y="40" fill="var(--text-color)" font-size="16" font-weight="bold">
+          B
+         </text> <text x="260" y="85" fill="var(--text-color)" font-size="16" font-weight="bold">
+          C
+         </text> <text x="230" y="215" fill="var(--text-color)" font-size="16" font-weight="bold">
+          D
+         </text>
+        </svg>
+       </div>
+      </div>
+      <div class="theorem-box rounded-xl p-4 sm:p-6">
+       <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2" style="color: var(--primary-color);"><span>📏</span> Somma Angoli Interni</h3>
+       <div class="grid md:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base">
+        <div style="color: var(--text-color);">
+         <p class="mb-2 sm:mb-4">La somma è sempre <strong style="color: var(--primary-color);">360°</strong></p>
+         <div class="mono-font text-lg sm:text-2xl text-center p-3 rounded-lg" style="background-color: var(--bg-color);">
+          α + β + γ + δ = <span style="color: var(--primary-color);">360°</span>
+         </div>
+        </div>
+        <div style="color: var(--text-color);">
+         <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Dimostrazione:</h4>
+         <p>Una diagonale divide il quadrilatero dato in <strong>due triangoli</strong>. Ogni triangolo = 180°</p>
+         <p class="mono-font mt-2 text-center" style="color: var(--primary-color);">180° + 180° = 360°</p>
+        </div>
+       </div>
+      </div>
+     </section><!-- SLIDE 3 -->
+     <section id="slide-3" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 3</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Classificazione dei Quadrilateri</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">I trapezi</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">🔷 Trapezio Generico</h3>
+        <div class="definition-box rounded-lg p-3 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Una solo coppia di lati paralleli</strong>.</p>
+        </div>
+        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <div>
+          <h4 class="font-bold" style="color: var(--secondary-color);">Proprietà:</h4>
+          <ul class="list-disc list-inside ml-2 space-y-1 text-xs sm:text-sm">
+           <li>Una coppia di lati paralleli</li>
+           <li>Angoli adiacenti allo stesso lato obliquo supplementari</li>
+          </ul>
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <p class="mono-font text-xs sm:text-sm">Area = (B + b) × h / 2</p>
+         </div>
+        </div>
+       </div>
+       <div class="flex items-center justify-center">
+        <svg viewbox="0 0 280 180" class="w-full max-w-xs shape-hover" style="max-height: 150px;"><polygon points="40,140 80,40 200,40 240,140" fill="rgba(99, 102, 241, 0.2)" stroke="var(--secondary-color)" stroke-width="3" /> <line x1="140" y1="40" x2="140" y2="140" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="5,3" /> <text x="145" y="95" fill="var(--primary-color)" font-size="14">
+          h
+         </text> <text x="130" y="25" fill="var(--text-color)" font-size="14">
+          b
+         </text> <text x="130" y="160" fill="var(--text-color)" font-size="14">
+          B
+         </text>
+        </svg>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">🔶 Trapezio Isoscele</h3>
+        <div class="definition-box rounded-lg p-2 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);">Lati obliqui <strong>congruenti</strong>.</p>
+        </div>
+        <ul class="space-y-1 text-sm sm:text-base" style="color: var(--text-color);">
+         <li>✓ Angoli alla base congruenti</li>
+         <li>✓ Diagonali congeruenti</li>
+         <li>✓ Ha simmetria</li>
+        </ul>
+        <svg viewbox="0 0 200 120" class="w-full max-w-xs mt-3 shape-hover" style="max-height: 100px;"><polygon points="30,100 60,20 140,20 170,100" fill="rgba(245, 158, 11, 0.2)" stroke="var(--primary-color)" stroke-width="2" /> <line x1="100" y1="10" x2="100" y2="110" stroke="var(--secondary-color)" stroke-width="1" stroke-dasharray="4,2" />
+        </svg>
+       </div>
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">🔷 Trapezio Rettangolo</h3>
+        <div class="definition-box rounded-lg p-2 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Due angoli retti</strong>.</p>
+        </div>
+        <ul class="space-y-1 text-sm sm:text-base" style="color: var(--text-color);">
+         <li>✓ Lato perpendicolare</li>
+         <li>✓ Due angoli retti</li>
+         <li>✓ Altezza = lato</li>
+        </ul>
+        <svg viewbox="0 0 200 120" class="w-full max-w-xs mt-3 shape-hover" style="max-height: 100px;"><polygon points="30,100 30,20 140,20 170,100" fill="rgba(99, 102, 241, 0.2)" stroke="var(--secondary-color)" stroke-width="2" /> <rect x="30" y="80" width="15" height="15" fill="none" stroke="var(--primary-color)" stroke-width="1" /> <rect x="30" y="20" width="15" height="15" fill="none" stroke="var(--primary-color)" stroke-width="1" />
+        </svg>
+       </div>
+      </div>
+     </section><!-- SLIDE 4 -->
+     <section id="slide-4" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 3</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Parallelogramma e Rettangolo</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Proprietà e caratteristiche</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">▱ Parallelogramma</h3>
+        <div class="definition-box rounded-lg p-3 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Lati opposti paralleli</strong>.</p>
+        </div>
+        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <div>
+          <h4 class="font-bold" style="color: var(--secondary-color);">Proprietà:</h4>
+          <ul class="list-disc list-inside ml-2 space-y-1 text-xs sm:text-sm">
+            <li>Lati opposti congruenti</li>
+           <li>Angoli opposti congruenti</li>
+           <li>Angoli consecutivi supplementari</li>
+           <li>Diagonali si intersecano nel loro punto medio</li>
+          </ul>
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <p class="mono-font text-xs sm:text-sm">Area = base × altezza</p>
+         </div>
+        </div>
+       </div>
+       <div class="flex items-center justify-center">
+        <svg viewbox="0 0 240 140" class="w-full max-w-xs shape-hover" style="max-height: 120px;"><polygon points="40,110 80,30 200,30 160,110" fill="rgba(99, 102, 241, 0.2)" stroke="var(--secondary-color)" stroke-width="3" /> <line x1="40" y1="110" x2="200" y2="30" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="5,3" /> <line x1="80" y1="30" x2="160" y2="110" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="5,3" /> <circle cx="120" cy="70" r="4" fill="var(--primary-color)" />
+        </svg>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-8">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">▭ Rettangolo</h3>
+        <div class="definition-box rounded-lg p-3 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Angoli retti</strong>.</p>
+        </div>
+        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <div>
+          <h4 class="font-bold" style="color: var(--secondary-color);">Proprietà:</h4>
+          <ul class="list-disc list-inside ml-2 space-y-1 text-xs sm:text-sm">
+            <li>E' un parallelogramma</li>
+           <li>Diagonali congruenti</li>
+           <li>Le diagonali si intersecano nel loro punto medio</li>
+           
+          </ul>
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <p class="mono-font text-xs sm:text-sm">Area = b × h</p>
+          <p class="mono-font text-xs sm:text-sm">Diag. = √(b² + h²)</p>
+         </div>
+        </div>
+       </div>
+       <div class="flex items-center justify-center">
+        <svg viewbox="0 0 240 140" class="w-full max-w-xs shape-hover" style="max-height: 120px;"><rect x="40" y="30" width="160" height="80" fill="rgba(245, 158, 11, 0.2)" stroke="var(--primary-color)" stroke-width="3" /> <line x1="40" y1="30" x2="200" y2="110" stroke="var(--secondary-color)" stroke-width="2" stroke-dasharray="5,3" /> <line x1="200" y1="30" x2="40" y2="110" stroke="var(--secondary-color)" stroke-width="2" stroke-dasharray="5,3" /> <circle cx="120" cy="70" r="4" fill="var(--primary-color)" /> <rect x="40" y="30" width="10" height="10" fill="none" stroke="var(--text-color)" stroke-width="1" />
+        </svg>
+       </div>
+      </div>
+     </section><!-- SLIDE 5 -->
+     <section id="slide-5" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 3</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Rombo e Quadrato</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">I quadrilateri equilateri</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">◇ Rombo</h3>
+        <div class="definition-box rounded-lg p-3 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Quattro lati congruenti</strong>.</p>
+        </div>
+        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <div>
+          <h4 class="font-bold" style="color: var(--secondary-color);">Proprietà:</h4>
+          <ul class="list-disc list-inside ml-2 space-y-1 text-xs sm:text-sm">
+            <li>E' un parallelogramma</li>
+           <li>Diagonali perpendicolari</li>           
+           <li>Le diagonali sono bisettrici degli angoli interni</li>
+          </ul>
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <p class="mono-font text-xs sm:text-sm">Area = (d₁ × d₂) / 2</p>
+         </div>
+        </div>
+        <svg viewbox="0 0 200 160" class="w-full max-w-xs mt-3 shape-hover" style="max-height: 140px;"><polygon points="100,10 180,80 100,150 20,80" fill="rgba(99, 102, 241, 0.2)" stroke="var(--secondary-color)" stroke-width="3" /> <line x1="100" y1="10" x2="100" y2="150" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="5,3" /> <line x1="20" y1="80" x2="180" y2="80" stroke="var(--primary-color)" stroke-width="2" stroke-dasharray="5,3" /> <circle cx="100" cy="80" r="4" fill="var(--primary-color)" />
+        </svg>
+       </div>
+       <div class="rounded-xl p-4 sm:p-6 pulse-glow" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">◼ Quadrato</h3>
+        <div class="definition-box rounded-lg p-3 mb-3">
+         <p class="text-sm sm:text-base" style="color: var(--text-color);"><strong>Lati congruenti e angoli retti</strong>.</p>
+        </div>
+        <div class="space-y-2 sm:space-y-3 text-sm sm:text-base" style="color: var(--text-color);">
+         <div>
+          <h4 class="font-bold" style="color: var(--secondary-color);">Il quadrato è:</h4>
+          <ul class="list-disc list-inside ml-2 space-y-1 text-xs sm:text-sm">
+           <li>Rettangolo e rombo</li>           
+          </ul>
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <p class="mono-font text-xs sm:text-sm">Area = l²</p>
+          <p class="mono-font text-xs sm:text-sm">Diag. = l√2</p>
+         </div>
+        </div>
+        <svg viewbox="0 0 200 160" class="w-full max-w-xs mt-3 shape-hover" style="max-height: 140px;"><rect x="40" y="20" width="120" height="120" fill="rgba(245, 158, 11, 0.2)" stroke="var(--primary-color)" stroke-width="3" /> <line x1="40" y1="20" x2="160" y2="140" stroke="var(--secondary-color)" stroke-width="2" stroke-dasharray="5,3" /> <line x1="160" y1="20" x2="40" y2="140" stroke="var(--secondary-color)" stroke-width="2" stroke-dasharray="5,3" /> <circle cx="100" cy="80" r="4" fill="var(--primary-color)" /> <rect x="40" y="20" width="12" height="12" fill="none" stroke="var(--text-color)" stroke-width="1" />
+        </svg>
+       </div>
+      </div>
+     </section><!-- SLIDE 6 -->
+     <section id="slide-6" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 4</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Relazioni Gerarchiche</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Come sono collegati?</p>
+      </div>
+      <div class="rounded-xl p-4 sm:p-6 mb-6 sm:mb-8" style="background-color: var(--surface-color);">
+       <h3 class="text-base sm:text-xl font-bold mb-4 sm:mb-8 text-center" style="color: var(--primary-color);">📊 Mappa</h3>
+       <div class="flex justify-center overflow-x-auto">
+<svg viewBox="0 0 700 520" class="w-full max-w-2xl">
+
+  <!-- ========== LIVELLO 1 ========== -->
+  <!-- QUADRILATERO -->
+  <rect x="260" y="30" width="160" height="50" rx="12"
+        fill="none" stroke="var(--text-color)" stroke-width="2"/>
+  <text x="340" y="55"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="18" font-weight="bold"
+        fill="var(--text-color)">
+    QUADRILATERO
+  </text>
+
+  <!-- ========== LIVELLO 2 ========== -->
+  <!-- TRAPEZIO -->
+  <rect x="60" y="140" width="160" height="50" rx="12"
+        fill="none" stroke="var(--secondary-color)" stroke-width="2"/>
+  <text x="140" y="165"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="16" font-weight="bold"
+        fill="var(--text-color)">
+    TRAPEZIO
+  </text>
+
+  <!-- PARALLELOGRAMMA -->
+  <rect x="450" y="140" width="160" height="50" rx="12"
+        fill="none" stroke="var(--primary-color)" stroke-width="2"/>
+  <text x="530" y="165"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="16" font-weight="bold"
+        fill="var(--text-color)">
+    PARALLELOGRAMMA
+  </text>
+
+  <!-- ========== LIVELLO 3 ========== -->
+  <!-- RETTANGOLO (spostato ancora a destra) -->
+  <rect x="320" y="260" width="160" height="50" rx="12"
+        fill="none" stroke="var(--primary-color)" stroke-width="2"/>
+  <text x="400" y="285"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="16" font-weight="bold"
+        fill="var(--text-color)">
+    RETTANGOLO
+  </text>
+
+  <!-- ROMBO (spostato ancora a destra) -->
+  <rect x="480" y="260" width="160" height="50" rx="12"
+        fill="none" stroke="var(--primary-color)" stroke-width="2"/>
+  <text x="560" y="285"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="16" font-weight="bold"
+        fill="var(--text-color)">
+    ROMBO
+  </text>
+
+  <!-- ========== LIVELLO 4 ========== -->
+  <!-- QUADRATO -->
+  <rect x="400" y="390" width="160" height="55" rx="14"
+        fill="none" stroke="var(--primary-color)" stroke-width="3"/>
+  <text x="480" y="417"
+        text-anchor="middle" dominant-baseline="middle"
+        font-size="18" font-weight="bold"
+        fill="var(--primary-color)">
+    QUADRATO
+  </text>
+
+  <!-- ================== FRECCE ================== -->
+
+  <!-- Quadrilatero → Trapezio -->
+  <line x1="340" y1="80" x2="140" y2="140"
+        stroke="var(--secondary-color)" stroke-width="3"/>
+  <polygon points="140,140 132,128 148,128"
+           fill="var(--secondary-color)"/>
+
+  <!-- Quadrilatero → Parallelogramma -->
+  <line x1="340" y1="80" x2="530" y2="140"
+        stroke="var(--primary-color)" stroke-width="3"/>
+  <polygon points="530,140 522,128 538,128"
+           fill="var(--primary-color)"/>
+
+  <!-- Parallelogramma → Rettangolo -->
+  <line x1="530" y1="190" x2="400" y2="260"
+        stroke="var(--primary-color)" stroke-width="3"/>
+  <polygon points="400,260 392,248 408,248"
+           fill="var(--primary-color)"/>
+
+  <!-- Parallelogramma → Rombo -->
+  <line x1="530" y1="190" x2="560" y2="260"
+        stroke="var(--primary-color)" stroke-width="3"/>
+  <polygon points="560,260 552,248 568,248"
+           fill="var(--primary-color)"/>
+
+  <!-- Rettangolo → Quadrato -->
+  <line x1="400" y1="310" x2="480" y2="390"
+        stroke="var(--primary-color)" stroke-width="3"/>
+  <polygon points="480,390 472,378 488,378"
+           fill="var(--primary-color)"/>
+
+  <!-- Rombo → Quadrato -->
+  <line x1="560" y1="310" x2="480" y2="390"
+        stroke="var(--primary-color)" stroke-width="3"/>
+  <polygon points="480,390 472,378 488,378"
+           fill="var(--primary-color)"/>
+
+</svg>
+
+
+
+
+       </div>
+      </div>
+      <div class="rounded-xl p-4 sm:p-6 mb-4 sm:mb-8" style="background-color: var(--surface-color);">
+       <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">✓✗ Verifica</h3>
+       <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm sm:text-base" style="color: var(--text-color);">
+         <thead>
+          <tr style="border-bottom: 2px solid var(--primary-color);">
+           <th class="py-2 px-2 sm:px-3 sm:py-3">Affermazione</th>
+           <th class="py-2 px-2 sm:px-3 sm:py-3 text-center">V/F</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr style="border-bottom: 1px solid var(--surface-color);">
+           <td class="py-2 px-2 sm:py-3 sm:px-3">Ogni Quadrato è rettangolo?</td>
+           <td class="py-2 px-2 sm:py-3 sm:px-3 text-center font-bold" style="color: #22c55e;">✓</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--surface-color);">
+           <td class="py-2 px-2 sm:py-3 sm:px-3">Ogni Quadrato è rombo?</td>
+           <td class="py-2 px-2 sm:py-3 sm:px-3 text-center font-bold" style="color: #22c55e;">✓</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--surface-color);">
+           <td class="py-2 px-2 sm:py-3 sm:px-3">Ogni Rettangolo è quadrato?</td>
+           <td class="py-2 px-2 sm:py-3 sm:px-3 text-center font-bold" style="color: #ef4444;">✗</td>
+          </tr>
+          <tr>
+           <td class="py-2 px-2 sm:py-3 sm:px-3">Ogni Trapezio è parallelogramma?</td>
+           <td class="py-2 px-2 sm:py-3 sm:px-3 text-center font-bold" style="color: #ef4444;">✗</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </section><!-- SLIDE 7 -->
+     <section id="slide-7" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 5</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Piccolo Teorema di Talete</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Rette parallele e segmenti</p>
+      </div>
+      <div class="theorem-box rounded-xl p-4 sm:p-6 mb-4 sm:mb-8">
+       <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2" style="color: var(--primary-color);"><span>📜</span> Enunciato</h3>
+       <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+        <p class="text-sm sm:text-base leading-relaxed" style="color: var(--text-color);"><em>"A segmenti <strong>congruenti</strong> su una trasversale, corrispondono segmenti <strong>congruenti</strong> sull'altra trasversale."</em></p>
+       </div>
+      </div>
+      <div class="rounded-xl p-4 sm:p-6 mb-4 sm:mb-8" style="background-color: var(--surface-color);">
+       <h3 class="text-base sm:text-xl font-bold mb-3" style="color: var(--secondary-color);">📐 Rappresentazione</h3>
+       <div class="flex items-center justify-center overflow-x-auto">
+       <svg viewBox="0 0 260 200" class="w-full max-w-sm">
+
+  <!-- Parallele -->
+  <line x1="20" y1="40" x2="240" y2="40"
+        stroke="var(--primary-color)" stroke-width="2"/>
+  <line x1="20" y1="80" x2="240" y2="80"
+        stroke="var(--primary-color)" stroke-width="2"/>
+  <line x1="20" y1="120" x2="240" y2="120"
+        stroke="var(--primary-color)" stroke-width="2"/>
+
+  <!-- Trasversali -->
+  <line x1="70" y1="15" x2="110" y2="160"
+        stroke="var(--secondary-color)" stroke-width="2"/>
+  <line x1="160" y1="15" x2="200" y2="160"
+        stroke="var(--secondary-color)" stroke-width="2"/>
+
+  <!-- Intersezioni sinistra -->
+  <text x="75" y="40" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">A</text>
+  <text x="85" y="80" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">B</text>
+  <text x="95" y="120" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">C</text>
+
+  <!-- Intersezioni destra -->
+  <text x="165" y="40" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">A'</text>
+  <text x="175" y="80" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">B'</text>
+  <text x="185" y="120" text-anchor="middle" dominant-baseline="middle"
+        font-weight="bold" fill="var(--text-color)">C'</text>
+
+  <!-- Proporzione -->
+  <text x="130" y="185"
+        text-anchor="middle"
+        font-size="16"
+        font-weight="bold"
+        fill="var(--primary-color)">
+        AB = BC ⇒ A'B' = B'C' ✓
+      
+   
+  </text>
+
+</svg>
+
+
+       </div>
+      </div>
+      <div class="rounded-xl p-4 sm:p-6 mb-4" style="background-color: var(--surface-color);">
+       <h3 class="text-base sm:text-xl font-bold mb-3 flex items-center gap-2" style="color: var(--primary-color);"><span>🔗</span> Punto Medio</h3>
+       <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+        <div class="flex items-center justify-center">
+         <svg viewbox="0 0 280 240" class="w-full max-w-xs shape-hover" style="max-height: 180px;"><polygon points="40,190 140,30 240,190" fill="rgba(245, 158, 11, 0.1)" stroke="var(--secondary-color)" stroke-width="3" /> <circle cx="90" cy="110" r="6" fill="var(--primary-color)" /> <line x1="90" y1="110" x2="190" y2="110" stroke="var(--primary-color)" stroke-width="3" /> <circle cx="190" cy="110" r="6" fill="var(--primary-color)" /> <circle cx="40" cy="190" r="4" fill="var(--secondary-color)" /> <circle cx="140" cy="30" r="4" fill="var(--secondary-color)" /> <circle cx="240" cy="190" r="4" fill="var(--secondary-color)" /> <text x="25" y="210" fill="var(--text-color)" font-size="12" font-weight="bold">A</text> <text x="130" y="15" fill="var(--text-color)" font-size="12" font-weight="bold">B</text> <text x="235" y="210" fill="var(--text-color)" font-size="12" font-weight="bold">C</text> <text x="65" y="125" fill="var(--primary-color)" font-size="12" font-weight="bold">M</text> <text x="165" y="125" fill="var(--primary-color)" font-size="12" font-weight="bold">N</text>
+         </svg>
+        </div>
+        <div class="text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="definition-box rounded-lg p-3 mb-3">
+          <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Teorema:</h4>
+          <p>M punto medio di AB, MN ∥ AC → N punto medio di BC</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color); color: var(--primary-color);">
+          <p class="mono-font text-xs sm:text-sm">AM = MB → CN = NB ✓</p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+       <h3 class="text-base sm:text-xl font-bold mb-3 flex items-center gap-2" style="color: var(--secondary-color);"><span>🔗</span> Punti Medi</h3>
+       <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+        <div class="flex items-center justify-center">
+         <svg viewbox="0 0 280 240" class="w-full max-w-xs shape-hover" style="max-height: 180px;"><polygon points="40,190 140,30 240,190" fill="rgba(99, 102, 241, 0.1)" stroke="var(--secondary-color)" stroke-width="3" /> <circle cx="90" cy="110" r="6" fill="var(--primary-color)" /> <circle cx="190" cy="110" r="6" fill="var(--primary-color)" /> <line x1="90" y1="110" x2="190" y2="110" stroke="var(--primary-color)" stroke-width="3" /> <circle cx="40" cy="190" r="4" fill="var(--secondary-color)" /> <circle cx="140" cy="30" r="4" fill="var(--secondary-color)" /> <circle cx="240" cy="190" r="4" fill="var(--secondary-color)" /> <text x="25" y="210" fill="var(--text-color)" font-size="12" font-weight="bold">A</text> <text x="130" y="15" fill="var(--text-color)" font-size="12" font-weight="bold">B</text> <text x="235" y="210" fill="var(--text-color)" font-size="12" font-weight="bold">C</text> <text x="65" y="130" fill="var(--primary-color)" font-size="12" font-weight="bold">M</text> <text x="165" y="130" fill="var(--primary-color)" font-size="12" font-weight="bold">N</text>
+         </svg>
+        </div>
+        <div class="text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="definition-box rounded-lg p-3 mb-3">
+          <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Teorema:</h4>
+          <p>Il segmento che congiunge i punti medi di due lati è parallelo al terzo lato e congruente alla sua metà</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color); color: var(--primary-color);">
+          <p class="mono-font text-xs sm:text-sm">MN ∥ AC</p>
+          <p class="mono-font text-xs sm:text-sm">MN = AC / 2 ✓</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </section><!-- SLIDE 8 -->
+     <section id="slide-8" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 6</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Esercizi Guidati</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Impariamo insieme</p>
+      </div>
+      <div class="space-y-3 sm:space-y-4">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <div class="flex items-center gap-2 sm:gap-3 mb-3"><span class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background-color: var(--primary-color); color: var(--bg-color);">1</span>
+         <h3 class="text-base sm:text-xl font-bold" style="color: var(--primary-color);">Angoli Parallelogramma</h3>
+        </div>
+        <div class="definition-box rounded-lg p-3 mb-2 text-sm sm:text-base">
+         <p style="color: var(--text-color);"><strong>Problema:</strong> Angolo A = 70°. Calcola gli altri angoli.</p>
+        </div>
+        <div class="space-y-2 text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="flex items-start gap-2">
+          <span class="font-bold" style="color: var(--secondary-color);">→</span> <span>Angoli opposti: A = C = 70°</span>
+         </div>
+         <div class="p-2 rounded-lg mono-font text-xs sm:text-sm" style="background-color: var(--bg-color); color: var(--primary-color);">
+          B = 180° - 70° = 110°
+         </div>
+         <div class="theorem-box rounded-lg p-2">
+          <strong>Risposta:</strong> 70°, 110°, 70°, 110°
+         </div>
+        </div>
+       </div>
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <div class="flex items-center gap-2 sm:gap-3 mb-3"><span class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background-color: var(--primary-color); color: var(--bg-color);">2</span>
+         <h3 class="text-base sm:text-xl font-bold" style="color: var(--primary-color);">Area Trapezio</h3>
+        </div>
+        <div class="definition-box rounded-lg p-3 mb-2 text-sm sm:text-base">
+         <p style="color: var(--text-color);"><strong>Problema:</strong> B=12 cm, b=8 cm, h=5 cm. Calcola area.</p>
+        </div>
+        <div class="p-2 rounded-lg mono-font text-xs sm:text-sm" style="background-color: var(--bg-color); color: var(--primary-color); margin-bottom: 0.5rem;">
+         Area = (12 + 8) × 5 / 2 = 50 cm²
+        </div>
+        <div class="theorem-box rounded-lg p-2 text-sm sm:text-base">
+         <strong>Risposta:</strong> 50 cm²
+        </div>
+       </div>
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <div class="flex items-center gap-2 sm:gap-3 mb-3"><span class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background-color: var(--secondary-color); color: var(--bg-color);">3</span>
+         <h3 class="text-base sm:text-xl font-bold" style="color: var(--secondary-color);">Punti Medi</h3>
+        </div>
+        <div class="definition-box rounded-lg p-3 mb-2 text-sm sm:text-base">
+         <p style="color: var(--text-color);"><strong>Problema:</strong> BC = 10 cm. Quanto misura MN?</p>
+        </div>
+        <div class="p-2 rounded-lg mono-font text-xs sm:text-sm" style="background-color: var(--bg-color); color: var(--primary-color); margin-bottom: 0.5rem;">
+         MN = 10 / 2 = 5 cm
+        </div>
+        <div class="theorem-box rounded-lg p-2 text-sm sm:text-base">
+         <strong>Risposta:</strong> 5 cm
+        </div>
+       </div>
+      </div>
+     </section><!-- SLIDE 9 -->
+     <section id="slide-9" class="slide-enter hidden">
+      <div class="text-center mb-6 sm:mb-8"><span class="inline-block px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4" style="background-color: var(--secondary-color); color: var(--text-color);">FASE 7</span>
+       <h2 class="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2" style="color: var(--text-color);">Quiz Finale</h2>
+       <p class="text-sm sm:text-xl" style="color: var(--primary-color);">Metti alla prova le tue conoscenze!</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8"><button onclick="showLevel('base')" id="btn-base" class="px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all text-xs sm:text-sm" style="background-color: var(--primary-color); color: var(--bg-color);">🌱 Base</button> <button onclick="showLevel('intermedio')" id="btn-intermedio" class="px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all text-xs sm:text-sm" style="background-color: var(--surface-color); color: var(--text-color);">🌿 Int.</button> <button onclick="showLevel('avanzato')" id="btn-avanzato" class="px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all text-xs sm:text-sm" style="background-color: var(--surface-color); color: var(--text-color);">🌳 Avv.</button> <button onclick="showLevel('quiz')" id="btn-quiz" class="px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all text-xs sm:text-sm" style="background-color: var(--surface-color); color: var(--text-color);">🎯 Quiz</button>
+      </div>
+      <div id="level-base">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3" style="color: #22c55e;">🌱 Livello Base</h3>
+        <div class="space-y-2 sm:space-y-4 text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--primary-color);">Es. 1 - Riconoscimento</p>
+          <p>a) 4 lati uguali + 4 angoli retti?</p>
+          <p>b) Una coppia di lati paralleli?</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--primary-color);">Es. 2 - Somma Angoli</p>
+          <p>Tre angoli: 80°, 90°, 110°. Quarto?</p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="level-intermedio" class="hidden">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3" style="color: var(--primary-color);">🌿 Livello Intermedio</h3>
+        <div class="space-y-2 sm:space-y-4 text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--primary-color);">Es. 1 - Angoli</p>
+          <p>Parallelogramma: un angolo è triplo del consecutivo. Calcola tutti.</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--primary-color);">Es. 2 - Rettangolo</p>
+          <p>Base 15 cm, altezza 8 cm. Area, perimetro, diagonale.</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--primary-color);">Es. 3 - Rombo</p>
+          <p>Diagonali 10 cm e 24 cm. Area e lato.</p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="level-avanzato" class="hidden">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3" style="color: var(--secondary-color);">🌳 Livello Avanzato</h3>
+        <div class="space-y-2 sm:space-y-4 text-sm sm:text-base" style="color: var(--text-color);">
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--secondary-color);">Es. 1 - Punti Medi</p>
+          <p>Perimetro MNC = 30 cm, MN = 5 cm. Calcola perimetro ABC.</p>
+         </div>
+         <div class="p-3 rounded-lg" style="background-color: var(--bg-color);">
+          <p class="font-bold" style="color: var(--secondary-color);">Es. 2 - Talete</p>
+          <p>AD = 5 cm, DB = 7,5 cm, AE = 6 cm. Calcola EC.</p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="level-quiz" class="hidden">
+       <div class="rounded-xl p-4 sm:p-6" style="background-color: var(--surface-color);">
+        <h3 class="text-base sm:text-xl font-bold mb-3 sm:mb-4" style="color: var(--primary-color);">🎯 Quiz</h3>
+        <div id="quiz-container">
+         <div id="quiz-question" class="mb-4 sm:mb-6">
+          <p class="text-sm sm:text-lg mb-3 sm:mb-4" style="color: var(--text-color);" id="question-text">Domanda 1: Quanti assi di simmetria ha un quadrato?</p>
+          <div class="grid gap-2 sm:gap-4" id="quiz-options"></div>
+         </div>
+         <div id="quiz-feedback" class="hidden p-3 rounded-lg mb-3 text-xs sm:text-sm"></div>
+         <div class="flex justify-between items-center gap-2 text-xs sm:text-sm"><span id="quiz-progress" class="mono-font" style="color: var(--text-color);">1/5</span> <span id="quiz-score" class="mono-font" style="color: var(--primary-color);">0/5</span>
+         </div>
+        </div>
+        <div id="quiz-results" class="hidden text-center">
+         <div class="text-5xl sm:text-6xl mb-3 sm:mb-4">
+          🏆
+         </div>
+         <h4 class="text-xl sm:text-2xl font-bold mb-2" style="color: var(--primary-color);">Completato!</h4>
+         <p class="text-base sm:text-xl mb-4 sm:mb-6" style="color: var(--text-color);">Punteggio: <span id="final-score" class="font-bold" style="color: var(--primary-color);">0</span>/5</p>
+         <div class="flex flex-col gap-2 sm:gap-4 justify-center"><button onclick="restartQuiz()" class="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all hover:scale-105 text-sm sm:text-base" style="background-color: var(--secondary-color); color: var(--text-color);">🔄 Riprova</button> <button onclick="goToSlide(1)" class="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all hover:scale-105 text-sm sm:text-base" style="background-color: var(--primary-color); color: var(--bg-color);">↻ Ricomincia</button>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="mt-6 sm:mt-8 rounded-xl p-4 sm:p-6 theorem-box">
+       <h3 class="text-base sm:text-xl font-bold mb-3" style="color: var(--primary-color);">📚 Riepilogo</h3>
+       <div class="grid md:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm" style="color: var(--text-color);">
+        <div>
+         <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Concetti</h4>
+         <ul class="space-y-1">
+          <li>• Somma angoli = 360°</li>
+          <li>• Classificazione</li>
+          <li>• Talete</li>
+         </ul>
+        </div>
+        <div>
+         <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Ricorda</h4>
+         <ul class="space-y-1">
+          <li>• Quadrato = rettangolo</li>
+          <li>• Non sempre vero il contrario</li>
+          <li>• Verificare formule</li>
+         </ul>
+        </div>
+        <div>
+         <h4 class="font-bold mb-2" style="color: var(--secondary-color);">Prossimi Passi</h4>
+         <ul class="space-y-1">
+          <li>• Ripassa esercizi</li>
+          <li>• Disegna forme</li>
+          <li>• Fai domande</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="mt-4 sm:mt-8 flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center"><button onclick="goToSlide(1)" class="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold transition-all hover:scale-105 text-xs sm:text-base" style="background-color: var(--secondary-color); color: var(--text-color);">↻ Ricomincia</button>
+      </div>
+     </section>
+    </div>
+   </main><!-- FOOTER -->
+   <footer class="sticky bottom-0 z-50 backdrop-blur-md flex-shrink-0">
+    <div class="w-full px-3 sm:px-4 py-2 sm:py-4">
+     <div class="flex justify-between items-center gap-2 flex-wrap"><button id="prev-btn" onclick="changeSlide(-1)" disabled class="nav-btn flex items-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm" style="background-color: var(--surface-color); color: var(--text-color);">
+       <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+       </svg> Prec. </button>
+      <div class="flex gap-1 flex-wrap justify-center hidden sm:flex"><button onclick="goToSlide(1)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--primary-color);"></button> <button onclick="goToSlide(2)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(3)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(4)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(5)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(6)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(7)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(8)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button> <button onclick="goToSlide(9)" class="slide-dot w-3 h-3 rounded-full transition-all" style="background-color: var(--surface-color);"></button>
+      </div><button id="next-btn" onclick="changeSlide(1)" class="nav-btn flex items-center gap-1 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm" style="background-color: var(--primary-color); color: var(--bg-color);"> Succ. 
+       <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: 'I Quadrilateri',
+      teacher_name: 'Prof.',
+    };
+    
+    let config = { ...defaultConfig };
+    let currentSlide = 1;
+    const totalSlides = 9;
+    let addedTags = [];
+    let currentQuestion = 0;
+    let score = 0;
+    
+    const suggestedTags = ['quadrato', 'rettangolo', 'rombo', 'parallelogramma', 'trapezio'];
+    
+    const quizQuestions = [
+      {
+        question: "Quanti assi di simmetria ha un quadrato?",
+        options: ["2", "4", "1", "8"],
+        correct: 1
+      },
+      {
+        question: "Somma angoli interni quadrilatero:",
+        options: ["180°", "270°", "360°", "540°"],
+        correct: 2
+      },
+      {
+        question: "Se BC = 12 cm, quanto misura MN?",
+        options: ["6 cm", "12 cm", "18 cm", "24 cm"],
+        correct: 0
+      },
+      {
+        question: "M punto medio AB, N punto medio AC, allora MN è:",
+        options: ["Perpendicolare a BC", "Parallelo a BC", "Uguale a BC", "Doppio di BC"],
+        correct: 1
+      },
+      {
+        question: "Nel teorema di Talete, se AD = DB, allora:",
+        options: ["A'E > E'B'", "A'E = E B'", "A'E < E'B'", "Nessuna relazione"],
+        correct: 1
+      }
+    ];
+    
+    function changeSlide(direction) {
+      const newSlide = currentSlide + direction;
+      if (newSlide >= 1 && newSlide <= totalSlides) {
+        goToSlide(newSlide);
+      }
+    }
+    
+    function goToSlide(slideNum) {
+      document.getElementById(`slide-${currentSlide}`).classList.add('hidden');
+      currentSlide = slideNum;
+      const newSlideEl = document.getElementById(`slide-${currentSlide}`);
+      newSlideEl.classList.remove('hidden');
+      newSlideEl.classList.add('slide-enter');
+      
+      updateNavigation();
+      document.getElementById('app').scrollTop = 0;
+    }
+    
+    function updateNavigation() {
+      document.getElementById('slide-indicator').textContent = `${currentSlide}/${totalSlides}`;
+      document.getElementById('progress-bar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+      document.getElementById('prev-btn').disabled = currentSlide === 1;
+      document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+      
+      document.querySelectorAll('.slide-dot').forEach((dot, index) => {
+        dot.style.backgroundColor = (index + 1 === currentSlide) ? 'var(--primary-color)' : 'var(--surface-color)';
+      });
+    }
+    
+    function toggleFullscreen() {
+      const app = document.getElementById('app');
+      if (!document.fullscreenElement) {
+        app.requestFullscreen().catch(err => console.log('Fullscreen non disponibile'));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    
+    function closePresentation() {
+      alert('Presentazione chiusa. Torna alla home!');
+    }
+    
+    function addTag() {
+      const input = document.getElementById('tag-input');
+      const value = input.value.trim().toLowerCase();
+      
+      if (value && !addedTags.includes(value)) {
+        addedTags.push(value);
+        renderTags();
+      }
+      input.value = '';
+    }
+    
+    function removeTag(tag) {
+      addedTags = addedTags.filter(t => t !== tag);
+      renderTags();
+    }
+    
+    function renderTags() {
+      const container = document.getElementById('tags-container');
+      container.innerHTML = addedTags.map(tag => `
+        <span class="inline-flex items-center gap-1 px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm" 
+          style="background-color: ${suggestedTags.includes(tag) ? 'var(--primary-color)' : 'var(--secondary-color)'}; color: var(--bg-color);">
+          ${tag}
+          <button onclick="removeTag('${tag}')" class="hover:opacity-70">×</button>
+        </span>
+      `).join('');
+    }
+    
+    function showLevel(level) {
+      ['base', 'intermedio', 'avanzato', 'quiz'].forEach(l => {
+        document.getElementById(`level-${l}`).classList.add('hidden');
+        document.getElementById(`btn-${l}`).style.backgroundColor = 'var(--surface-color)';
+        document.getElementById(`btn-${l}`).style.color = 'var(--text-color)';
+      });
+      
+      document.getElementById(`level-${level}`).classList.remove('hidden');
+      document.getElementById(`btn-${level}`).style.backgroundColor = 'var(--primary-color)';
+      document.getElementById(`btn-${level}`).style.color = 'var(--bg-color)';
+      
+      if (level === 'quiz') {
+        renderQuiz();
+      }
+    }
+    
+    function renderQuiz() {
+      const q = quizQuestions[currentQuestion];
+      document.getElementById('question-text').textContent = `Dom. ${currentQuestion + 1}: ${q.question}`;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = q.options.map((opt, i) => `
+        <button onclick="checkAnswer(${i})" class="quiz-option p-2 sm:p-4 rounded-lg text-left transition-all hover:scale-105 text-xs sm:text-base" 
+          style="background-color: var(--bg-color); color: var(--text-color);">
+          ${String.fromCharCode(65 + i)}) ${opt}
+        </button>
+      `).join('');
+      
+      document.getElementById('quiz-progress').textContent = `${currentQuestion + 1}/5`;
+      document.getElementById('quiz-score').textContent = `${score}/5`;
+      document.getElementById('quiz-feedback').classList.add('hidden');
+    }
+    
+    function checkAnswer(selected) {
+      const q = quizQuestions[currentQuestion];
+      const feedback = document.getElementById('quiz-feedback');
+      const options = document.querySelectorAll('.quiz-option');
+      
+      options.forEach(opt => opt.disabled = true);
+      
+      if (selected === q.correct) {
+        score++;
+        feedback.textContent = '✓ Corretto!';
+        feedback.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+        feedback.style.color = '#22c55e';
+        options[selected].style.backgroundColor = 'rgba(34, 197, 94, 0.3)';
+      } else {
+        feedback.textContent = `✗ Risp: ${String.fromCharCode(65 + q.correct)}) ${q.options[q.correct]}`;
+        feedback.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+        feedback.style.color = '#ef4444';
+        options[selected].style.backgroundColor = 'rgba(239, 68, 68, 0.3)';
+        options[q.correct].style.backgroundColor = 'rgba(34, 197, 94, 0.3)';
+      }
+      
+      feedback.classList.remove('hidden');
+      document.getElementById('quiz-score').textContent = `${score}/5`;
+      
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < quizQuestions.length) {
+          renderQuiz();
+        } else {
+          showResults();
+        }
+      }, 1500);
+    }
+    
+    function showResults() {
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('quiz-results').classList.remove('hidden');
+      document.getElementById('final-score').textContent = score;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById('quiz-container').classList.remove('hidden');
+      document.getElementById('quiz-results').classList.add('hidden');
+      renderQuiz();
+    }
+    
+    // Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          document.getElementById('header-title').textContent = config.main_title || defaultConfig.main_title;
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['main_title', cfg.main_title || defaultConfig.main_title],
+          ['teacher_name', cfg.teacher_name || defaultConfig.teacher_name]
+        ])
+      });
+    }
+    
+    updateNavigation();
+    renderTags();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cef19f664315f8e',t:'MTc3MTI2NjQ3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
