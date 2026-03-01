@@ -1,0 +1,1344 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algebra — Scomposizione di Polinomi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0c14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --border: rgba(255,255,255,0.07);
+      --text: #e4e2f0;
+      --muted: #9895b5;
+      --pri: #7c6af7;
+      --pri-glow: rgba(124,106,247,0.25);
+      --sec: #2dd4a4;
+      --sec-glow: rgba(45,212,164,0.2);
+      --amber: #f5c842;
+      --red: #f06080;
+      --blue: #4fa3f7;
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,106,247,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(45,212,164,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,12,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hdr-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem 0.6rem;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.6rem; }
+
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--pri), var(--sec));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fs-btn {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .fs-btn:hover { border-color: var(--pri); color: var(--pri); }
+
+    .score-pill {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'DM Mono', monospace;
+      white-space: nowrap;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 0.3rem;
+      overflow-x: auto;
+      padding: 0.5rem 1rem 0.6rem;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.42rem 0.85rem;
+      white-space: nowrap;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .tab:hover { border-color: rgba(124,106,247,0.4); color: var(--text); }
+    .tab.active {
+      background: var(--pri);
+      border-color: var(--pri);
+      color: #fff;
+      box-shadow: 0 0 16px var(--pri-glow);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 1.2rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    section { display: none; }
+    section.active { display: block; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-inner {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .sec-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      line-height: 1.2;
+    }
+    .sec-title span { color: var(--pri); }
+
+    .sec-num {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--pri);
+      background: var(--pri-glow);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    .def-box {
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .def-box::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px;
+    }
+    .def-box.pri { background: linear-gradient(135deg, rgba(124,106,247,0.12), rgba(124,106,247,0.04)); }
+    .def-box.pri::before { background: var(--pri); }
+    .def-box.sec { background: linear-gradient(135deg, rgba(45,212,164,0.12), rgba(45,212,164,0.04)); }
+    .def-box.sec::before { background: var(--sec); }
+    .def-box.amber { background: linear-gradient(135deg, rgba(245,200,66,0.12), rgba(245,200,66,0.04)); }
+    .def-box.amber::before { background: var(--amber); }
+    .def-box.red { background: linear-gradient(135deg, rgba(240,96,128,0.12), rgba(240,96,128,0.04)); }
+    .def-box.red::before { background: var(--red); }
+
+    .def-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pri);
+      margin-bottom: 0.4rem;
+    }
+    .def-box.sec .def-label { color: var(--sec); }
+    .def-box.amber .def-label { color: var(--amber); }
+    .def-box.red .def-label { color: var(--red); }
+
+    .def-box p { color: var(--text); line-height: 1.6; font-size: 0.95rem; }
+    .def-box strong { color: #fff; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media(min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
+    @media(min-width: 820px) { .row-3 { grid-template-columns: 1fr 1fr 1fr; } }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--pri); color: #fff; box-shadow: 0 4px 14px var(--pri-glow); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--pri-glow); }
+    .btn-sec { background: transparent; color: var(--sec); border: 1.5px solid var(--sec); }
+    .btn-sec:hover { background: var(--sec-glow); }
+    .btn-ghost { background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn-angle {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      font-size: 0.78rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-angle:hover { border-color: var(--pri); color: var(--pri); }
+
+    .formula {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--pri);
+      text-align: center;
+      background: var(--pri-glow);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      letter-spacing: 0.02em;
+    }
+
+    .formula-sec {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--sec);
+      text-align: center;
+      background: var(--sec-glow);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      margin: 0.6rem 0;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-right: 0.4rem;
+    }
+    .badge-pri { background: var(--pri-glow); color: var(--pri); }
+    .badge-sec { background: var(--sec-glow); color: var(--sec); }
+    .badge-amber { background: rgba(245,200,66,0.15); color: var(--amber); }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .data-table th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-family: 'DM Mono', monospace;
+      color: var(--text);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table td.hl { color: var(--pri); }
+    .data-table td.hl-g { color: var(--sec); }
+    .data-table td.hl-a { color: var(--amber); }
+
+    /* ── STEP LIST ── */
+    .step-list { list-style: none; padding: 0; margin: 0.6rem 0; }
+    .step-list li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      display: flex; align-items: center; justify-content: center;
+      min-width: 22px; height: 22px;
+      background: var(--pri-glow);
+      color: var(--pri);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* ── EXERCISES ── */
+    .ex-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .ex-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem; }
+
+    .choices { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.7rem 0; }
+    .choices label {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.87rem; cursor: pointer;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+    .choices label:hover { border-color: var(--pri); }
+    .choices input { accent-color: var(--pri); }
+
+    .result {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+    }
+    .result.ok { color: var(--sec); }
+    .result.err { color: var(--red); }
+
+    .sol-box {
+      display: none;
+      margin-top: 0.6rem;
+      padding: 0.7rem 1rem;
+      background: rgba(45,212,164,0.08);
+      border: 1px solid rgba(45,212,164,0.2);
+      border-radius: 10px;
+      font-size: 0.87rem;
+      color: var(--text);
+    }
+    .sol-box strong { color: var(--sec); }
+    .sol-box code {
+      font-family: 'DM Mono', monospace;
+      color: var(--pri);
+      background: var(--pri-glow);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+    }
+
+    .progress-bar { height: 2px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 0.4rem; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pri), var(--sec)); transition: width 0.4s ease; }
+
+    /* ── INPUT STYLE ── */
+    input[type="text"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.9rem;
+      font-family: 'DM Mono', monospace;
+      outline: none;
+      width: 100%;
+      max-width: 300px;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus { border-color: var(--pri); }
+    input[type="text"].ok { border-color: var(--sec); }
+    input[type="text"].err { border-color: var(--red); }
+
+    select {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    select:focus { border-color: var(--pri); }
+
+    /* ── STRATEGIA FLOWCHART ── */
+    .flowchart { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.5rem 0; }
+    .flow-step {
+      display: flex; align-items: center; gap: 0.7rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.87rem;
+    }
+    .flow-arrow { text-align: center; color: var(--muted); font-size: 0.85rem; padding-left: 1.1rem; }
+    .flow-num {
+      min-width: 24px; height: 24px;
+      background: var(--pri);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .flow-num.alt { background: var(--sec); }
+    .flow-num.amber { background: var(--amber); color: #000; }
+    .flow-cond {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.73rem;
+      color: var(--amber);
+      background: rgba(245,200,66,0.1);
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.3rem;
+    }
+
+    /* ── INTERACTIVE FACTORING DEMO ── */
+    .demo-area {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 0.8rem 0;
+    }
+    .demo-poly {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--amber);
+      text-align: center;
+      padding: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+    .demo-steps { margin-top: 0.8rem; }
+    .demo-step-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.35s ease;
+    }
+    .demo-step-item.visible { opacity: 1; transform: translateX(0); }
+    .demo-step-item.step-a { background: rgba(124,106,247,0.08); color: var(--pri); }
+    .demo-step-item.step-b { background: rgba(245,200,66,0.08); color: var(--amber); }
+    .demo-step-item.step-c { background: rgba(45,212,164,0.08); color: var(--sec); }
+
+    /* ── NOTABLE PRODUCTS CARDS ── */
+    .np-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.7rem;
+      margin: 0.7rem 0;
+    }
+    @media(min-width: 640px) { .np-grid { grid-template-columns: 1fr 1fr; } }
+
+    .np-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .np-card:hover { border-color: rgba(124,106,247,0.3); transform: translateY(-1px); }
+    .np-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .np-formula {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--pri);
+      line-height: 1.5;
+    }
+    .np-formula .eq { color: var(--sec); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(180,180,190,0.35);
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.72rem;
+      position: relative;
+      z-index: 1;
+    }
+    footer .footer-brand { font-weight: 700; color: #E8581A; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; }
+    footer .footer-center { color: var(--muted); text-align: center; flex: 1; }
+    footer .footer-center small { display: block; font-size: 0.67rem; color: #aaa; margin-top: 0.15rem; }
+    footer .footer-copy { color: var(--muted); white-space: nowrap; text-align: right; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    section.active > * { animation: fadeInUp 0.35s ease both; }
+    section.active > *:nth-child(2) { animation-delay: 0.06s; }
+    section.active > *:nth-child(3) { animation-delay: 0.12s; }
+    section.active > *:nth-child(4) { animation-delay: 0.18s; }
+    section.active > *:nth-child(5) { animation-delay: 0.22s; }
+
+    .hl { color: var(--pri); font-weight: 700; }
+    .hl-g { color: var(--sec); font-weight: 700; }
+    .hl-a { color: var(--amber); font-weight: 700; }
+
+    /* ── QUIZ FILL IN ── */
+    .fill-row {
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.6rem;
+    }
+    .fill-blank {
+      display: inline-block;
+      background: rgba(124,106,247,0.15);
+      border: 1.5px solid rgba(124,106,247,0.3);
+      border-radius: 6px;
+      padding: 0.1rem 0.5rem;
+      min-width: 90px;
+      color: var(--pri);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (pointer: coarse) {
+      .btn, .tab, .btn-angle, .fs-btn { min-height: 44px; }
+      .tab { padding: 0.55rem 1rem; }
+      .btn { padding: 0.6rem 1.2rem; }
+      select { min-height: 44px; }
+      .choices label { min-height: 44px; }
+    }
+    @media (max-width: 480px) {
+      :root { --radius: 12px; }
+      .sec-title { font-size: 1.25rem; }
+      .hdr-top { padding: 0.65rem 0.85rem 0.5rem; gap: 0.5rem; }
+      .brand-sub { display: none; }
+      .fs-btn { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
+      .tab-nav { padding: 0.4rem 0.6rem 0.5rem; gap: 0.25rem; }
+      .tab { font-size: 0.74rem; padding: 0.4rem 0.7rem; }
+      main { padding: 0.85rem 0.65rem; }
+      .card { padding: 1rem 0.9rem; }
+      .formula { font-size: 1rem; }
+      .btn-row { flex-direction: column; align-items: flex-start; }
+      .btn-row .btn { width: 100%; justify-content: center; }
+    }
+    @media (min-width: 900px) {
+      main { padding: 1.5rem 2rem; max-width: 960px; }
+      .hdr-top { padding: 1rem 2rem 0.7rem; }
+      .tab-nav { padding: 0.5rem 1.8rem 0.65rem; }
+      .card { padding: 1.5rem; }
+      .sec-title { font-size: 1.65rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="hdr-top">
+    <div class="brand">
+      <div class="brand-icon">∑</div>
+      <div>
+        <div class="brand-text">MatematicaViva</div>
+        <div class="brand-sub">Classe Prima · Algebra</div>
+      </div>
+    </div>
+    <div class="score-pill" id="score-pill">Punteggio: 0 / 5</div>
+    <button class="fs-btn" id="fullscreen-btn">⛶ Schermo intero</button>
+  </div>
+  <div class="tab-nav">
+    <button class="tab active" data-section="raccoglimento">① Raccoglimento</button>
+    <button class="tab" data-section="strategia">② Strategia</button>
+    <button class="tab" data-section="parziale">③ Racc. Parziale</button>
+    <button class="tab" data-section="notevoli">④ Prod. Notevoli</button>
+    <button class="tab" data-section="trinomio">⑤ Trinomio</button>
+    <button class="tab" data-section="esercizi">✏ Esercizi</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+</header>
+
+<main>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 1 — RACCOGLIMENTO TOTALE
+  ══════════════════════════════════════════ -->
+  <section class="active" id="sec-raccoglimento">
+    <div class="card">
+      <div class="sec-num">01 · Raccoglimento Totale</div>
+      <h1 class="sec-title">Raccogli il <span>MCD</span> di tutti i termini</h1>
+      <div class="def-box pri">
+        <div class="def-label">Definizione</div>
+        <p>Si estrae il <strong>Massimo Comun Divisore (MCD)</strong> di tutti i termini come fattore fuori dalla parentesi, dividendo poi ciascun termine per esso.</p>
+      </div>
+      <div class="formula">ab + ac + ad = a(b + c + d)</div>
+    </div>
+
+    <div class="card">
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:0.8rem;">📌 <strong style="color:#fff;">Come trovare il MCD:</strong> calcola il MCD dei coefficienti numerici e, per ogni variabile, prendi la <em>potenza minima</em> presente in tutti i termini.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Polinomio</th><th>MCD</th><th>Forma scomposta</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>6x² + 9x</td><td class="hl">3x</td><td class="hl-g">3x(2x + 3)</td></tr>
+          <tr><td>4a³ − 8a² + 12a</td><td class="hl">4a</td><td class="hl-g">4a(a² − 2a + 3)</td></tr>
+          <tr><td>15x²y − 10xy²</td><td class="hl">5xy</td><td class="hl-g">5xy(3x − 2y)</td></tr>
+          <tr><td>12x³ − 8x² + 4x</td><td class="hl">4x</td><td class="hl-g">4x(3x² − 2x + 1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="sec-num">Demo interattiva</div>
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:0.8rem;">Clicca il pulsante per vedere il processo passo per passo.</p>
+      <div class="demo-area">
+        <div class="demo-poly" id="demo-poly">6a²b − 9ab² + 3ab</div>
+        <div class="demo-steps" id="demo-steps"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="runDemo()">▶ Avvia demo</button>
+        <button class="btn btn-ghost" onclick="resetDemo()">↺ Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 2 — STRATEGIA OPERATIVA
+  ══════════════════════════════════════════ -->
+  <section id="sec-strategia">
+    <div class="card">
+      <div class="sec-num">02 · Strategia Operativa</div>
+      <h1 class="sec-title">Applica le tecniche nel <span>giusto ordine</span></h1>
+      <div class="def-box sec">
+        <div class="def-label">Regola d'oro</div>
+        <p>Segui sempre questa sequenza. Non saltare il primo passo: il <strong>raccoglimento totale</strong> semplifica tutto il resto.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flowchart">
+        <div class="flow-step"><div class="flow-num">1</div><div><strong>Cerca il MCD</strong> di tutti i termini <span class="flow-cond">sempre primo</span><br><small style="color:var(--muted);">→ Raccoglimento totale</small></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num">2</div><div><strong>Conta i termini rimasti</strong> dopo il raccoglimento</div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num alt">3</div><div><strong>2 termini</strong><br><small style="color:var(--muted);">→ Differenza di due quadrati · Differenza di due cubi · Somma di due cubi</small></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num alt">4</div><div><strong>3 termini</strong><br><small style="color:var(--muted);">→ Quadrato di binomio · Trinomio speciale monico · Trinomio speciale non monico</small></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num amber">5</div><div><strong>4 termini</strong> <span class="flow-cond" style="color:var(--amber);">raggruppa a coppie</span><br><small style="color:var(--muted);">→ Raccoglimento parziale</small></div></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step"><div class="flow-num" style="background:var(--red);">6</div><div><strong>Grado ≥ 2 con radici razionali</strong><br><small style="color:var(--muted);">→ Metodo di Ruffini</small></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-num">Esempi completi</div>
+      <div class="card-inner">
+        <p style="font-size:0.8rem; color:var(--muted); font-weight:700; letter-spacing:0.06em; text-transform:uppercase;">Esempio: 2x³ − 8x</p>
+        <ul class="step-list" style="margin-top:0.4rem;">
+          <li><span class="step-num">1</span><span>MCD = 2x → <span class="hl">2x(x² − 4)</span></span></li>
+          <li><span class="step-num">2</span><span>2 termini in x² − 4 → differenza di due quadrati</span></li>
+          <li><span class="step-num">✓</span><span class="hl-g">2x(x − 2)(x + 2)</span></li>
+        </ul>
+      </div>
+      <div class="card-inner">
+        <p style="font-size:0.8rem; color:var(--muted); font-weight:700; letter-spacing:0.06em; text-transform:uppercase;">Esempio: 3x³ − 12x² + 12x</p>
+        <ul class="step-list" style="margin-top:0.4rem;">
+          <li><span class="step-num">1</span><span>MCD = 3x → <span class="hl">3x(x² − 4x + 4)</span></span></li>
+          <li><span class="step-num">2</span><span>3 termini, quadrato di un binomio</span></li>
+          <li><span class="step-num">✓</span><span class="hl-g">3x(x − 2)²</span></li>
+        </ul>
+      </div>
+      <div class="card-inner">
+        <p style="font-size:0.8rem; color:var(--muted); font-weight:700; letter-spacing:0.06em; text-transform:uppercase;">Esempio: x⁴ − 16</p>
+        <ul class="step-list" style="margin-top:0.4rem;">
+          <li><span class="step-num">1</span><span>Nessun MCD comune tranne 1</span></li>
+          <li><span class="step-num">2</span><span>2 termini: differenza di due quadrati (x²)² − 4² → <span class="hl">(x²−4)(x²+4)</span></span></li>
+          <li><span class="step-num">3</span><span>Ancora 2 termini in x²−4 → differenza di due quadrati</span></li>
+          <li><span class="step-num">✓</span><span class="hl-g">(x−2)(x+2)(x²+4)</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 3 — RACCOGLIMENTO PARZIALE
+  ══════════════════════════════════════════ -->
+  <section id="sec-parziale">
+    <div class="card">
+      <div class="sec-num">03 · Raccoglimento Parziale</div>
+      <h1 class="sec-title">Raggruppa a <span>coppie</span></h1>
+      <div class="def-box pri">
+        <div class="def-label">Quando si usa</div>
+        <p>Con <strong>4 termini</strong>: si raggruppano a coppie e si raccoglie da ciascun gruppo, sperando che appaia un <strong>binomio comune</strong>.</p>
+      </div>
+      <div class="formula">ab + ac + db + dc = a(b+c) + d(b+c) = (a+d)(b+c)</div>
+      <div class="def-box amber">
+        <div class="def-label">Nota</div>
+        <p>Se i fattori tra parentesi <strong>non coincidono</strong>, prova un raggruppamento diverso cambiando l'ordine dei termini.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-num">Esempi</div>
+      <table class="data-table">
+        <thead><tr><th>Polinomio</th><th>Raggruppa</th><th>Risultato</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>x³ + x² + 2x + 2</td>
+            <td>(x³+x²) + (2x+2)</td>
+            <td class="hl-g">x²(x+1) + 2(x+1) = (x²+2)(x+1)</td>
+          </tr>
+          <tr>
+            <td>ax − ay + bx − by</td>
+            <td>(ax−ay) + (bx−by)</td>
+            <td class="hl-g">a(x−y) + b(x−y) = (a+b)(x−y)</td>
+          </tr>
+          <tr>
+            <td>ax + ay − bx − by</td>
+            <td>(ax+ay) − (bx+by)</td>
+            <td class="hl-g">a(x+y) − b(x+y) = (a−b)(x+y)</td>
+          </tr>
+          <tr>
+            <td>x³ + 2x² + 3x + 6</td>
+            <td>(x³+2x²) + (3x+6)</td>
+            <td class="hl-g">x²(x+2) + 3(x+2) = (x²+3)(x+2)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- interactive partial factoring demo -->
+    <div class="card">
+      <div class="sec-num">Scegli il raggruppamento giusto</div>
+      <p style="font-size:0.9rem; margin-bottom:0.8rem;">Polinomio: <span style="font-family:'DM Mono'; color:var(--amber); font-size:1rem;">2x³ − 3x² + 4x − 6</span></p>
+      <div class="choices" id="grouping-choices">
+        <label><input type="radio" name="grp" value="a"> (2x³−3x²) + (4x−6)</label>
+        <label><input type="radio" name="grp" value="b"> (2x³+4x) − (3x²+6)</label>
+        <label><input type="radio" name="grp" value="c"> (2x³−6) + (−3x²+4x)</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGrouping()">Verifica</button>
+      </div>
+      <div class="result" id="grp-result"></div>
+      <div class="sol-box" id="grp-sol">
+        <strong>Soluzione A:</strong> x²(2x−3) + 2(2x−3) = <code>(x²+2)(2x−3)</code> ✓<br>
+        <strong>Soluzione B:</strong> 2x(x²+2) − 3(x²+2) = <code>(2x−3)(x²+2)</code> ✓ — entrambe funzionano!<br>
+        La soluzione C non porta a un fattore comune immediato.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 4 — PRODOTTI NOTEVOLI
+  ══════════════════════════════════════════ -->
+  <section id="sec-notevoli">
+    <div class="card">
+      <div class="sec-num">04 · Prodotti Notevoli</div>
+      <h1 class="sec-title">Riconosci le <span>forme speciali</span></h1>
+      <div class="def-box sec">
+        <div class="def-label">Strategia</div>
+        <p>Dopo il raccoglimento totale, controlla se il polinomio corrisponde a uno dei seguenti <strong>prodotti notevoli</strong>. Riconoscerli ti risparmia molto lavoro!</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="np-grid">
+        <div class="np-card">
+          <div class="np-name">Quadrato di binomio (+)</div>
+          <div class="np-formula">a² + 2ab + b²<br><span class="eq">= (a + b)²</span></div>
+        </div>
+        <div class="np-card">
+          <div class="np-name">Quadrato di binomio (−)</div>
+          <div class="np-formula">a² − 2ab + b²<br><span class="eq">= (a − b)²</span></div>
+        </div>
+        <div class="np-card">
+          <div class="np-name">Differenza di quadrati</div>
+          <div class="np-formula">a² − b²<br><span class="eq">= (a − b)(a + b)</span></div>
+        </div>
+        <div class="np-card">
+          <div class="np-name">Cubo di binomio (+)</div>
+          <div class="np-formula">a³ + 3a²b + 3ab² + b³<br><span class="eq">= (a + b)³</span></div>
+        </div>
+        <div class="np-card">
+          <div class="np-name">Somma di cubi</div>
+          <div class="np-formula">a³ + b³<br><span class="eq">= (a+b)(a²−ab+b²)</span></div>
+        </div>
+        <div class="np-card">
+          <div class="np-name">Differenza di cubi</div>
+          <div class="np-formula">a³ − b³<br><span class="eq">= (a−b)(a²+ab+b²)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-num">Esempi guidati</div>
+      <table class="data-table">
+        <thead><tr><th>Polinomio</th><th>Tipo</th><th>Scomposizione</th></tr></thead>
+        <tbody>
+          <tr><td>x² − 25</td><td class="hl-a">Diff. quadrati</td><td class="hl-g">(x−5)(x+5)</td></tr>
+          <tr><td>4a² − 9b²</td><td class="hl-a">Diff. quadrati</td><td class="hl-g">(2a−3b)(2a+3b)</td></tr>
+          <tr><td>x² + 6x + 9</td><td class="hl-a">Quadrato +</td><td class="hl-g">(x+3)²</td></tr>
+          <tr><td>x² − 10x + 25</td><td class="hl-a">Quadrato −</td><td class="hl-g">(x−5)²</td></tr>
+          <tr><td>8x³ + 27</td><td class="hl-a">Somma cubi</td><td class="hl-g">(2x+3)(4x²−6x+9)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="def-box amber" style="margin-top:1rem;">
+        <div class="def-label">⚠ Attenzione</div>
+        <p>La <strong>somma di quadrati</strong> a² + b² <strong>NON si fattorizza</strong> nei reali. Non confonderla con la differenza di quadrati a² − b²!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 5 — TRINOMIO
+  ══════════════════════════════════════════ -->
+  <section id="sec-trinomio">
+    <div class="card">
+      <div class="sec-num">05 · Trinomio</div>
+      <h1 class="sec-title">Trinomio <span>monico</span> e <span>non monico</span></h1>
+    </div>
+
+    <!-- MONICO -->
+    <div class="card">
+      <div class="sec-num" style="background:var(--sec-glow); color:var(--sec);">Trinomio Monico</div>
+      <div class="def-box sec">
+        <div class="def-label">Condizione</div>
+        <p>Il coefficiente di x² è <strong>uguale a 1</strong>. Forma: <strong>x² + sx + p</strong></p>
+      </div>
+      <div class="formula-sec">x² + sx + p = (x + a)(x + b)</div>
+      <div class="def-box pri" style="margin-top:0.5rem;">
+        <div class="def-label">Metodo</div>
+        <p>Trova due numeri <strong>a</strong> e <strong>b</strong> tali che: <span class="hl">a + b = s</span> (coefficiente di x) e <span class="hl-g">a · b = p</span> (termine noto).</p>
+      </div>
+      <table class="data-table" style="margin-top:0.8rem;">
+        <thead><tr><th>Polinomio</th><th>s</th><th>p</th><th>a, b</th><th>Scomposto</th></tr></thead>
+        <tbody>
+          <tr><td>x² + 5x + 6</td><td class="hl">5</td><td class="hl-g">6</td><td class="hl-a">2 ; 3</td><td>(x+2)(x+3)</td></tr>
+          <tr><td>x² − 7x + 12</td><td class="hl">−7</td><td class="hl-g">12</td><td class="hl-a">−3 ; −4</td><td>(x−3)(x−4)</td></tr>
+          <tr><td>x² + x − 6</td><td class="hl">1</td><td class="hl-g">−6</td><td class="hl-a">3 ; −2</td><td>(x+3)(x−2)</td></tr>
+          <tr><td>x² + 2x − 15</td><td class="hl">2</td><td class="hl-g">−15</td><td class="hl-a">5 ; −3</td><td>(x+5)(x−3)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NON MONICO -->
+    <div class="card">
+      <div class="sec-num" style="background:rgba(245,200,66,0.15); color:var(--amber);">Trinomio Non Monico</div>
+      <div class="def-box amber">
+        <div class="def-label">Condizione</div>
+        <p>Il coefficiente di x² è <strong>diverso da 1</strong>. Forma: <strong>ax² + bx + c</strong> con a ≠ 1</p>
+      </div>
+
+      <ul class="step-list">
+        <li><span class="step-num">1</span><span>Calcola il prodotto <span class="hl">a · c</span></span></li>
+        <li><span class="step-num">2</span><span>Trova m, n tali che <span class="hl">m + n = b</span> e <span class="hl-g">m · n = a · c</span></span></li>
+        <li><span class="step-num">3</span><span>Riscrivi il termine bx come <span class="hl-a">mx + nx</span></span></li>
+        <li><span class="step-num">4</span><span>Raggruppa a coppie: <code style="font-family:'DM Mono'; color:var(--pri);">(ax² + mx) + (nx + c)</code></span></li>
+        <li><span class="step-num">5</span><span>Raccogli da ciascun gruppo</span></li>
+        <li><span class="step-num">6</span><span>Raccogli il <span class="hl">binomio comune</span></span></li>
+      </ul>
+
+      <div class="card-inner" style="margin-top:0.6rem;">
+        <p style="font-size:0.8rem; color:var(--muted); font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.5rem;">Esempio: 6x² + 7x + 2</p>
+        <table class="data-table">
+          <thead><tr><th>Passo</th><th>Operazione</th><th>Risultato</th></tr></thead>
+          <tbody>
+            <tr><td class="hl">1</td><td>a · c = 6 · 2</td><td class="hl-g">12</td></tr>
+            <tr><td class="hl">2</td><td>m + n = 7, m · n = 12</td><td class="hl-a">m=3, n=4</td></tr>
+            <tr><td class="hl">3</td><td>Riscrivi 7x</td><td>6x² + 3x + 4x + 2</td></tr>
+            <tr><td class="hl">4</td><td>Raggruppa</td><td>(6x²+3x) + (4x+2)</td></tr>
+            <tr><td class="hl">5</td><td>Raccogli</td><td>3x(2x+1) + 2(2x+1)</td></tr>
+            <tr><td class="hl">6</td><td>Fattore comune</td><td class="hl-g">(3x + 2)(2x + 1) ✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONE 6 — ESERCIZI
+  ══════════════════════════════════════════ -->
+  <section id="sec-esercizi">
+    <div class="card">
+      <div class="sec-num">✏ Esercizi</div>
+      <h1 class="sec-title">Metti alla <span>prova</span> le tue conoscenze</h1>
+      <p style="color:var(--muted); font-size:0.88rem;">Completa tutti gli esercizi per raggiungere il punteggio massimo. Puoi visualizzare la soluzione dopo ogni tentativo.</p>
+    </div>
+
+    <!-- EX 1: SCELTA MULTIPLA — MCD -->
+    <div class="ex-card">
+      <div class="ex-title">1 · Raccoglimento totale — Qual è il MCD dei coefficienti di 12x³ − 8x² + 4x?</div>
+      <div class="choices">
+        <label><input type="radio" name="ex1" value="a"> 2x</label>
+        <label><input type="radio" name="ex1" value="b"> 4x</label>
+        <label><input type="radio" name="ex1" value="c"> 4x²</label>
+        <label><input type="radio" name="ex1" value="d"> 2x²</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkEx1()">Verifica</button>
+        <button class="btn btn-ghost" onclick="toggleSol('sol1')">Soluzione</button>
+      </div>
+      <div class="result" id="res1"></div>
+      <div class="sol-box" id="sol1">
+        Il MCD dei coefficienti 12, 8, 4 è <strong>4</strong>. La potenza minima di x è x¹. Quindi MCD = <code>4x</code>.<br>
+        Forma scomposta: <code>4x(3x² − 2x + 1)</code>
+      </div>
+    </div>
+
+    <!-- EX 2: SCELTA MULTIPLA — prodotto notevole -->
+    <div class="ex-card">
+      <div class="ex-title">2 · Prodotti notevoli — Scomponi x² − 81</div>
+      <div class="choices">
+        <label><input type="radio" name="ex2" value="a"> (x − 9)²</label>
+        <label><input type="radio" name="ex2" value="b"> (x + 9)²</label>
+        <label><input type="radio" name="ex2" value="c"> (x − 9)(x + 9)</label>
+        <label><input type="radio" name="ex2" value="d"> Non è scomponibile</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkEx2()">Verifica</button>
+        <button class="btn btn-ghost" onclick="toggleSol('sol2')">Soluzione</button>
+      </div>
+      <div class="result" id="res2"></div>
+      <div class="sol-box" id="sol2">
+        x² − 81 = x² − 9² è una <strong>differenza di quadrati</strong>.<br>
+        Formula: a² − b² = (a−b)(a+b) → <code>(x − 9)(x + 9)</code>
+      </div>
+    </div>
+
+    <!-- EX 3: SCELTA MULTIPLA — trinomio monico -->
+    <div class="ex-card">
+      <div class="ex-title">3 · Trinomio monico — Scomponi x² − 5x + 6</div>
+      <div class="choices">
+        <label><input type="radio" name="ex3" value="a"> (x − 2)(x − 3)</label>
+        <label><input type="radio" name="ex3" value="b"> (x + 2)(x + 3)</label>
+        <label><input type="radio" name="ex3" value="c"> (x − 1)(x − 6)</label>
+        <label><input type="radio" name="ex3" value="d"> (x − 2)(x + 3)</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkEx3()">Verifica</button>
+        <button class="btn btn-ghost" onclick="toggleSol('sol3')">Soluzione</button>
+      </div>
+      <div class="result" id="res3"></div>
+      <div class="sol-box" id="sol3">
+        s = −5, p = 6. Cerco a+b = −5 e a·b = 6.<br>
+        Provo: −2 + (−3) = −5 ✓ e (−2)·(−3) = 6 ✓<br>
+        Risposta: <code>(x − 2)(x − 3)</code>
+      </div>
+    </div>
+
+    <!-- EX 4: VERO / FALSO -->
+    <div class="ex-card">
+      <div class="ex-title">4 · Vero o Falso — Rispondi a ciascuna affermazione</div>
+      <div id="tf-questions" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.7rem;"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkEx4()">Verifica tutto</button>
+      </div>
+      <div class="result" id="res4"></div>
+    </div>
+
+    <!-- EX 5: ABBINAMENTO -->
+    <div class="ex-card">
+      <div class="ex-title">5 · Abbinamento — Associa ogni polinomio alla sua scomposizione</div>
+      <div id="match-area" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.7rem;"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkEx5()">Verifica abbinamenti</button>
+      </div>
+      <div class="result" id="res5"></div>
+    </div>
+
+    <!-- PUNTEGGIO -->
+    <div class="card" id="score-card" style="text-align:center; display:none;">
+      <div class="sec-num" style="display:inline-block;">Risultato finale</div>
+      <div id="final-score" style="font-family:'Fraunces', serif; font-size:2.5rem; font-weight:700; color:var(--sec); margin:0.5rem 0;"></div>
+      <p id="final-msg" style="color:var(--muted); font-size:0.9rem;"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">MatematicaViva</span>
+  <span class="footer-center">
+    Distribuito con licenza Creative Commons BY-NC-ND 4.0 · matematicaviva.github.io
+    <small>Prof.ssa M. Prandelli</small>
+  </span>
+  <span class="footer-copy">© 2026 MatematicaViva</span>
+</footer>
+
+<script>
+// ── FULLSCREEN ──
+const fsBtn = document.getElementById('fullscreen-btn');
+function updateFsLabel() {
+  const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  fsBtn.textContent = inFs ? '✕ Esci schermo intero' : '⛶ Schermo intero';
+}
+fsBtn.addEventListener('click', () => {
+  const elem = document.documentElement;
+  const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  if (!inFs) {
+    const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+    if (req) req.call(elem).catch(() => {});
+  } else {
+    const ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (ex) ex.call(document).catch(() => {});
+  }
+});
+document.addEventListener('fullscreenchange', updateFsLabel);
+document.addEventListener('webkitfullscreenchange', updateFsLabel);
+document.addEventListener('mozfullscreenchange', updateFsLabel);
+
+const tabs = document.querySelectorAll('.tab');
+const sections = document.querySelectorAll('section');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const sec = tab.dataset.section;
+    tabs.forEach(t => t.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-' + sec).classList.add('active');
+  });
+});
+
+// ── SCORE ──
+const scores = [false, false, false, false, false];
+function updateScore() {
+  const n = scores.filter(Boolean).length;
+  document.getElementById('score-pill').textContent = `Punteggio: ${n} / 5`;
+  document.getElementById('progress').style.width = (n / 5 * 100) + '%';
+  if (n === 5) {
+    const sc = document.getElementById('score-card');
+    sc.style.display = 'block';
+    document.getElementById('final-score').textContent = '5 / 5 ⭐';
+    document.getElementById('final-msg').textContent = 'Ottimo! Hai completato tutti gli esercizi correttamente!';
+  }
+}
+
+function toggleSol(id) {
+  const b = document.getElementById(id);
+  b.style.display = (b.style.display === 'block') ? 'none' : 'block';
+}
+
+// ── DEMO INTERATTIVA ──
+const demoSteps = [
+  { cls: 'step-a', text: '① Identifica i coefficienti: 6, 9, 3 → MCD numerico = 3' },
+  { cls: 'step-a', text: '② Identifica le variabili: a², ab², ab → potenza minima a¹, b¹' },
+  { cls: 'step-b', text: '③ MCD totale = 3ab' },
+  { cls: 'step-b', text: '④ Dividi ciascun termine per 3ab: 6a²b ÷ 3ab = 2a · · · 9ab² ÷ 3ab = 3b · · · 3ab ÷ 3ab = 1' },
+  { cls: 'step-c', text: '⑤ Risultato: 3ab(2a − 3b + 1) ✓' },
+];
+let demoRunning = false;
+let demoTimeout = [];
+
+function resetDemo() {
+  demoTimeout.forEach(clearTimeout);
+  demoTimeout = [];
+  demoRunning = false;
+  document.getElementById('demo-steps').innerHTML = '';
+}
+
+function runDemo() {
+  if (demoRunning) return;
+  resetDemo();
+  demoRunning = true;
+  demoSteps.forEach((s, i) => {
+    const t = setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'demo-step-item ' + s.cls;
+      div.innerHTML = s.text;
+      document.getElementById('demo-steps').appendChild(div);
+      requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
+    }, i * 700);
+    demoTimeout.push(t);
+  });
+}
+
+// ── EX 1 ──
+function checkEx1() {
+  const sel = document.querySelector('input[name="ex1"]:checked');
+  const res = document.getElementById('res1');
+  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
+  if (sel.value === 'b') {
+    res.textContent = '✓ Esatto! MCD = 4x → 4x(3x² − 2x + 1)';
+    res.className = 'result ok';
+    scores[0] = true;
+  } else {
+    res.textContent = '✗ Non corretto. Calcola il MCD di 12, 8, 4 e la potenza minima di x.';
+    res.className = 'result err';
+  }
+  updateScore();
+}
+
+// ── EX 2 ──
+function checkEx2() {
+  const sel = document.querySelector('input[name="ex2"]:checked');
+  const res = document.getElementById('res2');
+  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
+  if (sel.value === 'c') {
+    res.textContent = '✓ Bravo! x² − 81 = (x−9)(x+9) — differenza di quadrati.';
+    res.className = 'result ok';
+    scores[1] = true;
+  } else {
+    res.textContent = '✗ Riprova. Riconosci la formula: a² − b² = (a−b)(a+b).';
+    res.className = 'result err';
+  }
+  updateScore();
+}
+
+// ── EX 3 ──
+function checkEx3() {
+  const sel = document.querySelector('input[name="ex3"]:checked');
+  const res = document.getElementById('res3');
+  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
+  if (sel.value === 'a') {
+    res.textContent = '✓ Perfetto! s=−5, p=6 → a=−2, b=−3 → (x−2)(x−3)';
+    res.className = 'result ok';
+    scores[2] = true;
+  } else {
+    res.textContent = '✗ Riprova. Cerca a+b = −5 e a·b = 6.';
+    res.className = 'result err';
+  }
+  updateScore();
+}
+
+// ── EX 4: V/F ──
+const tfData = [
+  { q: 'Il raccoglimento totale va sempre applicato per primo.', ans: true },
+  { q: 'a² + b² = (a+b)(a−b)', ans: false },
+  { q: 'x² + 6x + 9 = (x+3)²', ans: true },
+  { q: 'Nel trinomio monico si cerca a,b con a+b = s e a·b = p.', ans: true },
+  { q: 'Il raccoglimento parziale si usa tipicamente con 4 termini.', ans: true },
+];
+
+(function buildTF() {
+  const container = document.getElementById('tf-questions');
+  tfData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex; align-items:flex-start; gap:0.6rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem;';
+    div.innerHTML = `
+      <span style="flex:1; font-size:0.87rem; line-height:1.5;">${item.q}</span>
+      <div style="display:flex; gap:0.4rem; flex-shrink:0; margin-top:0.1rem;">
+        <label style="cursor:pointer;">
+          <input type="radio" name="tf${i}" value="true" style="accent-color:var(--sec);"> <span style="font-size:0.82rem; font-weight:700; color:var(--sec);">V</span>
+        </label>
+        <label style="cursor:pointer; margin-left:0.3rem;">
+          <input type="radio" name="tf${i}" value="false" style="accent-color:var(--red);"> <span style="font-size:0.82rem; font-weight:700; color:var(--red);">F</span>
+        </label>
+      </div>`;
+    container.appendChild(div);
+  });
+})();
+
+function checkEx4() {
+  let correct = 0;
+  tfData.forEach((item, i) => {
+    const sel = document.querySelector(`input[name="tf${i}"]:checked`);
+    if (sel && (sel.value === 'true') === item.ans) correct++;
+  });
+  const res = document.getElementById('res4');
+  if (correct === tfData.length) {
+    res.textContent = '✓ Perfetto! Tutte le risposte sono corrette.';
+    res.className = 'result ok';
+    scores[3] = true;
+  } else {
+    res.textContent = `✗ ${correct} su ${tfData.length} corrette. Ricontrolla le definizioni!`;
+    res.className = 'result err';
+  }
+  updateScore();
+}
+
+// ── EX 5: ABBINAMENTO ──
+const matchDefs = [
+  { def: 'Forma: x² + 5x + 6', ans: '(x+2)(x+3)' },
+  { def: 'Forma: 4a² − 9b²', ans: '(2a−3b)(2a+3b)' },
+  { def: 'Forma: x³ + x² + 2x + 2', ans: '(x²+2)(x+1)' },
+  { def: 'Forma: 6x² + 7x + 2', ans: '(3x+2)(2x+1)' },
+  { def: 'Forma: 2x³ − 8x', ans: '2x(x−2)(x+2)' },
+];
+const matchOpts = ['(x+2)(x+3)', '(2a−3b)(2a+3b)', '(x²+2)(x+1)', '(3x+2)(2x+1)', '2x(x−2)(x+2)'];
+
+(function buildMatch() {
+  const container = document.getElementById('match-area');
+  matchDefs.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.9rem;';
+    const shuffled = [...matchOpts].sort(() => Math.random() - 0.5);
+    div.innerHTML = `
+      <span style="flex:1; min-width:160px; font-size:0.85rem; font-family:'DM Mono', monospace; color:var(--amber);">${item.def}</span>
+      <select id="match${i}" style="background:var(--surface2); border:1.5px solid var(--border); border-radius:8px; padding:0.35rem 0.5rem; color:var(--text); font-family:'DM Mono'; font-size:0.82rem; outline:none; cursor:pointer;">
+        <option value="">— scegli —</option>
+        ${shuffled.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+    container.appendChild(div);
+  });
+})();
+
+function checkEx5() {
+  let correct = 0;
+  matchDefs.forEach((item, i) => {
+    const sel = document.getElementById('match' + i);
+    if (sel && sel.value === item.ans) correct++;
+  });
+  const res = document.getElementById('res5');
+  if (correct === matchDefs.length) {
+    res.textContent = '✓ Perfetto! Tutti gli abbinamenti sono corretti.';
+    res.className = 'result ok';
+    scores[4] = true;
+  } else {
+    res.textContent = `✗ ${correct} su ${matchDefs.length} corretti. Ricontrolla le scomposizioni!`;
+    res.className = 'result err';
+  }
+  updateScore();
+}
+
+// ── EX PARZIALE (inline) ──
+function checkGrouping() {
+  const sel = document.querySelector('input[name="grp"]:checked');
+  const res = document.getElementById('grp-result');
+  if (!sel) { res.textContent = '⚠ Seleziona un raggruppamento.'; res.className = 'result err'; return; }
+  if (sel.value === 'a' || sel.value === 'b') {
+    res.textContent = '✓ Ottima scelta! Entrambi A e B portano alla scomposizione corretta.';
+    res.className = 'result ok';
+    document.getElementById('grp-sol').style.display = 'block';
+  } else {
+    res.textContent = '✗ Questo raggruppamento non porta a un fattore comune. Riprova con A o B.';
+    res.className = 'result err';
+  }
+}
+</script>
+</body>
+</html>
