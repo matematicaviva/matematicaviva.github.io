@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<title>Funzioni Goniometriche – Lezione Interattiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════ */
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2236;
+  --border: #1e2d45;
+  --accent: #3b82f6;
+  --accent2: #06b6d4;
+  --accent3: #f59e0b;
+  --accent4: #10b981;
+  --accent5: #f43f5e;
+  --accent6: #a78bfa;
+  --text: #e2e8f0;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --glow: rgba(59,130,246,0.15);
+  --nav-h: 56px;
+  --radius: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 42% 62%, rgba(255,255,255,0.18) 0%, transparent 100%),
+    radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,0.22) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 78%, rgba(255,255,255,0.12) 0%, transparent 100%),
+    radial-gradient(1px 1px at 58% 38%, rgba(255,255,255,0.18) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.4rem;
+}
+
+.nav-brand {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--text);
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+.nav-brand span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+
+nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+nav a:hover, nav a.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--glow);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 38px; height: 38px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0 9px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger span {
+  display: block; height: 2px;
+  background: var(--text-dim);
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.nav-drawer {
+  display: none;
+  position: fixed;
+  top: var(--nav-h); left: 0; right: 0;
+  background: rgba(10,14,26,0.97);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  z-index: 199;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.nav-drawer.open { display: flex; }
+.nav-drawer a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-drawer a:hover, .nav-drawer a.active {
+  color: var(--accent); background: var(--glow); border-color: var(--accent);
+}
+
+.fs-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.28rem 0.65rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.fs-btn:hover { border-color: var(--accent); color: var(--accent); }
+.fs-label { display: inline; }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: calc(var(--nav-h) + 2rem) 1.5rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute;
+  width: min(600px, 90vw); height: min(600px, 90vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 8vw, 5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, #fff 0%, var(--accent2) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  color: var(--text-dim);
+  max-width: 540px;
+  margin: 0 auto 2.5rem;
+}
+.hero-badges {
+  display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem;
+}
+.badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; padding: 0.3rem 0.9rem;
+  border-radius: 999px; border: 1px solid var(--border);
+  color: var(--text-dim); background: var(--surface);
+}
+.badge.blue { border-color: var(--accent); color: var(--accent); background: rgba(59,130,246,0.1); }
+.badge.teal { border-color: var(--accent2); color: var(--accent2); background: rgba(6,182,212,0.1); }
+.badge.amber { border-color: var(--accent3); color: var(--accent3); background: rgba(245,158,11,0.1); }
+
+.hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.hero-btns a {
+  padding: 0.75rem 1.75rem; border-radius: 999px; text-decoration: none;
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: clamp(0.85rem, 2.5vw, 1rem); transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #2563eb; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+.scroll-hint {
+  position: absolute; bottom: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  animation: bounce 2s infinite;
+}
+.scroll-hint::after { content: '↓'; font-size: 1.1rem; color: var(--accent); }
+@keyframes bounce {
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(5px)}
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.container {
+  max-width: 920px; margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem);
+}
+section { padding: clamp(3rem, 8vw, 5rem) 0; position: relative; }
+section + section { border-top: 1px solid var(--border); }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; color: var(--accent);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.6rem;
+}
+h2.section-title {
+  font-family: 'Outfit', sans-serif; font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 2.8rem); line-height: 1.2;
+  margin-bottom: 1.25rem; color: #fff;
+}
+h3.sub-title {
+  font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: clamp(1rem, 3vw, 1.2rem); color: var(--accent2);
+  margin: 2rem 0 0.65rem;
+}
+p { color: var(--text-dim); margin-bottom: 0.9rem; font-size: clamp(0.9rem, 2.2vw, 1rem); }
+strong { color: var(--text); }
+
+/* ═══════════════════════════════════════
+   CARDS & BOXES
+═══════════════════════════════════════ */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1rem,3vw,1.5rem) clamp(1rem,3vw,2rem);
+  margin: 1.25rem 0; position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+.info-box {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(6,182,212,0.05));
+  border: 1px solid rgba(59,130,246,0.25); border-radius: var(--radius);
+  padding: clamp(1rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem); margin: 1.25rem 0;
+}
+.info-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+  color: var(--accent); margin-bottom: 0.75rem;
+}
+.tip-box {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.05));
+  border: 1px solid rgba(16,185,129,0.25); border-radius: var(--radius);
+  padding: clamp(1rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem); margin: 1.25rem 0;
+}
+.tip-title { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent4); margin-bottom: 0.65rem; }
+.warn-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(244,63,94,0.05));
+  border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius);
+  padding: clamp(1rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem); margin: 1.25rem 0;
+}
+.warn-title { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent3); margin-bottom: 0.65rem; }
+
+/* ═══════════════════════════════════════
+   FORMULA
+═══════════════════════════════════════ */
+.formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.78rem, 2vw, 0.98rem);
+  color: var(--accent2);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 0.65rem 1rem;
+  margin: 0.85rem 0;
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+}
+.formula .var { color: var(--accent3); }
+.formula .op { color: var(--accent5); }
+
+/* ═══════════════════════════════════════
+   CIRCLE CANVAS
+═══════════════════════════════════════ */
+#circle-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+canvas#unitCircle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  cursor: crosshair;
+  touch-action: none;
+  display: block;
+  max-width: 100%;
+}
+.circle-info { min-width: 0; }
+.val-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.55rem 0; border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+}
+.val-label { color: var(--text-muted); font-size: clamp(0.65rem,1.8vw,0.75rem); }
+.val-num { font-size: clamp(0.85rem,2.5vw,1.05rem); font-weight: 600; }
+.val-num.sin { color: var(--accent5); }
+.val-num.cos { color: var(--accent4); }
+.val-num.tan { color: var(--accent3); }
+.angle-display {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.5rem,5vw,2rem); font-weight: 800; color: #fff; margin-bottom: 0.75rem;
+}
+.quadrant-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  padding: 0.22rem 0.65rem; border-radius: 999px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); margin-bottom: 0.85rem; display: inline-block;
+}
+.circle-instruction { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 0.75rem; }
+
+/* ═══════════════════════════════════════
+   TABLE
+═══════════════════════════════════════ */
+.table-wrap { overflow-x: auto; margin: 1.25rem 0; -webkit-overflow-scrolling: touch; border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: clamp(0.7rem,1.8vw,0.88rem); }
+th {
+  background: var(--surface2); color: var(--accent); font-weight: 600;
+  padding: clamp(0.45rem,1.5vw,0.75rem) clamp(0.5rem,2vw,1rem);
+  text-align: center; border-bottom: 2px solid var(--accent);
+  border-right: 1px solid var(--border); white-space: nowrap;
+}
+td {
+  padding: clamp(0.4rem,1.5vw,0.65rem) clamp(0.5rem,2vw,1rem);
+  text-align: center; border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border); color: var(--text-dim); white-space: nowrap;
+}
+tr:nth-child(even) td { background: var(--surface); }
+tr:hover td { background: rgba(59,130,246,0.05); color: var(--text); }
+td.hl { color: var(--accent3); font-weight: 600; }
+td.hl2 { color: var(--accent4); font-weight: 600; }
+
+/* ═══════════════════════════════════════
+   CONVERTER
+═══════════════════════════════════════ */
+.converter {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: clamp(1rem,3vw,1.5rem); margin: 1.5rem 0;
+}
+.conv-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.conv-group label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.conv-input {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.7rem 0.9rem; color: var(--text);
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.95rem,3vw,1.1rem);
+  width: 100%; transition: border-color 0.2s; -webkit-appearance: none;
+}
+.conv-input:focus { outline: none; border-color: var(--accent); }
+.conv-arrows { color: var(--accent); font-size: 1.4rem; text-align: center; }
+
+/* ═══════════════════════════════════════
+   QUADRANT GRID
+═══════════════════════════════════════ */
+.quadrant-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0;
+}
+.q-cell { background: var(--surface); padding: clamp(0.9rem,3vw,1.25rem); text-align: center; transition: background 0.2s; }
+.q-cell:hover { background: var(--surface2); }
+.q-num { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
+.q-range { font-family: 'JetBrains Mono', monospace; font-size: clamp(0.65rem,1.8vw,0.78rem); color: var(--text-dim); margin-bottom: 0.65rem; }
+.q-signs { display: flex; justify-content: center; gap: 0.35rem; flex-wrap: wrap; }
+.sign-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.6rem,1.6vw,0.74rem);
+  padding: 0.18rem 0.5rem; border-radius: 999px; font-weight: 600;
+}
+.sign-pos { background: rgba(16,185,129,0.15); color: var(--accent4); border: 1px solid rgba(16,185,129,0.3); }
+.sign-neg { background: rgba(244,63,94,0.1); color: var(--accent5); border: 1px solid rgba(244,63,94,0.25); }
+
+/* ═══════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════ */
+.quiz-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: clamp(1.25rem,4vw,2rem); margin: 1.5rem 0; position: relative; overflow: hidden;
+}
+.quiz-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent6), var(--accent5));
+}
+.quiz-num { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--accent6); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.quiz-q { font-family: 'Outfit', sans-serif; font-size: clamp(1rem,3vw,1.15rem); font-weight: 700; color: #fff; margin-bottom: 1.1rem; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.85rem; }
+.quiz-opt {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  padding: clamp(0.65rem,2vw,0.75rem) clamp(0.75rem,2vw,1rem);
+  cursor: pointer; font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.8rem,2.2vw,0.88rem); color: var(--text-dim);
+  transition: all 0.18s; text-align: left; user-select: none;
+  -webkit-tap-highlight-color: transparent; min-height: 48px;
+  display: flex; align-items: center;
+}
+.quiz-opt:hover:not(.answered) { border-color: var(--accent6); color: var(--text); background: rgba(167,139,250,0.07); }
+.quiz-opt:active:not(.answered) { transform: scale(0.97); }
+.quiz-opt.correct { background: rgba(16,185,129,0.12); border-color: var(--accent4); color: var(--accent4); }
+.quiz-opt.wrong { background: rgba(244,63,94,0.1); border-color: var(--accent5); color: var(--accent5); }
+.quiz-opt.show-correct { background: rgba(16,185,129,0.08); border-color: var(--accent4); color: var(--accent4); opacity: 0.7; }
+.quiz-feedback {
+  display: none; padding: 0.7rem 0.9rem; border-radius: 8px;
+  font-size: clamp(0.8rem,2.2vw,0.9rem); line-height: 1.5; margin-top: 0.5rem;
+}
+.quiz-feedback.ok { background: rgba(16,185,129,0.1); color: var(--accent4); display: block; }
+.quiz-feedback.ko { background: rgba(244,63,94,0.1); color: var(--accent5); display: block; }
+
+/* ═══════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════ */
+.progress-bar-wrap { background: var(--surface2); border-radius: 999px; height: 6px; margin: 0.5rem 0 1.25rem; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s ease; }
+.score-display { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--accent3); text-align: center; }
+.score-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+
+/* ═══════════════════════════════════════
+   CHALLENGE
+═══════════════════════════════════════ */
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 0.85rem; margin: 1.25rem 0;
+}
+.challenge-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: clamp(1rem,3vw,1.25rem); cursor: pointer; transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.challenge-item:hover { border-color: var(--accent); background: var(--surface2); }
+.challenge-item.revealed { border-color: var(--accent4); }
+.ch-question { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(0.9rem,2.5vw,1rem); color: #fff; margin-bottom: 0.65rem; }
+.ch-answer {
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.72rem,2vw,0.82rem); color: var(--accent4);
+  background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 8px; padding: 0.6rem 0.75rem; display: none; line-height: 1.65;
+}
+.challenge-item.revealed .ch-answer { display: block; }
+.ch-hint { font-size: 0.72rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 0.4rem; }
+.ch-level { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; padding: 0.18rem 0.5rem; border-radius: 999px; margin-bottom: 0.5rem; display: inline-block; }
+.lv1 { background: rgba(16,185,129,0.15); color: var(--accent4); }
+.lv2 { background: rgba(59,130,246,0.15); color: var(--accent); }
+.lv3 { background: rgba(244,63,94,0.15); color: var(--accent5); }
+
+/* ═══════════════════════════════════════
+   INVERSE FUNCTIONS
+═══════════════════════════════════════ */
+.fn-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%,220px),1fr));
+  gap: 0.85rem; margin: 1.25rem 0;
+}
+.fn-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1rem,3vw,1.25rem); transition: transform 0.2s; }
+.fn-card:hover { transform: translateY(-2px); }
+.fn-name { font-family: 'JetBrains Mono', monospace; font-size: clamp(0.95rem,2.5vw,1.1rem); font-weight: 600; margin-bottom: 0.5rem; }
+.fn-name.arcsin { color: var(--accent5); }
+.fn-name.arccos { color: var(--accent4); }
+.fn-name.arctan { color: var(--accent3); }
+.fn-detail { font-size: clamp(0.72rem,2vw,0.82rem); color: var(--text-dim); font-family: 'JetBrains Mono', monospace; line-height: 1.85; }
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════ */
+.fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — TABLET ≤ 900px
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  #circle-wrapper, #tancot-wrapper {
+    grid-template-columns: 1fr;
+  }
+  canvas#unitCircle, canvas#tanCotCanvas {
+    width: min(360px, 100%) !important;
+    margin: 0 auto;
+  }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — MOBILE ≤ 640px
+═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  :root { --nav-h: 52px; }
+
+  /* Nav */
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .fs-label { display: none; }
+
+  /* Converter stacks vertically */
+  .converter { grid-template-columns: 1fr; }
+  .conv-arrows { transform: rotate(90deg); margin: -0.3rem auto; }
+
+  /* Quiz: single column options */
+  .quiz-options { grid-template-columns: 1fr; }
+
+  /* Canvas full width */
+  canvas#unitCircle, canvas#tanCotCanvas { width: 100% !important; }
+
+  /* Reduce section padding */
+  section { padding: 2.5rem 0; }
+
+  /* Slightly smaller formulas */
+  .formula { font-size: 0.75rem; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE ≤ 380px
+═══════════════════════════════════════ */
+@media (max-width: 380px) {
+  .hero h1 { font-size: 1.9rem; }
+  .hero-btns a { padding: 0.65rem 1.25rem; }
+  .badge { font-size: 0.62rem; padding: 0.25rem 0.7rem; }
+  .quadrant-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   GRAPH SECTION
+═══════════════════════════════════════ */
+.graph-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--clr, var(--border));
+  background: transparent;
+  color: var(--clr, var(--text-dim));
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.graph-toggle.active {
+  background: color-mix(in srgb, var(--clr) 18%, transparent);
+}
+.graph-toggle:hover { opacity: 0.85; }
+
+.graph-legend-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .quiz-opt { min-height: 52px; }
+  .challenge-item { padding: 1.1rem; }
+  .nav-drawer a { padding: 0.8rem 1rem; min-height: 48px; display: flex; align-items: center; }
+  nav a { padding: 0.4rem 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ NAV ════════════ -->
+<nav>
+  <div class="nav-brand">∠ <span>Gonio</span></div>
+  <div class="nav-links">
+    <a href="#intro">Intro</a>
+    <a href="#definizione">Definizione</a>
+    <a href="#tangente">Tan &amp; Cotan</a>
+    <a href="#radiante">Radiante</a>
+    <a href="#valori">Valori</a>
+    <a href="#simmetrie">Simmetrie</a>
+    <a href="#inverse">Inverse</a>
+    <a href="#grafici">Grafici</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#sfida">Sfida</a>
+  </div>
+  <div class="nav-actions">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">
+      <span id="fsIcon">⛶</span>
+      <span class="fs-label" id="fsLabel">Schermo pieno</span>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleDrawer()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="navDrawer">
+  <a href="#intro" onclick="closeDrawer()">📌 Intro</a>
+  <a href="#definizione" onclick="closeDrawer()">⭕ Definizione</a>
+  <a href="#tangente" onclick="closeDrawer()">📐 Tan &amp; Cotan</a>
+  <a href="#radiante" onclick="closeDrawer()">📐 Radiante</a>
+  <a href="#valori" onclick="closeDrawer()">📊 Valori notevoli</a>
+  <a href="#simmetrie" onclick="closeDrawer()">🔀 Simmetrie</a>
+  <a href="#inverse" onclick="closeDrawer()">🔁 Funzioni inverse</a>
+  <a href="#grafici" onclick="closeDrawer()">📈 Grafici</a>
+  <a href="#quiz" onclick="closeDrawer()">❓ Quiz</a>
+  <a href="#sfida" onclick="closeDrawer()">🏆 Sfida finale</a>
+</div>
+
+<!-- ════════════ HERO ════════════ -->
+<section id="intro" class="hero">
+  <div class="hero-glow"></div>
+  <div>
+    <div class="hero-badges">
+      <span class="badge blue">📐 Geometria</span>
+      <span class="badge teal">⭕ Circonferenza</span>
+      <span class="badge amber">🎯 Interattivo</span>
+    </div>
+    <h1>Funzioni<br>Goniometriche</h1>
+    <p>Una lezione interattiva completa — dalla circonferenza goniometrica ai valori notevoli, dalle simmetrie alle funzioni inverse.</p>
+    <div class="hero-btns">
+      <a href="#definizione" class="btn-primary">Inizia la lezione →</a>
+      <a href="#quiz" class="btn-secondary">Vai ai quiz</a>
+    </div>
+  </div>
+  <div class="scroll-hint">scroll</div>
+</section>
+
+<!-- intro card -->
+<div class="container">
+  <div class="card fade-in" style="margin-top:1.5rem">
+    <p style="font-family:'Syne',sans-serif;font-size:clamp(0.95rem,2.5vw,1rem);font-weight:700;color:#fff;margin-bottom:0.75rem">🌊 Dove vivono le funzioni goniometriche?</p>
+    <p style="margin-bottom:1rem">Hai mai osservato le <strong>onde del mare</strong>? O il movimento di un'altalena? Questi fenomeni si <strong>ripetono periodicamente</strong> e si descrivono con seno, coseno e tangente.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,110px),1fr));gap:0.6rem">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.8rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:0.25rem">🔊</div>
+        <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)">Onde sonore</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.8rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:0.25rem">⚡</div>
+        <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)">Corrente AC</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.8rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:0.25rem">🌍</div>
+        <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)">GPS / orbite</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.8rem;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:0.25rem">🏗️</div>
+        <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim)">Ingegneria</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ DEFINIZIONE ════════════ -->
+<section id="definizione">
+<div class="container">
+
+  <!-- 1. Definizione circonferenza goniometrica -->
+  <div class="fade-in">
+    <p class="section-label">// 01 — Definizione</p>
+    <h2 class="section-title">La Circonferenza<br>Goniometrica</h2>
+    <p>La <strong>circonferenza goniometrica</strong> è una circonferenza di raggio <strong>r = 1</strong> con centro nell'origine degli assi. Ad ogni angolo α corrisponde un unico punto P(x, y) sulla circonferenza. Le coordinate di P <em>sono</em> per definizione le funzioni goniometriche di α.</p>
+    <p>L'angolo α si misura a partire dal <strong>semiasse positivo delle ascisse</strong> e cresce in senso <strong>antiorario</strong> — come mostra l'arco giallo nelle esplorazioni qui sotto.</p>
+  </div>
+
+  <!-- 2. Esplorazione seno e coseno -->
+  <div class="fade-in">
+    <h3 class="sub-title">⭕ Esplorazione — seno e coseno</h3>
+    <p>Trascina il punto P per vedere come <span style="color:#f43f5e;font-weight:600">sin(α)</span> e <span style="color:#10b981;font-weight:600">cos(α)</span> variano al variare dell'angolo. L'<strong style="color:#f59e0b">arco giallo</strong> è l'angolo α, sempre misurato in senso antiorario dal semiasse positivo delle x.</p>
+  </div>
+
+  <div id="circle-wrapper">
+    <canvas id="unitCircle" width="320" height="320"></canvas>
+    <div class="circle-info fade-in">
+      <div class="angle-display" id="angleDeg">45°</div>
+      <div class="quadrant-badge" id="quadrantLabel">I Quadrante</div>
+      <div class="val-row"><span class="val-label">sin(α)</span><span class="val-num sin" id="sinVal">0.7071</span></div>
+      <div class="val-row"><span class="val-label">cos(α)</span><span class="val-num cos" id="cosVal">0.7071</span></div>
+      <div class="val-row"><span class="val-label">radianti</span><span class="val-num" id="radVal" style="color:var(--accent6)">0.7854</span></div>
+      <p class="circle-instruction">← Clicca o trascina il punto bianco</p>
+    </div>
+  </div>
+
+  <!-- 3. Esplorazione tangente e cotangente -->
+  <div class="fade-in" id="tangente">
+    <h3 class="sub-title">📐 Esplorazione — tangente e cotangente</h3>
+    <p>L'<strong style="color:#f59e0b">arco giallo</strong> mostra sempre α in senso antiorario. Avvicina il punto a 90°: osserva il <span style="color:#f59e0b;font-weight:600">segmento arancio (tan)</span> allungarsi verso l'infinito. Prova anche 0° per vedere cosa succede al <span style="color:#a78bfa;font-weight:600">segmento viola (cot)</span>.</p>
+  </div>
+
+  <div id="tancot-wrapper" style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;margin:1.5rem 0">
+    <canvas id="tanCotCanvas" width="320" height="320" style="background:var(--surface);border:1px solid var(--border);border-radius:16px;cursor:crosshair;touch-action:none;display:block;max-width:100%"></canvas>
+    <div id="tancot-info" style="min-width:0">
+      <div class="angle-display" id="tcAngleDeg">45°</div>
+      <div class="quadrant-badge" id="tcQuadrant">I Quadrante</div>
+      <div class="val-row"><span class="val-label">tan(α) — segmento arancio</span><span class="val-num tan" id="tcTan">1.0000</span></div>
+      <div class="val-row"><span class="val-label">cotan(α) — segmento viola</span><span class="val-num" style="color:var(--accent6)" id="tcCot">1.0000</span></div>
+      <div class="val-row"><span class="val-label">sin(α)</span><span class="val-num sin" id="tcSin">0.7071</span></div>
+      <div class="val-row"><span class="val-label">cos(α)</span><span class="val-num cos" id="tcCos">0.7071</span></div>
+      <p style="font-size:0.72rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:0.75rem">← Clicca o trascina il punto bianco</p>
+    </div>
+  </div>
+
+  <!-- 4. Come si leggono geometricamente -->
+  <div class="info-box fade-in">
+    <div class="info-title">📐 Come si leggono geometricamente tan e cotan</div>
+    <p style="margin:0 0 0.5rem">Prolungando il raggio vettore OP fino a incontrare le due rette tangenti alla circonferenza unitario:</p>
+    <p style="margin:0 0 0.3rem"><span style="color:var(--accent3);font-family:'JetBrains Mono',monospace;font-weight:600">tan(α)</span> = <strong>ordinata</strong> del punto di intersezione fra il prolungamento di OP e <strong>retta tangente </strong> x = 1.</p>
+    <p style="margin:0"><span style="color:var(--accent6);font-family:'JetBrains Mono',monospace;font-weight:600">cotan(α)</span> = <strong>ascissa</strong> del punto di intersezione fra il prolungamento di OP e <strong>retta tangente </strong> y = 1.</p>
+  </div>
+
+  <!-- 5. Quando tan e cotan non esistono -->
+  <div class="warn-box fade-in">
+    <div class="warn-title">⚠️ Quando tan e cotan non esistono</div>
+    <p style="margin:0 0 0.4rem"><strong>tan(α)</strong> non esiste quando <strong>cos(α) = 0</strong>, cioè per α = 90° e α = 270°: il raggio prolungato è parallelo alla retta x = 1 e non la incontra mai.</p>
+    <p style="margin:0"><strong>cotan(α)</strong> non esiste quando <strong>sin(α) = 0</strong>, cioè per α = 0° e α = 180°: il raggio prolungato è parallelo alla retta y = 1 e non la incontra mai.</p>
+  </div>
+
+  <!-- 6. Le quattro funzioni fondamentali -->
+  <div class="info-box fade-in">
+    <div class="info-title">📌 Le quattro funzioni fondamentali</div>
+    <p style="margin:0 0 0.6rem">Dato il punto P(x, y) sulla circonferenza goniometrica:</p>
+    <code class="formula"><span class="var">sin</span>(α) <span class="op">=</span> y   <span style="color:var(--text-muted)">← ordinata di P</span></code>
+    <code class="formula"><span class="var">cos</span>(α) <span class="op">=</span> x   <span style="color:var(--text-muted)">← ascissa di P</span></code>
+    <code class="formula"><span class="var">tan</span>(α) <span class="op">=</span> y/x <span class="op">=</span> sin(α)/cos(α)   <span style="color:var(--text-muted)">[cos(α) ≠ 0]</span></code>
+    <code class="formula"><span class="var">cotan</span>(α) <span class="op">=</span> x/y <span class="op">=</span> cos(α)/sin(α)   <span style="color:var(--text-muted)">[sin(α) ≠ 0]</span></code>
+  </div>
+
+  <!-- 7. Identità fondamentale -->
+  <div class="tip-box fade-in">
+    <div class="tip-title">💡 Identità fondamentale</div>
+    <code class="formula"><span class="var">sin²</span>(α) <span class="op">+</span> <span class="var">cos²</span>(α) <span class="op">=</span> 1</code>
+    <p style="margin:0.4rem 0 0;font-size:0.9rem">Poiché P = (cos α, sin α) è sulla circonferenza di raggio 1, vale x² + y² = 1: questa è semplicemente l'equazione della circonferenza, ovvero il Teorema di Pitagora.</p>
+  </div>
+
+  <!-- 8. Domanda per la classe -->
+  <div class="warn-box fade-in">
+    <div class="warn-title">❓ Domanda per la classe</div>
+    <p style="margin:0">Se <strong>sin(α) = 3/5</strong>, quanto vale <strong>cos(α)</strong>?<br>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-muted)">cos²(α) = 1 − sin²(α) = 1 − 9/25 = 16/25 → cos(α) = ±4/5<br>(il segno dipende dal quadrante in cui si trova P)</span></p>
+  </div>
+
+  <!-- 9. Relazioni tra tan, cotan, sin e cos -->
+  <div class="tip-box fade-in">
+    <div class="tip-title">💡 Relazioni tra tan, cotan, sin e cos</div>
+    <code class="formula"><span class="var">tan</span>(α) <span class="op">=</span> sin(α) / cos(α)   <span style="color:var(--text-muted)">[cos(α) ≠ 0]</span></code>
+    <code class="formula"><span class="var">cotan</span>(α) <span class="op">=</span> cos(α) / sin(α)   <span style="color:var(--text-muted)">[sin(α) ≠ 0]</span></code>
+    <code class="formula"><span class="var">tan</span>(α) <span class="op">·</span> <span class="var">cotan</span>(α) <span class="op">=</span> 1</code>
+    <code class="formula">1 <span class="op">+</span> <span class="var">tan²</span>(α) <span class="op">=</span> 1 / cos²(α)   <span style="color:var(--text-muted)">[cos(α) ≠ 0]</span></code>
+    <code class="formula">1 <span class="op">+</span> <span class="var">cot²</span>(α) <span class="op">=</span> 1 / sin²(α)   <span style="color:var(--text-muted)">[sin(α) ≠ 0]</span></code>
+  </div>
+
+</div>
+</section>
+
+<!-- ════════════ RADIANTE ════════════ -->
+<section id="radiante">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 02 — Il Radiante</p>
+    <h2 class="section-title">Gradi vs Radianti</h2>
+    <p>I gradi sono comodi ma non sono l'unità naturale della matematica. Il <strong>radiante</strong> è l'unità del Sistema Internazionale.</p>
+  </div>
+  <div class="info-box fade-in">
+    <div class="info-title">📐 Definizione di Radiante</div>
+    <p style="margin:0">L'angolo che sottende un arco lungo quanto il raggio. Un giro completo = <strong>2π rad</strong>.</p>
+    <code class="formula" style="margin-top:0.65rem">α [rad] = lunghezza arco / raggio = l / r</code>
+  </div>
+
+  <h3 class="sub-title fade-in">🔄 Convertitore interattivo</h3>
+  <div class="converter fade-in">
+    <div class="conv-group">
+      <label>Gradi (°)</label>
+      <input class="conv-input" id="inputGradi" type="number" value="180" step="1" inputmode="decimal">
+    </div>
+    <div class="conv-arrows">⇄</div>
+    <div class="conv-group">
+      <label>Radianti (rad)</label>
+      <input class="conv-input" id="inputRad" type="number" step="0.001" inputmode="decimal">
+    </div>
+  </div>
+  <p id="convHint" style="font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;text-align:center"></p>
+
+  <h3 class="sub-title fade-in" id="valori">📊 Tabella di riferimento</h3>
+  <div class="table-wrap fade-in">
+    <table>
+      <thead><tr><th>Gradi</th><th>Radianti</th><th>sin</th><th>cos</th><th>tan</th></tr></thead>
+      <tbody>
+        <tr><td>0°</td><td>0</td><td class="hl2">0</td><td class="hl2">1</td><td class="hl2">0</td></tr>
+        <tr><td>30°</td><td>π/6</td><td class="hl2">1/2</td><td class="hl2">√3/2</td><td class="hl2">√3/3</td></tr>
+        <tr><td>45°</td><td>π/4</td><td class="hl">√2/2</td><td class="hl">√2/2</td><td class="hl">1</td></tr>
+        <tr><td>60°</td><td>π/3</td><td class="hl">√3/2</td><td class="hl">1/2</td><td class="hl">√3</td></tr>
+        <tr><td>90°</td><td>π/2</td><td class="hl2">1</td><td class="hl2">0</td><td>—</td></tr>
+        <tr><td>120°</td><td>2π/3</td><td class="hl2">√3/2</td><td class="hl">−1/2</td><td class="hl">−√3</td></tr>
+        <tr><td>150°</td><td>5π/6</td><td class="hl2">1/2</td><td class="hl">−√3/2</td><td class="hl">−√3/3</td></tr>
+        <tr><td>180°</td><td>π</td><td class="hl2">0</td><td class="hl">−1</td><td class="hl2">0</td></tr>
+        <tr><td>270°</td><td>3π/2</td><td class="hl">−1</td><td class="hl2">0</td><td>—</td></tr>
+        <tr><td>360°</td><td>2π</td><td class="hl2">0</td><td class="hl2">1</td><td class="hl2">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip-box fade-in">
+    <div class="tip-title">🧠 Trucco per ricordare sin(0°→90°)</div>
+    <p style="margin:0">Sequenza <strong>0, 1, 2, 3, 4</strong> → dividi per 4 → radice quadrata:</p>
+    <code class="formula">sin(0°)=0  sin(30°)=½  sin(45°)=√2/2  sin(60°)=√3/2  sin(90°)=1</code>
+    <p style="margin:0.4rem 0 0;font-size:0.85rem">Per il <strong>coseno</strong>: leggi la stessa sequenza al contrario!</p>
+  </div>
+</div>
+</section>
+
+<!-- ════════════ SIMMETRIE ════════════ -->
+<section id="simmetrie">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 03 — Simmetrie</p>
+    <h2 class="section-title">Angoli Associati<br>& Quadranti</h2>
+    <p>La circonferenza è divisa in <strong>4 quadranti</strong>. Il segno di seno e coseno dipende da dove si trova l'angolo.</p>
+  </div>
+
+  <div class="quadrant-grid fade-in">
+    <div class="q-cell">
+      <div class="q-num">I Quadrante</div><div class="q-range">0° – 90°</div>
+      <div class="q-signs"><span class="sign-pill sign-pos">sin +</span><span class="sign-pill sign-pos">cos +</span><span class="sign-pill sign-pos">tan +</span></div>
+    </div>
+    <div class="q-cell">
+      <div class="q-num">II Quadrante</div><div class="q-range">90° – 180°</div>
+      <div class="q-signs"><span class="sign-pill sign-pos">sin +</span><span class="sign-pill sign-neg">cos −</span><span class="sign-pill sign-neg">tan −</span></div>
+    </div>
+    <div class="q-cell">
+      <div class="q-num">III Quadrante</div><div class="q-range">180° – 270°</div>
+      <div class="q-signs"><span class="sign-pill sign-neg">sin −</span><span class="sign-pill sign-neg">cos −</span><span class="sign-pill sign-pos">tan +</span></div>
+    </div>
+    <div class="q-cell">
+      <div class="q-num">IV Quadrante</div><div class="q-range">270° – 360°</div>
+      <div class="q-signs"><span class="sign-pill sign-neg">sin −</span><span class="sign-pill sign-pos">cos +</span><span class="sign-pill sign-neg">tan −</span></div>
+    </div>
+  </div>
+
+  <h3 class="sub-title fade-in">📋 Formule angoli associati</h3>
+  <div class="table-wrap fade-in">
+    <table>
+      <thead><tr><th>Trasformazione</th><th>sin</th><th>cos</th><th>tan</th></tr></thead>
+      <tbody>
+        <tr><td>−α</td><td>−sin α</td><td>cos α</td><td>−tan α</td></tr>
+        <tr><td>90° − α</td><td>cos α</td><td>sin α</td><td>cotan α</td></tr>
+        <tr><td>90° + α</td><td>cos α</td><td>−sin α</td><td>−cotan α</td></tr>
+        <tr><td>180° − α</td><td>sin α</td><td>−cos α</td><td>−tan α</td></tr>
+        <tr><td>180° + α</td><td>−sin α</td><td>−cos α</td><td>tan α</td></tr>
+        <tr><td>360° − α</td><td>−sin α</td><td>cos α</td><td>−tan α</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-title fade-in">🎯 Attività: prevedi il segno!</h3>
+  <p class="fade-in">Indica in quale quadrante si trova ciascun angolo prima di vedere la risposta.</p>
+  <div id="signActivity" class="fade-in"></div>
+</div>
+</section>
+
+<!-- ════════════ INVERSE ════════════ -->
+<section id="inverse">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 04 — Funzioni Inverse</p>
+    <h2 class="section-title">arcsin, arccos,<br>arctan</h2>
+    <p>Se <strong>sin(α) = 0.5</strong>, qual è α? Usa l'<strong>arcoseno</strong>. Le funzioni inverse ti permettono di risalire all'angolo partendo dal valore.</p>
+  </div>
+
+  <div class="fn-grid fade-in">
+    <div class="fn-card">
+      <div class="fn-name arcsin">arcsin(x)</div>
+      <div class="fn-detail">Dato sin(α) = x, trova α<br>Dominio: [−1, 1]<br>Codominio: [−90°, 90°]<br>ovvero [−π/2, π/2]</div>
+    </div>
+    <div class="fn-card">
+      <div class="fn-name arccos">arccos(x)</div>
+      <div class="fn-detail">Dato cos(α) = x, trova α<br>Dominio: [−1, 1]<br>Codominio: [0°, 180°]<br>ovvero [0, π]</div>
+    </div>
+    <div class="fn-card">
+      <div class="fn-name arctan">arctan(x)</div>
+      <div class="fn-detail">Dato tan(α) = x, trova α<br>Dominio: ℝ<br>Codominio: (−90°, 90°)<br>ovvero (−π/2, π/2)</div>
+    </div>
+  </div>
+
+  <div class="warn-box fade-in">
+    <div class="warn-title">⚠️ Trappola comune!</div>
+    <p style="margin:0"><strong>arcsin(sin(α)) = α</strong> solo se α ∈ [−90°, 90°].</p>
+    <code class="formula" style="margin-top:0.65rem">sin(150°) = sin(30°) = ½
+arcsin(½) = 30°  ← non 150°!</code>
+  </div>
+  <div class="info-box fade-in">
+    <div class="info-title">🔢 Esempi</div>
+    <code class="formula">arccos(√3/2) = 30°    cos(30°) = √3/2</code>
+    <code class="formula">arctan(1) = 45°        tan(45°) = 1</code>
+    <code class="formula">arcsin(−½) = −30°     codominio: [−90°, 90°]</code>
+  </div>
+</div>
+</section>
+
+<!-- ════════════ GRAFICI ════════════ -->
+<section id="grafici">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 05 — Grafici</p>
+    <h2 class="section-title">Grafici nel Piano<br>Cartesiano</h2>
+    <p>Visualizza il comportamento delle quattro funzioni goniometriche su tutto l'asse reale. Passa il mouse (o tocca) sul grafico per leggere i valori precisi. Puoi attivare/disattivare ogni funzione con i bottoni.</p>
+  </div>
+
+  <!-- Toggle buttons -->
+  <div class="fade-in" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem">
+    <button class="graph-toggle active" data-fn="sin" onclick="toggleGraph('sin',this)" style="--clr:#f43f5e">y = sin x</button>
+    <button class="graph-toggle active" data-fn="cos" onclick="toggleGraph('cos',this)" style="--clr:#10b981">y = cos x</button>
+    <button class="graph-toggle active" data-fn="tan" onclick="toggleGraph('tan',this)" style="--clr:#f59e0b">y = tan x</button>
+    <button class="graph-toggle active" data-fn="cot" onclick="toggleGraph('cot',this)" style="--clr:#a78bfa">y = cotan x</button>
+  </div>
+
+  <!-- Canvas -->
+  <div id="graph-wrapper" class="fade-in" style="position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1rem">
+    <canvas id="graphCanvas" style="display:block;width:100%;cursor:crosshair;touch-action:none"></canvas>
+    <!-- Tooltip -->
+    <div id="graphTooltip" style="position:absolute;pointer-events:none;display:none;background:rgba(17,24,39,0.95);border:1px solid var(--border);border-radius:8px;padding:0.45rem 0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;white-space:nowrap;z-index:10"></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="fade-in" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:0.65rem;margin-bottom:1.5rem">
+    <div class="graph-legend-card" style="border-color:rgba(244,63,94,0.35)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;color:#f43f5e;margin-bottom:0.3rem">y = sin x</div>
+      <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.55">Periodo: 2π &nbsp;|&nbsp; Dominio: ℝ<br>Codominio: [−1, 1]&nbsp; |&nbsp; Dispari</div>
+    </div>
+    <div class="graph-legend-card" style="border-color:rgba(16,185,129,0.35)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;color:#10b981;margin-bottom:0.3rem">y = cos x</div>
+      <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.55">Periodo: 2π &nbsp;|&nbsp; Dominio: ℝ<br>Codominio: [−1, 1]&nbsp; |&nbsp; Pari</div>
+    </div>
+    <div class="graph-legend-card" style="border-color:rgba(245,158,11,0.35)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;color:#f59e0b;margin-bottom:0.3rem">y = tan x</div>
+      <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.55">Periodo: π &nbsp;|&nbsp; Dominio: ℝ∖{π/2+kπ}<br>Codominio: ℝ&nbsp; |&nbsp; Dispari</div>
+    </div>
+    <div class="graph-legend-card" style="border-color:rgba(167,139,250,0.35)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:700;color:#a78bfa;margin-bottom:0.3rem">y = cotan x</div>
+      <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.55">Periodo: π &nbsp;|&nbsp; Dominio: ℝ∖{kπ}<br>Codominio: ℝ&nbsp; |&nbsp; Dispari</div>
+    </div>
+  </div>
+
+  <div class="info-box fade-in">
+    <div class="info-title">📌 Come leggere il grafico</div>
+    <p style="margin:0">L'asse delle <strong style="color:var(--accent2)">x</strong> è in radianti (le etichette mostrano multipli di π). L'asse delle <strong style="color:var(--accent2)">y</strong> è il valore della funzione. Le <strong>linee tratteggiate verticali</strong> segnano gli asintoti verticali di tangente e cotangente. Il <strong>riquadro grigio</strong> evidenzia un periodo completo (2π) di seno e coseno.</p>
+  </div>
+</div>
+</section>
+
+<!-- ════════════ QUIZ ════════════ -->
+<section id="quiz">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 06 — Quiz interattivi</p>
+    <h2 class="section-title">Metti alla prova<br>le tue conoscenze</h2>
+    <p>Rispondi cliccando l'opzione corretta — feedback immediato con spiegazione.</p>
+  </div>
+  <div class="fade-in">
+    <div class="score-label">Progresso</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quizProgress" style="width:0%"></div></div>
+    <div class="score-display" id="quizScore" style="font-size:1.4rem;margin:0">0 / 9</div>
+  </div>
+  <div id="quizContainer" class="fade-in"></div>
+</div>
+</section>
+
+<!-- ════════════ SFIDA ════════════ -->
+<section id="sfida">
+<div class="container">
+  <div class="fade-in">
+    <p class="section-label">// 06 — Sfida finale</p>
+    <h2 class="section-title">🏆 Sfida<br>di Riepilogo</h2>
+    <p>Tocca ogni problema per rivelare la soluzione. Prova prima da solo!</p>
+  </div>
+  <div class="challenge-grid fade-in" id="challengeGrid"></div>
+</div>
+</section>
+
+<footer style="text-align:center;padding:clamp(2rem,6vw,3rem) 1.5rem;border-top:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:0.72rem">
+  <div style="font-size:1.4rem;margin-bottom:0.4rem">∠</div>
+  Funzioni Goniometriche — Lezione Interattiva<br>
+  <span style="color:var(--accent)">La matematica si impara facendo.</span>
+</footer>
+
+<!-- ════════════ JAVASCRIPT ════════════ -->
+<script>
+/* ─── HAMBURGER ─────────────────────────────── */
+function toggleDrawer() {
+  const d = document.getElementById('navDrawer');
+  const h = document.getElementById('hamburger');
+  const open = d.classList.toggle('open');
+  h.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeDrawer() {
+  document.getElementById('navDrawer').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('nav') && !e.target.closest('.nav-drawer')) closeDrawer();
+});
+
+/* ─── FULLSCREEN ─────────────────────────────── */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  const isFs = !!document.fullscreenElement;
+  document.getElementById('fsIcon').textContent = isFs ? '✕' : '⛶';
+  document.getElementById('fsLabel').textContent = isFs ? 'Esci' : 'Schermo pieno';
+});
+
+/* ─── CANVAS CIRCONFERENZA ─────────────────────── */
+const canvas = document.getElementById('unitCircle');
+const ctx = canvas.getContext('2d');
+let angle = Math.PI / 4;
+
+function resizeCanvas() {
+  const wrapper = document.getElementById('circle-wrapper');
+  const col = wrapper.children[0];
+  const available = Math.min(wrapper.clientWidth, 360);
+  const s = Math.max(220, available);
+  canvas.width = s; canvas.height = s;
+  drawCircle();
+}
+
+function drawCircle() {
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = W * 0.38;
+  ctx.clearRect(0, 0, W, H);
+  const fs = Math.max(9, Math.round(W * 0.034));
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.arc(cx,cy,R*i/3,0,Math.PI*2); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
+  ctx.font = `${fs}px JetBrains Mono, monospace`;
+  ctx.fillText('1', cx+R+4, cy-3);
+  ctx.fillText('-1', cx-R-fs*2-2, cy-3);
+  ctx.fillText('1', cx+4, cy-R-4);
+  ctx.fillText('-1', cx+4, cy+R+fs+2);
+
+  // Circle
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle = 'rgba(59,130,246,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // P in math coords: x=cos(angle), y=sin(angle); screen y is flipped
+  const px = cx + R * Math.cos(angle);
+  const py = cy - R * Math.sin(angle);
+
+  // cos segment: O → foot on x-axis
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,cy);
+  ctx.strokeStyle='#10b981'; ctx.lineWidth=2.5; ctx.setLineDash([]); ctx.stroke();
+  // sin segment: foot → P
+  ctx.beginPath(); ctx.moveTo(px,cy); ctx.lineTo(px,py);
+  ctx.strokeStyle='#f43f5e'; ctx.lineWidth=2.5; ctx.stroke();
+  // dashed horizontal guide
+  ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(cx,py); ctx.lineTo(px,py); ctx.stroke();
+  ctx.setLineDash([]);
+  // radius
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py);
+  ctx.strokeStyle='rgba(255,255,255,0.7)'; ctx.lineWidth=2; ctx.stroke();
+  // Angle arc — ALWAYS counterclockwise from positive x-axis to P.
+  // Normalize angle to [0, 2π] so the arc always sweeps CCW regardless of quadrant.
+  const normAngle = ((angle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  const arcR = R * 0.2;
+  ctx.beginPath();
+  // In screen coords: x-axis is 0, screen Y flipped → end = -normAngle, anticlockwise=true = CCW on screen = CCW in math ✓
+  ctx.arc(cx, cy, arcR, 0, -normAngle, true);
+  ctx.strokeStyle='#f59e0b'; ctx.lineWidth=2.5; ctx.stroke();
+  // α label at midpoint of the CCW arc (halfway between 0 and normAngle, going up)
+  const midA = -normAngle / 2;
+  ctx.font = `bold ${fs+2}px Georgia, serif`;
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillText('α', cx + (arcR+11)*Math.cos(midA) - 4, cy + (arcR+11)*Math.sin(midA) + fs/3);
+  // point
+  const pr = Math.max(5, W*0.022);
+  ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill();
+  ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2; ctx.stroke();
+
+  // labels
+  ctx.font = `bold ${fs}px JetBrains Mono, monospace`;
+  ctx.fillStyle='#f43f5e'; ctx.fillText('sin', px+pr+2,(py+cy)/2+fs/3);
+  ctx.fillStyle='#10b981'; ctx.fillText('cos',(px+cx)/2-fs*1.5,cy-fs/2);
+  ctx.fillStyle='#fff'; ctx.fillText('P',px+pr+2,py-pr-2);
+
+  updateInfo();
+}
+
+function updateInfo() {
+  const deg = ((angle*180/Math.PI)%360+360)%360;
+  const s=Math.sin(angle), c=Math.cos(angle);
+  document.getElementById('angleDeg').textContent = deg.toFixed(1)+'°';
+  document.getElementById('sinVal').textContent = s.toFixed(4);
+  document.getElementById('cosVal').textContent = c.toFixed(4);
+  document.getElementById('radVal').textContent = angle.toFixed(4);
+  const q = deg<90?'I Quadrante':deg<180?'II Quadrante':deg<270?'III Quadrante':'IV Quadrante';
+  document.getElementById('quadrantLabel').textContent = q;
+}
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const sx = canvas.width/r.width, sy = canvas.height/r.height;
+  const cx2 = e.touches?e.touches[0].clientX:e.clientX;
+  const cy2 = e.touches?e.touches[0].clientY:e.clientY;
+  return { x:(cx2-r.left)*sx - canvas.width/2, y:(cy2-r.top)*sy - canvas.height/2 };
+}
+
+let dragging = false;
+canvas.addEventListener('mousedown', e => { dragging=true; const p=getPos(e); angle=-Math.atan2(p.y,p.x); drawCircle(); });
+window.addEventListener('mousemove', e => { if(dragging){ const p=getPos(e); angle=-Math.atan2(p.y,p.x); drawCircle(); } });
+window.addEventListener('mouseup', ()=>dragging=false);
+canvas.addEventListener('touchstart', e=>{ e.preventDefault(); dragging=true; const p=getPos(e); angle=-Math.atan2(p.y,p.x); drawCircle(); },{passive:false});
+window.addEventListener('touchmove', e=>{ if(dragging){ e.preventDefault(); const p=getPos(e); angle=-Math.atan2(p.y,p.x); drawCircle(); } },{passive:false});
+window.addEventListener('touchend', ()=>dragging=false);
+
+const ro = new ResizeObserver(()=>resizeCanvas());
+ro.observe(document.getElementById('circle-wrapper'));
+resizeCanvas();
+
+/* ─── TAN/COT CANVAS ─────────────────────────────── */
+const tcCanvas = document.getElementById('tanCotCanvas');
+const tcCtx = tcCanvas.getContext('2d');
+let tcAngle = Math.PI / 4;
+
+function resizeTcCanvas() {
+  const wrapper = document.getElementById('tancot-wrapper');
+  const s = Math.max(220, Math.min(wrapper.clientWidth, 360));
+  tcCanvas.width = s; tcCanvas.height = s;
+  drawTanCot();
+}
+
+function drawTanCot() {
+  const W = tcCanvas.width, H = tcCanvas.height;
+  const cx = W/2, cy = H/2;
+  // Use a smaller R so tangent lines have room to extend
+  const R = W * 0.30;
+  const fs = Math.max(9, Math.round(W * 0.033));
+  tcCtx.clearRect(0, 0, W, H);
+
+  // Grid circles (faint)
+  tcCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  tcCtx.lineWidth = 1;
+  for (let i = 1; i < 4; i++) { tcCtx.beginPath(); tcCtx.arc(cx,cy,R*i/2,0,Math.PI*2); tcCtx.stroke(); }
+  tcCtx.beginPath(); tcCtx.moveTo(0,cy); tcCtx.lineTo(W,cy); tcCtx.stroke();
+  tcCtx.beginPath(); tcCtx.moveTo(cx,0); tcCtx.lineTo(cx,H); tcCtx.stroke();
+
+  // Tangent reference lines (x=1 and y=1 in unit coords)
+  const tanLineX = cx + R; // x=1 vertical tangent line
+  const cotLineY = cy - R; // y=1 horizontal tangent line
+
+  // Draw x=1 tangent line (vertical, orange, dashed)
+  tcCtx.setLineDash([4,4]);
+  tcCtx.strokeStyle = 'rgba(245,158,11,0.4)';
+  tcCtx.lineWidth = 1.5;
+  tcCtx.beginPath(); tcCtx.moveTo(tanLineX, 0); tcCtx.lineTo(tanLineX, H); tcCtx.stroke();
+
+  // Draw y=1 tangent line (horizontal, purple, dashed)
+  tcCtx.strokeStyle = 'rgba(167,139,250,0.4)';
+  tcCtx.beginPath(); tcCtx.moveTo(0, cotLineY); tcCtx.lineTo(W, cotLineY); tcCtx.stroke();
+  tcCtx.setLineDash([]);
+
+  // Axis labels
+  tcCtx.fillStyle = 'rgba(255,255,255,0.22)';
+  tcCtx.font = `${fs}px JetBrains Mono, monospace`;
+  tcCtx.fillText('1', tanLineX+3, cy-4);
+  tcCtx.fillStyle = 'rgba(245,158,11,0.5)';
+  tcCtx.fillText('x=1', tanLineX+3, cy+fs+2);
+  tcCtx.fillStyle = 'rgba(167,139,250,0.5)';
+  tcCtx.fillText('y=1', cx+4, cotLineY-4);
+
+  // Unit circle
+  tcCtx.beginPath(); tcCtx.arc(cx,cy,R,0,Math.PI*2);
+  tcCtx.strokeStyle = 'rgba(59,130,246,0.4)'; tcCtx.lineWidth = 1.5; tcCtx.stroke();
+
+  const cosA = Math.cos(tcAngle), sinA = Math.sin(tcAngle);
+  const px = cx + R*cosA, py = cy - R*sinA;
+
+  // Radius
+  tcCtx.beginPath(); tcCtx.moveTo(cx,cy); tcCtx.lineTo(px,py);
+  tcCtx.strokeStyle = 'rgba(255,255,255,0.6)'; tcCtx.lineWidth = 2; tcCtx.setLineDash([]); tcCtx.stroke();
+
+  // Extend radius to x=1 line → tangent point
+  const tanVal = sinA / cosA; // tan(α)
+  const cotVal = cosA / sinA; // cot(α)
+  const tanExists = Math.abs(cosA) > 0.01;
+  const cotExists = Math.abs(sinA) > 0.01;
+
+  if (tanExists) {
+    // Point on x=1 line: x=1, y=tan(α)
+    const tx = tanLineX;
+    const ty = cy - R * tanVal;
+    // Segment from (1,0) → (1, tan) on the tangent line
+    tcCtx.beginPath(); tcCtx.moveTo(tanLineX, cy); tcCtx.lineTo(tx, ty);
+    tcCtx.strokeStyle = '#f59e0b'; tcCtx.lineWidth = 4; tcCtx.stroke();
+    // Extend radius line to reach the tangent line
+    tcCtx.beginPath(); tcCtx.moveTo(cx, cy); tcCtx.lineTo(tx, ty);
+    tcCtx.strokeStyle = 'rgba(245,158,11,0.3)'; tcCtx.lineWidth = 1; tcCtx.setLineDash([3,3]); tcCtx.stroke();
+    tcCtx.setLineDash([]);
+    // Dot on tan line
+    tcCtx.beginPath(); tcCtx.arc(tx, ty, 5, 0, Math.PI*2);
+    tcCtx.fillStyle = '#f59e0b'; tcCtx.fill();
+    // Label tan
+    if (Math.abs(ty - cy) < H * 0.45) {
+      tcCtx.font = `bold ${fs}px JetBrains Mono, monospace`;
+      tcCtx.fillStyle = '#f59e0b';
+      const midY = (cy + ty) / 2;
+      tcCtx.fillText('tan', tanLineX + 6, midY + fs/3);
+    }
+  }
+
+  if (cotExists) {
+    // Point on y=1 line: y=1, x=cot(α)
+    const cx2 = cx + R * cotVal;
+    const cy2 = cotLineY;
+    // Segment from (0,1) → (cot, 1) on the cot tangent line
+    tcCtx.beginPath(); tcCtx.moveTo(cx, cotLineY); tcCtx.lineTo(cx2, cy2);
+    tcCtx.strokeStyle = '#a78bfa'; tcCtx.lineWidth = 4; tcCtx.stroke();
+    // Extend radius line to reach cot line
+    tcCtx.beginPath(); tcCtx.moveTo(cx, cy); tcCtx.lineTo(cx2, cy2);
+    tcCtx.strokeStyle = 'rgba(167,139,250,0.3)'; tcCtx.lineWidth = 1; tcCtx.setLineDash([3,3]); tcCtx.stroke();
+    tcCtx.setLineDash([]);
+    // Dot
+    tcCtx.beginPath(); tcCtx.arc(cx2, cy2, 5, 0, Math.PI*2);
+    tcCtx.fillStyle = '#a78bfa'; tcCtx.fill();
+    // Label cot
+    if (Math.abs(cx2 - cx) < W * 0.45) {
+      tcCtx.font = `bold ${fs}px JetBrains Mono, monospace`;
+      tcCtx.fillStyle = '#a78bfa';
+      const midX = (cx + cx2) / 2;
+      tcCtx.fillText('cot', midX - fs*1.2, cotLineY - 6);
+    }
+  }
+
+  // Angle arc — ALWAYS counterclockwise from positive x-axis to P
+  const normAngle2 = ((tcAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  const arcR2 = R * 0.22;
+  tcCtx.beginPath();
+  tcCtx.arc(cx, cy, arcR2, 0, -normAngle2, true);
+  tcCtx.strokeStyle = '#f59e0b'; tcCtx.lineWidth = 2.5; tcCtx.stroke();
+  // α label at midpoint of arc
+  const midA2 = -normAngle2 / 2;
+  tcCtx.font = `bold ${fs+2}px Georgia, serif`;
+  tcCtx.fillStyle = '#f59e0b';
+  tcCtx.fillText('α', cx + (arcR2+11)*Math.cos(midA2) - 4, cy + (arcR2+11)*Math.sin(midA2) + fs/3);
+
+  // Point P on circle
+  const pr = Math.max(5, W*0.022);
+  tcCtx.beginPath(); tcCtx.arc(px,py,pr,0,Math.PI*2);
+  tcCtx.fillStyle = '#fff'; tcCtx.fill();
+  tcCtx.strokeStyle = '#3b82f6'; tcCtx.lineWidth = 2; tcCtx.stroke();
+
+  // Label P
+  tcCtx.font = `bold ${fs}px JetBrains Mono, monospace`;
+  tcCtx.fillStyle = '#fff';
+  tcCtx.fillText('P', px + pr + 2, py - pr);
+
+  // Update info panel
+  const deg2 = ((tcAngle*180/Math.PI)%360+360)%360;
+  document.getElementById('tcAngleDeg').textContent = deg2.toFixed(1)+'°';
+  document.getElementById('tcSin').textContent = sinA.toFixed(4);
+  document.getElementById('tcCos').textContent = cosA.toFixed(4);
+  document.getElementById('tcTan').textContent = tanExists ? tanVal.toFixed(4) : '— (∞)';
+  document.getElementById('tcCot').textContent = cotExists ? cotVal.toFixed(4) : '— (∞)';
+  const q2 = deg2<90?'I Quadrante':deg2<180?'II Quadrante':deg2<270?'III Quadrante':'IV Quadrante';
+  document.getElementById('tcQuadrant').textContent = q2;
+}
+
+function getTcPos(e) {
+  const r = tcCanvas.getBoundingClientRect();
+  const sx = tcCanvas.width/r.width, sy = tcCanvas.height/r.height;
+  const cx2 = e.touches?e.touches[0].clientX:e.clientX;
+  const cy2 = e.touches?e.touches[0].clientY:e.clientY;
+  return { x:(cx2-r.left)*sx - tcCanvas.width/2, y:(cy2-r.top)*sy - tcCanvas.height/2 };
+}
+
+let tcDragging = false;
+tcCanvas.addEventListener('mousedown', e=>{ tcDragging=true; const p=getTcPos(e); tcAngle=Math.atan2(-p.y,p.x); drawTanCot(); });
+window.addEventListener('mousemove', e=>{ if(tcDragging){ const p=getTcPos(e); tcAngle=Math.atan2(-p.y,p.x); drawTanCot(); } });
+tcCanvas.addEventListener('touchstart', e=>{ e.preventDefault(); tcDragging=true; const p=getTcPos(e); tcAngle=Math.atan2(-p.y,p.x); drawTanCot(); },{passive:false});
+window.addEventListener('touchmove', e=>{ if(tcDragging){ e.preventDefault(); const p=getTcPos(e); tcAngle=Math.atan2(-p.y,p.x); drawTanCot(); } },{passive:false});
+
+const roTc = new ResizeObserver(()=>resizeTcCanvas());
+roTc.observe(document.getElementById('tancot-wrapper'));
+resizeTcCanvas();
+
+
+document.getElementById('inputGradi').addEventListener('input', function(){
+  const g = parseFloat(this.value);
+  if(!isNaN(g)){ const r=(g*Math.PI/180).toFixed(6); document.getElementById('inputRad').value=r;
+    document.getElementById('convHint').textContent=`${g}° = ${toFrac(g)}π ≈ ${r} rad`; }
+});
+document.getElementById('inputRad').addEventListener('input', function(){
+  const r = parseFloat(this.value);
+  if(!isNaN(r)){ const g=(r*180/Math.PI).toFixed(4); document.getElementById('inputGradi').value=g;
+    document.getElementById('convHint').textContent=`${r} rad = ${g}°`; }
+});
+document.getElementById('inputGradi').dispatchEvent(new Event('input'));
+
+function toFrac(d){
+  const m={0:'0',30:'1/6',45:'1/4',60:'1/3',90:'1/2',120:'2/3',135:'3/4',150:'5/6',
+            180:'1',210:'7/6',225:'5/4',240:'4/3',270:'3/2',300:'5/3',315:'7/4',330:'11/6',360:'2'};
+  return m[d]!==undefined?m[d]:(d/180).toFixed(4);
+}
+
+/* ─── ATTIVITÀ SEGNI ─────────────────────────────── */
+const signProblems=[
+  {angle:'150°',fn:'sin',correct:'II',hint:'180°−30°: II quad., sin>0 → sin(150°)=1/2'},
+  {angle:'225°',fn:'cos',correct:'III',hint:'180°+45°: III quad., cos<0 → cos(225°)=−√2/2'},
+  {angle:'315°',fn:'tan',correct:'IV',hint:'360°−45°: IV quad., tan<0 → tan(315°)=−1'},
+  {angle:'120°',fn:'sin',correct:'II',hint:'180°−60°: II quad., sin>0 → sin(120°)=√3/2'},
+];
+const actEl=document.getElementById('signActivity');
+signProblems.forEach((p,i)=>{
+  const div=document.createElement('div');
+  div.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:clamp(1rem,3vw,1.25rem);margin:0.65rem 0';
+  div.innerHTML=`
+    <p style="font-family:'Syne',sans-serif;font-weight:700;color:#fff;margin-bottom:0.75rem;font-size:clamp(0.9rem,2.5vw,1rem)">
+      In quale quadrante si trova ${p.angle}? &nbsp;Prevedi il segno di <span style="color:var(--accent3)">${p.fn}(${p.angle})</span>
+    </p>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+      ${['I','II','III','IV'].map(q=>`<button onclick="chkSign(this,'${q}','${p.correct}','sp${i}','${p.hint.replace(/'/g,"&#39;")}')"
+        style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.55rem 1.1rem;color:var(--text-dim);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.88rem;transition:all 0.2s;min-height:48px;-webkit-tap-highlight-color:transparent">${q}</button>`).join('')}
+    </div>
+    <div id="sp${i}" style="margin-top:0.65rem;font-family:'JetBrains Mono',monospace;font-size:clamp(0.75rem,2vw,0.82rem);display:none;line-height:1.5"></div>`;
+  actEl.appendChild(div);
+});
+
+function chkSign(btn,chosen,correct,fbId,hint){
+  const btns=btn.parentElement.querySelectorAll('button');
+  btns.forEach(b=>{b.disabled=true;b.style.cursor='default';});
+  const fb=document.getElementById(fbId); fb.style.display='block';
+  if(chosen===correct){
+    btn.style.cssText+='background:rgba(16,185,129,0.15);border-color:var(--accent4);color:var(--accent4)';
+    fb.style.color='var(--accent4)'; fb.textContent='✓ Corretto! '+hint;
+  } else {
+    btn.style.cssText+='background:rgba(244,63,94,0.1);border-color:var(--accent5);color:var(--accent5)';
+    fb.style.color='var(--accent5)'; fb.textContent='✗ Sbagliato. '+hint;
+    btns.forEach(b=>{if(b.textContent===correct){b.style.background='rgba(16,185,129,0.08)';b.style.borderColor='var(--accent4)';b.style.color='var(--accent4)';}});
+  }
+}
+
+/* ─── QUIZ ─────────────────────────────── */
+const quizData=[
+  {s:"Valori Notevoli",q:"Quanto vale sin(45°)?",opts:["1/2","√2/2","√3/2","1"],ans:1,exp:"sin(45°)=√2/2≈0.707 — trucco: √2/4"},
+  {s:"Valori Notevoli",q:"Quanto vale cos(60°)?",opts:["√3/2","1/2","0","√2/2"],ans:1,exp:"cos(60°)=1/2. Cos è il seno del complementare: cos(60°)=sin(30°)=1/2"},
+  {s:"Valori Notevoli",q:"Quanto vale tan(30°)?",opts:["1","√3","√3/3","1/2"],ans:2,exp:"tan(30°)=(1/2)/(√3/2)=1/√3=√3/3≈0.577"},
+  {s:"Radiante",q:"Converti 3π/4 in gradi:",opts:["120°","135°","150°","90°"],ans:1,exp:"3π/4×180/π=3×45=135°"},
+  {s:"Radiante",q:"Quanti radianti sono 270°?",opts:["π","3π/2","2π","5π/4"],ans:1,exp:"270×π/180=3π/2"},
+  {s:"Quadranti",q:"In quale quadrante si trova 200°?",opts:["I","II","III","IV"],ans:2,exp:"200° è tra 180° e 270°: III quadrante"},
+  {s:"Angoli Associati",q:"Quanto vale sin(150°)?",opts:["−1/2","√3/2","1/2","−√3/2"],ans:2,exp:"150°=180°−30°: II quad, sin>0 → sin(150°)=sin(30°)=1/2"},
+  {s:"Angoli Associati",q:"Quanto vale cos(225°)?",opts:["√2/2","−1/2","−√2/2","1/2"],ans:2,exp:"225°=180°+45°: III quad, cos<0 → −cos(45°)=−√2/2"},
+  {s:"Funzioni Inverse",q:"Quanto vale arcsin(1/2)?",opts:["60°","45°","30°","90°"],ans:2,exp:"arcsin(1/2)=30° perché sin(30°)=1/2 e 30°∈[−90°,90°]"},
+];
+let scores=new Array(quizData.length).fill(0), answered=new Array(quizData.length).fill(false);
+
+function updateScore(){
+  document.getElementById('quizScore').textContent=`${scores.reduce((a,b)=>a+b,0)} / ${quizData.length}`;
+  document.getElementById('quizProgress').style.width=`${(answered.filter(Boolean).length/quizData.length)*100}%`;
+}
+const qC=document.getElementById('quizContainer');
+quizData.forEach((q,qi)=>{
+  const d=document.createElement('div'); d.className='quiz-card';
+  d.innerHTML=`<div class="quiz-num">Quiz ${qi+1}/9 — ${q.s}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options">${q.opts.map((o,oi)=>`<button class="quiz-opt" data-qi="${qi}" data-oi="${oi}">${o}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="qfb${qi}"></div>`;
+  qC.appendChild(d);
+});
+document.querySelectorAll('.quiz-opt').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const qi=+this.dataset.qi, oi=+this.dataset.oi;
+    if(answered[qi]) return; answered[qi]=true;
+    const correct=quizData[qi].ans;
+    document.querySelectorAll(`[data-qi="${qi}"]`).forEach(b=>b.classList.add('answered'));
+    const fb=document.getElementById(`qfb${qi}`);
+    if(oi===correct){
+      this.classList.add('correct'); fb.className='quiz-feedback ok'; fb.textContent='✓ Corretto! '+quizData[qi].exp; scores[qi]=1;
+    } else {
+      this.classList.add('wrong');
+      document.querySelector(`[data-qi="${qi}"][data-oi="${correct}"]`).classList.add('show-correct');
+      fb.className='quiz-feedback ko'; fb.textContent='✗ Sbagliato. '+quizData[qi].exp;
+    }
+    updateScore();
+  });
+});
+
+/* ─── SFIDA FINALE ─────────────────────────────── */
+const challenges=[
+  {lv:1,q:"Converti π/3 in gradi",a:"π/3 × 180/π = 60°"},
+  {lv:1,q:"Calcola sin(60°) + cos(30°)",a:"√3/2 + √3/2 = √3 ≈ 1.732"},
+  {lv:1,q:"sin²(α) + cos²(α) + tan(45°) = ?",a:"1 + 1 = 2"},
+  {lv:2,q:"Trova α ∈ [0°,360°] con cos(α) = −1/2",a:"α = 120° e α = 240° (II e III quadrante)"},
+  {lv:2,q:"Calcola sin(210°) con angoli associati",a:"210°=180°+30°, III quad., sin<0\nsin(210°) = −sin(30°) = −1/2"},
+  {lv:2,q:"Calcola tan(315°)",a:"315°=360°−45°, IV quad., tan<0\ntan(315°) = −tan(45°) = −1"},
+  {lv:3,q:"sin(α)=−3/5, α∈[180°,270°].\nTrova cos(α) e tan(α)",a:"cos²=1−9/25=16/25 → cos=−4/5\ntan=(−3/5)/(−4/5)=3/4"},
+  {lv:3,q:"Calcola arcsin(sin(210°)) e spiega",a:"sin(210°)=−1/2 → arcsin(−1/2)=−30°\n(non 210°! codominio=[−90°,90°])"},
+  {lv:3,q:"Dimostra sin(90°−α) = cos(α)",a:"P(90°−α): x=cos(90°−α)=sinα ✓\ny=sin(90°−α)=cosα ✓"},
+];
+const cg=document.getElementById('challengeGrid');
+challenges.forEach(c=>{
+  const d=document.createElement('div'); d.className='challenge-item';
+  const lv=c.lv===1?'lv1':c.lv===2?'lv2':'lv3';
+  d.innerHTML=`<span class="ch-level ${lv}">Livello ${c.lv}</span>
+    <div class="ch-question">${c.q.replace(/\n/g,'<br>')}</div>
+    <div class="ch-hint">👆 Tocca per la soluzione</div>
+    <div class="ch-answer">${c.a.replace(/\n/g,'<br>')}</div>`;
+  d.addEventListener('click',function(){
+    this.classList.toggle('revealed');
+    this.querySelector('.ch-hint').textContent=this.classList.contains('revealed')?'👆 Tocca per nascondere':'👆 Tocca per la soluzione';
+  });
+  cg.appendChild(d);
+});
+
+
+/* ─── GRAFICI FUNZIONI GONIOMETRICHE ─────────────────────────────── */
+(function(){
+  const canvas = document.getElementById('graphCanvas');
+  const tooltip = document.getElementById('graphTooltip');
+  const wrapper = document.getElementById('graph-wrapper');
+  const ctx = canvas.getContext('2d');
+
+  const FN_COLORS = { sin:'#f43f5e', cos:'#10b981', tan:'#f59e0b', cot:'#a78bfa' };
+  const visible = { sin:true, cos:true, tan:true, cot:true };
+
+  // View in radians: x from -3π to 3π, y from -4 to 4
+  const xMin = -3*Math.PI, xMax = 3*Math.PI;
+  const yMin = -4, yMax = 4;
+  const CLAMP = 3.8; // clip tan/cot values to ±CLAMP for drawing
+
+  function resize() {
+    const W = wrapper.clientWidth;
+    const H = Math.min(Math.round(W * 0.52), 480);
+    canvas.width = W * devicePixelRatio;
+    canvas.height = H * devicePixelRatio;
+    canvas.style.height = H + 'px';
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    draw(W, H);
+  }
+
+  function toScreen(x, y, W, H) {
+    return {
+      sx: (x - xMin) / (xMax - xMin) * W,
+      sy: H - (y - yMin) / (yMax - yMin) * H
+    };
+  }
+
+  function toWorld(sx, sy, W, H) {
+    return {
+      x: sx / W * (xMax - xMin) + xMin,
+      y: (H - sy) / H * (yMax - yMin) + yMin
+    };
+  }
+
+  function draw(W, H) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Period highlight: one 2π period [0, 2π]
+    const s0 = toScreen(0, yMin, W, H);
+    const s2pi = toScreen(2*Math.PI, yMax, W, H);
+    ctx.fillStyle = 'rgba(59,130,246,0.045)';
+    ctx.fillRect(s0.sx, s2pi.sy, s2pi.sx - s0.sx, s0.sy - s2pi.sy);
+
+    // Grid lines (multiples of π/2)
+    ctx.strokeStyle = '#1e2d45';
+    ctx.lineWidth = 1;
+    for (let k = -6; k <= 6; k++) {
+      const x = k * Math.PI / 2;
+      const {sx} = toScreen(x, 0, W, H);
+      ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke();
+    }
+    for (let y = -4; y <= 4; y++) {
+      const {sy} = toScreen(0, y, W, H);
+      ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(W, sy); ctx.stroke();
+    }
+
+    // Asymptote dashed lines for tan (at π/2 + kπ) and cot (at kπ)
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    if (visible.tan) {
+      ctx.strokeStyle = 'rgba(245,158,11,0.35)';
+      for (let k = -3; k <= 3; k++) {
+        const x = Math.PI/2 + k*Math.PI;
+        const {sx} = toScreen(x, 0, W, H);
+        ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke();
+      }
+    }
+    if (visible.cot) {
+      ctx.strokeStyle = 'rgba(167,139,250,0.35)';
+      for (let k = -3; k <= 3; k++) {
+        const x = k * Math.PI;
+        const {sx} = toScreen(x, 0, W, H);
+        ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke();
+      }
+    }
+    ctx.setLineDash([]);
+
+    // Axes
+    const origin = toScreen(0, 0, W, H);
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(0, origin.sy); ctx.lineTo(W, origin.sy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(origin.sx, 0); ctx.lineTo(origin.sx, H); ctx.stroke();
+
+    // X-axis labels
+    ctx.fillStyle = '#64748b';
+    ctx.font = `${Math.max(10, Math.round(W*0.018))}px JetBrains Mono, monospace`;
+    ctx.textAlign = 'center';
+    const piLabels = {'-3':'-3π','-2':'-2π','-1':'-π','0':'0','1':'π','2':'2π','3':'3π'};
+    for (let k = -3; k <= 3; k++) {
+      if (k === 0) continue;
+      const x = k * Math.PI;
+      const {sx} = toScreen(x, 0, W, H);
+      const label = piLabels[String(k)] || (k+'π');
+      ctx.fillText(label, sx, origin.sy + 14);
+    }
+    // Y-axis labels
+    ctx.textAlign = 'right';
+    for (let y = -3; y <= 3; y++) {
+      if (y === 0) continue;
+      const {sy} = toScreen(0, y, W, H);
+      ctx.fillText(String(y), origin.sx - 5, sy + 4);
+    }
+
+    // Draw each function
+    const steps = W * 2;
+    const fns = {
+      sin: x => Math.sin(x),
+      cos: x => Math.cos(x),
+      tan: x => {
+        const v = Math.tan(x);
+        return (isFinite(v) && Math.abs(v) <= CLAMP) ? v : null;
+      },
+      cot: x => {
+        const s = Math.sin(x);
+        if (Math.abs(s) < 0.01) return null;
+        const v = Math.cos(x) / s;
+        return (isFinite(v) && Math.abs(v) <= CLAMP) ? v : null;
+      }
+    };
+
+    Object.entries(fns).forEach(([name, fn]) => {
+      if (!visible[name]) return;
+      ctx.strokeStyle = FN_COLORS[name];
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      let penDown = false;
+      for (let i = 0; i <= steps; i++) {
+        const x = xMin + (xMax - xMin) * i / steps;
+        const y = fn(x);
+        if (y === null) { penDown = false; continue; }
+        const {sx, sy} = toScreen(x, y, W, H);
+        if (!penDown) { ctx.moveTo(sx, sy); penDown = true; }
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+    });
+  }
+
+  // Tooltip interaction
+  let mouseX = null;
+  function showTooltip(e) {
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    const sx = cx - rect.left;
+    const sy = cy - rect.top;
+    const W = rect.width, H = rect.height;
+    const {x} = toWorld(sx, sy, W, H);
+    mouseX = x;
+
+    const sinV = Math.sin(x);
+    const cosV = Math.cos(x);
+    const tanDen = Math.cos(x);
+    const tanV = Math.abs(tanDen) > 0.01 ? Math.tan(x) : null;
+    const sinX = Math.sin(x);
+    const cotV = Math.abs(sinX) > 0.01 ? Math.cos(x)/sinX : null;
+    const xPi = (x/Math.PI).toFixed(3);
+
+    let html = `<span style="color:var(--accent2)">x = ${xPi}π (${x.toFixed(3)} rad)</span><br>`;
+    if (visible.sin) html += `<span style="color:#f43f5e">sin = ${sinV.toFixed(4)}</span>  `;
+    if (visible.cos) html += `<span style="color:#10b981">cos = ${cosV.toFixed(4)}</span><br>`;
+    if (visible.tan) html += `<span style="color:#f59e0b">tan = ${tanV!==null?tanV.toFixed(4):'∞'}</span>  `;
+    if (visible.cot) html += `<span style="color:#a78bfa">cotan = ${cotV!==null?cotV.toFixed(4):'∞'}</span>`;
+
+    tooltip.innerHTML = html;
+    tooltip.style.display = 'block';
+
+    // Position tooltip
+    let left = sx + 12, top = sy - 10;
+    const tw = 200, th = 72;
+    if (left + tw > W) left = sx - tw - 12;
+    if (top + th > H) top = H - th - 4;
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = Math.max(4, top) + 'px';
+
+    // Draw crosshair
+    const W2 = wrapper.clientWidth;
+    const H2 = canvas.clientHeight;
+    draw(W2, H2);
+    const {sx: cx2} = toScreen(x, 0, W2, H2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(cx2, 0); ctx.lineTo(cx2, H2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw dots on each curve at x
+    const dotFns = {sin:Math.sin(x), cos:Math.cos(x)};
+    if(tanV!==null) dotFns.tan=tanV;
+    if(cotV!==null) dotFns.cot=cotV;
+    Object.entries(dotFns).forEach(([name,y])=>{
+      if(!visible[name]) return;
+      const {sx:dx, sy:dy} = toScreen(x, y, W2, H2);
+      ctx.beginPath(); ctx.arc(dx, dy, 4, 0, Math.PI*2);
+      ctx.fillStyle = FN_COLORS[name]; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+  }
+
+  canvas.addEventListener('mousemove', showTooltip);
+  canvas.addEventListener('touchmove', e=>{e.preventDefault();showTooltip(e);},{passive:false});
+  canvas.addEventListener('mouseleave', ()=>{ tooltip.style.display='none'; draw(wrapper.clientWidth, canvas.clientHeight); });
+  canvas.addEventListener('touchend', ()=>{ tooltip.style.display='none'; draw(wrapper.clientWidth, canvas.clientHeight); });
+
+  window.toggleGraph = function(name, btn) {
+    visible[name] = !visible[name];
+    btn.classList.toggle('active', visible[name]);
+    draw(wrapper.clientWidth, canvas.clientHeight);
+  };
+
+  const ro = new ResizeObserver(()=>resize());
+  ro.observe(wrapper);
+  resize();
+})();
+
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.06});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+/* ─── NAV ACTIVE ─────────────────────────────── */
+const allSections=document.querySelectorAll('section[id]');
+function updateNav(){
+  let cur='';
+  allSections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id;});
+  document.querySelectorAll('nav a,.nav-drawer a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
+  });
+}
+window.addEventListener('scroll',updateNav,{passive:true});
+updateNav();
+</script>
+</body>
+</html>
