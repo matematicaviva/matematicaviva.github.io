@@ -1,190 +1,549 @@
 <!doctype html>
-<html lang="it" class="h-full">
- <head>
+<html lang="it">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Sezione Aurea</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    * { box-sizing: border-box; }
-
     :root {
-      --bg-deep: #0a0e1a;
-      --surface: #141a2e;
-      --text-primary: #e8dcc8;
-      --gold-accent: #c9a84c;
-      --gold-secondary: #8b6914;
+      --bg: #0c0c14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --border: rgba(255,255,255,0.07);
+      --text: #e4e2f0;
+      --muted: #9895b5;
+      --pri: #c9a84c;
+      --pri-glow: rgba(201,168,76,0.25);
+      --sec: #2dd4a4;
+      --sec-glow: rgba(45,212,164,0.2);
+      --amber: #f5c842;
+      --red: #f06080;
+      --blue: #4fa3f7;
+      --radius: 16px;
+      --primary: #c9a84c;
+      --secondary: #2dd4a4;
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-primary);
-    }
-
-    .font-display { font-family: 'Cormorant Garamond', serif; }
-
-    @keyframes spiralRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes drawLine {
-      from { stroke-dashoffset: 1000; }
-      to { stroke-dashoffset: 0; }
-    }
-    @keyframes pulseGlow {
-      0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,76,0.3)); }
-      50% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.6)); }
-    }
-    @keyframes scaleIn {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes slideRight {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes countUp {
-      from { opacity: 0; transform: scale(0.5); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @keyframes floatParticle {
-      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-      50% { transform: translateY(-20px) rotate(180deg); opacity: 0.7; }
-    }
-
-    .animate-fade-up {
-      animation: fadeInUp 0.8s ease-out forwards;
-      opacity: 0;
-    }
-    .animate-fade {
-      animation: fadeIn 0.6s ease-out forwards;
-      opacity: 0;
-    }
-    .animate-scale {
-      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      opacity: 0;
-    }
-    .animate-pulse-glow {
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
-
-    .delay-1 { animation-delay: 0.2s; }
-    .delay-2 { animation-delay: 0.4s; }
-    .delay-3 { animation-delay: 0.6s; }
-    .delay-4 { animation-delay: 0.8s; }
-    .delay-5 { animation-delay: 1.0s; }
-    .delay-6 { animation-delay: 1.2s; }
-    .delay-7 { animation-delay: 1.4s; }
-    .delay-8 { animation-delay: 1.6s; }
-
-    #slides-wrapper {
-      display: flex;
-      height: 100%;
-      width: 100%;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .slide-container {
-      flex: 0 0 100%;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       overflow-x: hidden;
-      scroll-behavior: smooth;
     }
 
-    .slide-container::-webkit-scrollbar {
-      width: 0;
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(45,212,164,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .nav-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: rgba(201,168,76,0.3);
-      border: 1px solid rgba(201,168,76,0.5);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .nav-dot.active {
-      background: var(--gold-accent);
-      box-shadow: 0 0 12px rgba(201,168,76,0.5);
-      transform: scale(1.3);
-    }
-    .nav-dot:hover {
-      background: rgba(201,168,76,0.6);
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,12,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
-    .nav-arrow {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.3);
+    .hdr-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem 0.6rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--pri), var(--sec));
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fs-btn {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-      color: var(--gold-accent);
+      transition: all 0.2s;
+      white-space: nowrap;
     }
-    .nav-arrow:hover {
-      background: rgba(201,168,76,0.2);
-      border-color: var(--gold-accent);
+    .fs-btn:hover { border-color: var(--pri); color: var(--pri); }
+
+    /* ── TAB NAV ── */
+    .tab-nav {
+      display: flex;
+      gap: 0.3rem;
+      overflow-x: auto;
+      padding: 0.5rem 1rem 0.6rem;
+      scrollbar-width: none;
     }
-    .nav-arrow:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.42rem 0.85rem;
+      white-space: nowrap;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
     }
 
-    .bg-grid {
-      background-image:
-        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
+    .tab:hover { border-color: rgba(201,168,76,0.4); color: var(--text); }
+    .tab.active {
+      background: var(--pri);
+      border-color: var(--pri);
+      color: #fff;
+      box-shadow: 0 0 16px var(--pri-glow);
     }
 
+    /* ── MAIN ── */
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 1.2rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    section { display: none; }
+    section.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-inner {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── SECTION TITLE ── */
+    .sec-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      line-height: 1.2;
+    }
+    .sec-title span { color: var(--pri); }
+
+    .sec-num {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--pri);
+      background: var(--pri-glow);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── DEFINITION BOXES ── */
+    .def-box {
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .def-box::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px;
+    }
+
+    .def-box.pri {
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+    }
+    .def-box.pri::before { background: var(--pri); }
+
+    .def-box.sec {
+      background: linear-gradient(135deg, rgba(45,212,164,0.12), rgba(45,212,164,0.04));
+    }
+    .def-box.sec::before { background: var(--sec); }
+
+    .def-box.amber {
+      background: linear-gradient(135deg, rgba(245,200,66,0.12), rgba(245,200,66,0.04));
+    }
+    .def-box.amber::before { background: var(--amber); }
+
+    .def-box.red {
+      background: linear-gradient(135deg, rgba(240,96,128,0.12), rgba(240,96,128,0.04));
+    }
+    .def-box.red::before { background: var(--red); }
+
+    .def-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pri);
+      margin-bottom: 0.4rem;
+    }
+
+    .def-box.sec .def-label { color: var(--sec); }
+    .def-box.amber .def-label { color: var(--amber); }
+    .def-box.red .def-label { color: var(--red); }
+
+    .def-box p { color: var(--text); line-height: 1.6; font-size: 0.95rem; }
+    .def-box strong { color: #fff; }
+
+    /* ── GRID ── */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media(min-width: 640px) {
+      .row { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── CANVAS ── */
+    .canvas {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+
+    .canvas-title {
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    canvas { display: block; max-width: 100%; }
+
+    /* ── BUTTONS ── */
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--pri);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--pri-glow);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--pri-glow); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-sec {
+      background: transparent;
+      color: var(--sec);
+      border: 1.5px solid var(--sec);
+    }
+    .btn-sec:hover { background: var(--sec-glow); }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* ── TAB BUTTONS (inside sections) ── */
+    .tab-btn {
+      padding: 0.42rem 0.9rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .tab-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--text); }
+    .tab-btn.active {
+      background: var(--pri);
+      border-color: var(--pri);
+      color: #fff;
+    }
+
+    /* ── FORMULA ── */
+    .formula {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--pri);
+      text-align: center;
+      background: var(--pri-glow);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      letter-spacing: 0.04em;
+    }
+
+    .formula-box {
+      font-family: 'DM Mono', monospace;
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(45,212,164,0.06));
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0;
+    }
+
+    .mono { font-family: 'DM Mono', monospace; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-right: 0.4rem;
+    }
+    .badge-pri { background: var(--pri-glow); color: var(--pri); }
+    .badge-sec { background: var(--sec-glow); color: var(--sec); }
+    .badge-amber { background: rgba(245,200,66,0.2); color: var(--amber); }
+
+    /* ── QUIZ OPTIONS ── */
+    .quiz-option {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      min-height: 44px;
+    }
+    .quiz-option:hover:not(:disabled) { border-color: var(--pri); background: rgba(201,168,76,0.08); }
+    .quiz-option.correct { background: rgba(45,212,164,0.15); border-color: var(--sec); color: #a7f3d0; }
+    .quiz-option.wrong { background: rgba(240,96,128,0.12); border-color: var(--red); color: #fca5a5; }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    thead tr {
+      border-bottom: 2px solid rgba(201,168,76,0.3);
+    }
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      color: var(--sec);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      color: var(--text);
+      line-height: 1.5;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.88rem;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(201,168,76,0.04); }
+
+    /* ── STEP TEXT ── */
+    .step-text {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--sec);
+      min-height: 1.2em;
+      margin-top: 0.5rem;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 500;
+      z-index: 100; opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success { background: rgba(45,212,164,0.9); color: #0c0c14; }
+    .toast.error { background: rgba(240,96,128,0.9); color: #fff; }
+    .toast.info { background: rgba(201,168,76,0.9); color: #0c0c14; }
+
+    /* ── SLIDER ── */
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
-      height: 4px;
-      background: rgba(201,168,76,0.2);
-      border-radius: 2px;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(201,168,76,0.3);
       outline: none;
     }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 18px; height: 18px;
+      width: 22px; height: 22px;
       border-radius: 50%;
-      background: var(--gold-accent);
+      background: var(--pri);
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(201,168,76,0.4);
-    }
-    input[type="range"]::-moz-range-thumb {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--gold-accent);
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 0 8px rgba(201,168,76,0.4);
+      box-shadow: 0 2px 8px var(--pri-glow);
     }
 
-    .golden-card {
-      background: linear-gradient(135deg, rgba(20,26,46,0.9), rgba(20,26,46,0.7));
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
+    section.active > * {
+      animation: fadeInUp 0.35s ease both;
+    }
+    section.active > *:nth-child(2) { animation-delay: 0.06s; }
+    section.active > *:nth-child(3) { animation-delay: 0.12s; }
+    section.active > *:nth-child(4) { animation-delay: 0.18s; }
+
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 10px rgba(201,168,76,0.2); }
+      50% { box-shadow: 0 0 25px rgba(201,168,76,0.4); }
+    }
+    .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+
+    /* ── HIGHLIGHT ── */
+    .hl { color: var(--pri); font-weight: 700; }
+    .hl-g { color: var(--sec); font-weight: 700; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(180,180,190,0.35);
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.72rem;
+      position: relative;
+      z-index: 1;
+    }
+    footer .footer-brand {
+      font-weight: 700;
+      color: #E8581A;
+      white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    footer .footer-center {
+      color: var(--muted);
+      text-align: center;
+      flex: 1;
+    }
+    footer .footer-center small {
+      display: block;
+      font-size: 0.67rem;
+      color: #aaaaaa;
+      margin-top: 0.15rem;
+    }
+    footer .footer-copy {
+      color: var(--muted);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    /* ── STEP BADGE ── */
     .step-badge {
       display: inline-flex;
       align-items: center;
@@ -193,1234 +552,1350 @@
       border-radius: 50%;
       background: rgba(201,168,76,0.15);
       border: 1px solid rgba(201,168,76,0.4);
-      color: var(--gold-accent);
+      color: var(--pri);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
+      flex-shrink: 0;
     }
 
-    .step-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.3);
-      color: var(--gold-accent);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-    }
-    .step-btn:hover {
-      background: rgba(201,168,76,0.2);
-      border-color: var(--gold-accent);
-    }
-    .step-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    /* ── RESPONSIVE ══ */
+    @media (pointer: coarse) {
+      .btn, .tab, .fs-btn, .tab-btn { min-height: 44px; }
+      .tab { padding: 0.55rem 1rem; }
+      .btn { padding: 0.6rem 1.2rem; }
     }
 
-    .golden-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+    @media (max-width: 480px) {
+      :root { --radius: 12px; }
+      .sec-title { font-size: 1.25rem; }
+      .hdr-top { padding: 0.65rem 0.85rem 0.5rem; gap: 0.5rem; }
+      .brand-text { font-size: 0.88rem; }
+      .brand-sub { display: none; }
+      .fs-btn { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
+      .tab-nav { padding: 0.4rem 0.6rem 0.5rem; gap: 0.25rem; }
+      .tab { font-size: 0.74rem; padding: 0.4rem 0.7rem; }
+      main { padding: 0.85rem 0.65rem; }
+      .card { padding: 1rem 0.9rem; }
     }
 
-    .deco-spiral {
-      position: absolute;
-      opacity: 0.06;
-      animation: spiralRotate 60s linear infinite;
+    @media (min-width: 900px) {
+      main { padding: 1.5rem 2rem; max-width: 960px; }
+      .hdr-top { padding: 1rem 2rem 0.7rem; }
+      .tab-nav { padding: 0.5rem 1.8rem 0.65rem; }
+      .card { padding: 1.5rem; }
+      .sec-title { font-size: 1.65rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
-  <style>body { box-sizing: border-box; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
- </head>
- <body class="h-full">
-  <div id="app-wrapper" class="h-full w-full relative bg-grid" style="background-color: var(--bg-deep);"><!-- Decorative background spirals -->
-   <svg class="deco-spiral" style="top:-10%;right:-10%;width:500px;height:500px;" viewbox="0 0 200 200"><path d="M100,100 Q100,60 130,60 Q160,60 160,90 Q160,120 130,120 Q110,120 110,100 Q110,85 120,85 Q130,85 130,95" fill="none" stroke="rgba(201,168,76,1)" stroke-width="0.5" />
-   </svg>
-   <svg class="deco-spiral" style="bottom:-15%;left:-10%;width:600px;height:600px;animation-direction:reverse;animation-duration:80s;" viewbox="0 0 200 200"><path d="M100,100 Q100,50 140,50 Q180,50 180,90 Q180,130 140,130 Q115,130 115,105 Q115,88 125,88 Q135,88 135,98" fill="none" stroke="rgba(201,168,76,1)" stroke-width="0.4" />
-   </svg><!-- Navigation -->
-   <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center gap-4 py-3" style="background: linear-gradient(transparent, rgba(10,14,26,0.95));"><button id="nav-prev" class="nav-arrow" aria-label="Slide precedente">
-     <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M15 18l-6-6 6-6" />
-     </svg></button>
-    <div id="nav-dots" class="flex items-center gap-3"></div><button id="nav-next" class="nav-arrow" aria-label="Slide successiva">
-     <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M9 18l6-6-6-6" />
-     </svg></button>
-   </nav><!-- Slide counter -->
-   <div id="slide-counter" class="fixed top-2 right-3 z-50 text-xs" style="color:rgba(201,168,76,0.5);font-family:'Cormorant Garamond',serif;"></div><!-- Slides wrapper -->
-   <div id="slides-wrapper"><!-- ============ SLIDE 1: Introduzione ============ -->
-    <section id="slide-0" class="slide-container" role="region" aria-label="Slide 1: Introduzione">
-     <div class="h-full w-full flex flex-col items-center justify-center px-4 relative py-2">
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-       <svg width="250" height="250" viewbox="0 0 400 400" class="animate-pulse-glow" style="opacity:0.08;"><path d="M200,200 Q200,100 280,100 Q360,100 360,180 Q360,260 280,260 Q220,260 220,200 Q220,160 250,160 Q280,160 280,190 Q280,210 260,210 Q245,210 245,198 Q245,188 252,188" fill="none" stroke="#c9a84c" stroke-width="1.5" />
-       </svg>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div class="brand">
+      <div class="brand-icon">φ</div>
+      <div>
+        <div class="brand-text">MatematicaViva</div>
+        <div class="brand-sub">Classe Seconda · Geometria</div>
       </div>
-      <div class="relative z-10 text-center max-w-2xl mx-auto">
-       <div class="animate-fade-up mb-1"><span class="font-display text-5xl md:text-6xl font-bold" style="color:var(--gold-accent);text-shadow:0 0 40px rgba(201,168,76,0.3);">φ</span>
-       </div>
-       <h1 id="slide1-title" class="font-display text-2xl md:text-3xl font-bold mb-1 animate-fade-up delay-1" style="color:var(--text-primary);">La Sezione Aurea</h1>
-       <p id="slide1-subtitle" class="font-display text-xs md:text-sm italic mb-2 animate-fade-up delay-2" style="color:var(--gold-accent);">φ ≈ 1,618033988749...</p>
-       <div class="golden-divider w-20 mx-auto mb-2 animate-fade delay-3"></div>
-       <div class="animate-fade-up delay-3 mb-2">
-        <p class="text-xs leading-relaxed mb-2" style="color:rgba(232,220,200,0.85);">La <strong style="color:var(--gold-accent);">sezione aurea</strong> è una proporzione matematica speciale che si manifesta quando un segmento viene diviso in modo che il rapporto tra la parte maggiore e la parte minore sia uguale al rapporto tra l'intero segmento e la parte maggiore.</p>
-        <div class="golden-card p-1 inline-block mx-auto mb-2">
-         <p class="font-display text-xs md:text-sm" style="color:var(--gold-accent);"><span style="color:var(--text-primary);">a</span> / <span style="color:var(--gold-secondary);">b</span> = (<span style="color:var(--text-primary);">a</span> + <span style="color:var(--gold-secondary);">b</span>) / <span style="color:var(--text-primary);">a</span> = <strong>φ ≈ 1,618</strong></p>
-        </div>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-1 animate-fade-up delay-4">
-        <div class="golden-card p-2 text-center">
-         <div class="text-lg mb-1">
-          🌻
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Natura</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Spirali, conchiglie</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-lg mb-1">
-          🎨
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Arte</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Leonardo, Dalí</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-lg mb-1">
-          🏛️
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Architettura</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Partenone, piramidi</p>
-        </div>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 2: Suddivisione Segmento ============ -->
-    <section id="slide-1" class="slide-container" role="region" aria-label="Slide 2: Suddivisione Segmento">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-4xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Suddivisione in Sezione Aurea</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Muovi lo slider per cambiare la lunghezza del segmento</p>
-       <div class="golden-card p-2 mb-2 animate-fade-up delay-2">
-        <div class="flex items-center gap-2"><label for="segment-slider" class="text-xs whitespace-nowrap" style="color:var(--gold-accent);">Lunghezza AB:</label> <input type="range" id="segment-slider" min="200" max="600" value="400" class="flex-1"> <span id="segment-length-display" class="text-xs font-mono" style="color:var(--gold-accent);">400</span>
-        </div>
-       </div>
-       <div class="golden-card p-2 mb-2 animate-fade-up delay-3">
-        <svg id="segment-svg" viewbox="0 0 700 260" class="w-full" style="max-height:180px;"></svg>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-1 animate-fade-up delay-4 text-xs">
-        <div class="golden-card p-2 text-center">
-         <p class="text-xs uppercase tracking-wider mb-0.5" style="color:rgba(232,220,200,0.5);">Segmento AB</p>
-         <p id="info-ab" class="font-display text-lg font-bold" style="color:var(--text-primary);">400</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <p class="text-xs uppercase tracking-wider mb-0.5" style="color:rgba(232,220,200,0.5);">AC</p>
-         <p id="info-ac" class="font-display text-lg font-bold" style="color:var(--gold-accent);">247.2</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <p class="text-xs uppercase tracking-wider mb-0.5" style="color:rgba(232,220,200,0.5);">CB</p>
-         <p id="info-cb" class="font-display text-lg font-bold" style="color:var(--gold-secondary);">152.8</p>
-        </div>
-       </div>
-       <div class="golden-card p-2 mt-1 text-center animate-fade-up delay-5">
-        <p class="text-xs" style="color:rgba(232,220,200,0.7);">AC/CB = <span id="ratio-display" class="font-bold" style="color:var(--gold-accent);">1.618</span> ≈ φ</p>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 3: Costruzione Rettangolo Aureo ============ -->
-    <section id="slide-2" class="slide-container" role="region" aria-label="Slide 3: Costruzione del Rettangolo Aureo">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-4xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Costruzione Geometrica</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Metodo classico del rettangolo aureo</p>
-       <div class="flex items-center justify-center gap-2 mb-2 animate-fade-up delay-2"><button id="construction-prev" class="step-btn text-xs" disabled>← Indietro</button> <span id="construction-step-label" class="text-xs px-2" style="color:var(--gold-accent);">Passo 1 / 6</span> <button id="construction-next" class="step-btn text-xs">Avanti →</button>
-       </div>
-       <div id="construction-step-desc" class="golden-card p-2 mb-2 text-center animate-fade delay-3 text-xs">
-        <p style="color:rgba(232,220,200,0.8);">Iniziamo con un segmento AB.</p>
-       </div>
-       <div class="golden-card p-2 animate-fade-up delay-3">
-        <svg id="construction-svg" viewbox="0 0 700 400" class="w-full" style="max-height:280px;"></svg>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 4: Descrizione Costruzione ============ -->
-    <section id="slide-3" class="slide-container" role="region" aria-label="Slide 4: Descrizione della Costruzione">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-4xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Come si Costruisce</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">I sei passi della costruzione geometrica</p>
-       <div class="space-y-1 animate-fade-up delay-2">
-        <div class="golden-card p-1.5">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">1</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Segmento AB</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);">Disegnare un segmento verticale AB di lunghezza qualsiasi.</p>
-          </div>
-         </div>
-        </div>
-        <div class="golden-card p-1.5 animate-fade delay-3">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">2</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Quadrato ABCD</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);">Costruire un quadrato avente il lato AB. I vertici sono A, B, D, C.</p>
-          </div>
-         </div>
-        </div>
-        <div class="golden-card p-1.5 animate-fade delay-4">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">3</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Punto Medio M</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);">Trovare il punto medio M del segmento BD.</p>
-          </div>
-         </div>
-        </div>
-        <div class="golden-card p-1.5 animate-fade delay-5">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">4</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Segmento MC Tratteggiato</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);">Tracciare il segmento MC in modo tratteggiato (guida costruttiva).</p>
-          </div>
-         </div>
-        </div>
-        <div class="golden-card p-1.5 animate-fade delay-6">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">5</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Arco da C</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);">Tracciare un arco di circonferenza da C, con centro M, verso l'estensione della base BD.</p>
-          </div>
-         </div>
-        </div>
-        <div class="golden-card p-1.5 animate-fade delay-7">
-         <div class="flex items-start gap-2"><span class="step-badge text-xs">6</span>
-          <div class="flex-1">
-           <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Rettangolo Aureo ABEF</h3>
-           <p class="text-xs" style="color:rgba(232,220,200,0.8);"><strong>Larghezza BE / Altezza AB = φ ≈ 1,618</strong></p>
-          </div>
-         </div>
-        </div>
-       </div>
-       <div class="golden-card p-2 mt-2 text-center animate-fade delay-8">
-        <p class="font-display text-xs italic" style="color:var(--gold-accent);">Il rettangolo ABEF è il rettangolo aureo perfetto ✓</p>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 5: Ricorsione Rettangoli Aurei ============ -->
-    <section id="slide-4" class="slide-container" role="region" aria-label="Slide 5: Ricorsione dei Rettangoli Aurei">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-4xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Rettangoli Aurei Annidati</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Suddivisione ricorsiva infinita</p>
-       <div class="flex items-center justify-center gap-2 mb-2 animate-fade-up delay-2"><button id="recursion-prev" class="step-btn text-xs" disabled>← Indietro</button> <span id="recursion-step-label" class="text-xs px-2" style="color:var(--gold-accent);">Livello 0</span> <button id="recursion-next" class="step-btn text-xs">Avanti →</button>
-       </div>
-       <div id="recursion-step-desc" class="golden-card p-2 mb-2 text-center animate-fade delay-3 text-xs">
-        <p style="color:rgba(232,220,200,0.8);">Rettangolo aureo senza suddivisione.</p>
-       </div>
-       <div class="golden-card p-2 animate-fade-up delay-3">
-        <svg id="recursion-svg" viewbox="0 0 700 380" class="w-full" style="max-height:220px;"></svg>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 6: Fibonacci ============ -->
-    <section id="slide-5" class="slide-container" role="region" aria-label="Slide 6: Successione di Fibonacci">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-5xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Successione di Fibonacci</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Ogni numero è la somma dei due precedenti</p>
-       <div class="golden-card p-2 mb-2 text-center animate-fade-up delay-2">
-        <p class="font-display text-sm" style="color:var(--gold-accent);">F(n) = F(n−1) + F(n−2)</p>
-        <p class="text-xs mt-0.5" style="color:rgba(232,220,200,0.5);">F(0)=0, F(1)=1</p>
-       </div>
-       <div id="fib-numbers" class="flex flex-wrap items-center justify-center gap-1 mb-2 animate-fade-up delay-3 text-xs">
-       </div>
-       <div class="golden-card p-2 mb-2 animate-fade-up delay-4">
-        <svg id="fib-svg" viewbox="0 0 700 350" class="w-full" style="max-height:220px;"></svg>
-       </div>
-       <div class="flex items-center justify-center gap-2 animate-fade-up delay-5"><button id="fib-animate-btn" class="step-btn text-xs">▶ Anima</button> <button id="fib-reset-btn" class="step-btn text-xs">↺ Reset</button>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 7: Collegamento Fibonacci-φ ============ -->
-    <section id="slide-6" class="slide-container" role="region" aria-label="Slide 7: Fibonacci e Sezione Aurea">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-5xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Fibonacci Converge a φ</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Il rapporto F(n+1)/F(n) → φ</p>
-       <div class="golden-card p-2 mb-2 animate-fade-up delay-2">
-        <p class="text-xs uppercase tracking-wider mb-1" style="color:rgba(232,220,200,0.5);">Rapporto Convergente</p>
-        <svg id="convergence-svg" viewbox="0 0 700 240" class="w-full" style="max-height:160px;"></svg>
-        <div class="flex items-center justify-center mt-1"><button id="conv-animate-btn" class="step-btn text-xs">▶ Anima</button>
-        </div>
-       </div>
-       <div class="golden-card p-2 overflow-x-auto animate-fade-up delay-3">
-        <table class="w-full text-xs">
-         <thead>
-          <tr style="color:var(--gold-accent);">
-           <th class="py-0.5 px-1 text-left font-display text-xs">n</th>
-           <th class="py-0.5 px-1 text-left font-display text-xs">F(n)</th>
-           <th class="py-0.5 px-1 text-left font-display text-xs">F(n+1)</th>
-           <th class="py-0.5 px-1 text-left font-display text-xs">Rapporto</th>
-          </tr>
-         </thead>
-         <tbody id="ratio-table-body" style="color:rgba(232,220,200,0.8);"></tbody>
-        </table>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 8: Natura ============ -->
-    <section id="slide-7" class="slide-container" role="region" aria-label="Slide 8: Sezione Aurea in Natura">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-5xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">La Sezione Aurea in Natura</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Proporzioni armoniose nel nostro ecosistema</p>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-2 animate-fade-up delay-2">
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-2 text-center" style="color:var(--gold-accent);">🌻 Girasole</h3>
-         <p class="text-xs mb-1" style="color:rgba(232,220,200,0.8);">I semi del girasole si dispongono in spirali auree. Il rapporto tra il numero di spirali in una direzione e l'altra è sempre un numero di Fibonacci.</p>
-        </div>
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-2 text-center" style="color:var(--gold-accent);">🐚 Conchiglia Nautilus</h3>
-         <p class="text-xs mb-1" style="color:rgba(232,220,200,0.8);">La conchiglia del nautilus segue una spirale logaritmica aurea, mantenendo la stessa proporzione φ attraverso tutte le sue camere.</p>
-        </div>
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-2 text-center" style="color:var(--gold-accent);">🌿 Petali Floreali</h3>
-         <p class="text-xs mb-1" style="color:rgba(232,220,200,0.8);">I fiori hanno spesso 3, 5, 8, 13, 21 petali (numeri di Fibonacci). Il gigli hanno 3, i ranuncoli 5, i margherite molte.</p>
-        </div>
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-2 text-center" style="color:var(--gold-accent);">🦅 Corpo Umano</h3>
-         <p class="text-xs mb-1" style="color:rgba(232,220,200,0.8);">Il rapporto tra l'altezza totale e la distanza dall'ombelico ai piedi è circa φ. Lo stesso per molte altre proporzioni corporee.</p>
-        </div>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 9: Arte e Architettura ============ -->
-    <section id="slide-8" class="slide-container" role="region" aria-label="Slide 9: Sezione Aurea in Arte e Architettura">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-5xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Sezione Aurea in Arte</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">Capolavori costruiti sulla proporzione aurea</p>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-2 animate-fade-up delay-2">
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-1 text-center" style="color:var(--gold-accent);">🎨 La Gioconda</h3>
-         <svg id="gioconda-svg" viewbox="0 0 400 300" class="w-full" style="max-height:100px;"></svg>
-         <p class="text-xs text-center mt-1" style="color:rgba(232,220,200,0.8);">Leonardo da Vinci usò il rettangolo aureo nella composizione</p>
-        </div>
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-1 text-center" style="color:var(--gold-accent);">🎨 Ultimi Cena di Dalí</h3>
-         <svg id="dali-svg" viewbox="0 0 400 300" class="w-full" style="max-height:100px;"></svg>
-         <p class="text-xs text-center mt-1" style="color:rgba(232,220,200,0.8);">Dipinta su un rettangolo aureo (277 cm × 172 cm)</p>
-        </div>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-1 animate-fade-up delay-3 text-xs">
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          🏛️
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Partenone</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Facciata aurea (447 a.C.)</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          🗼
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Torre Eiffel</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Proporzioni auree (1889)</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          ⛪
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Notre-Dame</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Architettura gotica</p>
-        </div>
-       </div>
-      </div>
-     </div>
-    </section><!-- ============ SLIDE 10: Design Moderno ============ -->
-    <section id="slide-9" class="slide-container" role="region" aria-label="Slide 10: Sezione Aurea nel Design Moderno">
-     <div class="h-full w-full flex flex-col items-center px-4 py-3">
-      <div class="max-w-5xl w-full mx-auto">
-       <h2 class="font-display text-2xl md:text-3xl font-bold text-center mb-1 animate-fade-up" style="color:var(--text-primary);">Sezione Aurea nel Design Moderno</h2>
-       <p class="text-center mb-2 text-xs animate-fade-up delay-1" style="color:rgba(232,220,200,0.6);">La proporzione perfetta oggi</p>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-2 animate-fade-up delay-2">
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-1 text-center" style="color:var(--gold-accent);">📱 Apple</h3>
-         <svg id="apple-svg" viewbox="0 0 400 240" class="w-full" style="max-height:120px;"></svg>
-         <p class="text-xs text-center mt-1" style="color:rgba(232,220,200,0.8);">Usa sezioni auree nel design dell'interfaccia</p>
-        </div>
-        <div class="golden-card p-2">
-         <h3 class="font-display text-sm font-semibold mb-1 text-center" style="color:var(--gold-accent);">🏎️ Aston Martin</h3>
-         <svg id="aston-svg" viewbox="0 0 400 240" class="w-full" style="max-height:120px;"></svg>
-         <p class="text-xs text-center mt-1" style="color:rgba(232,220,200,0.8);">Design automobilistico con proporzioni auree</p>
-        </div>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-1 animate-fade-up delay-3 text-xs">
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          💻
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Grafica Web</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Layout responsive</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          📸
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Fotografia</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Composizione perfetta</p>
-        </div>
-        <div class="golden-card p-2 text-center">
-         <div class="text-2xl mb-1">
-          ✏️
-         </div>
-         <h3 class="font-display text-xs font-semibold mb-0.5" style="color:var(--gold-accent);">Tipografia</h3>
-         <p class="text-xs" style="color:rgba(232,220,200,0.7);">Harmonia letterale</p>
-        </div>
-       </div>
-       <div class="text-center mt-2 animate-fade-up delay-4">
-        <p class="font-display text-xs italic" style="color:var(--gold-accent);">La bellezza è una proporzione matematica 🌟</p>
-       </div>
-      </div>
-     </div>
-    </section>
-   </div>
+    </div>
+    <button class="fs-btn" id="fullscreen-btn">⛶ Schermo intero</button>
   </div>
-  <script>
-    const PHI = (1 + Math.sqrt(5)) / 2;
-    const TOTAL_SLIDES = 10;
+  <nav class="tab-nav" id="top-menu">
+    <button class="tab active" data-section="intro">φ Introduzione</button>
+    <button class="tab" data-section="segmento">📏 Segmento</button>
+    <button class="tab" data-section="costruzione">📐 Costruzione</button>
+    <button class="tab" data-section="rettangolo">▭ Rettangolo</button>
+    <button class="tab" data-section="fibonacci">🌀 Fibonacci</button>
+    <button class="tab" data-section="convergenza">📈 Convergenza</button>
+    <button class="tab" data-section="natura">🌿 Natura</button>
+    <button class="tab" data-section="arte">🎨 Arte</button>
+    <button class="tab" data-section="design">💻 Design</button>
+    <button class="tab" data-section="verifica">🧠 Verifica</button>
+  </nav>
+</header>
 
-    let currentSlide = 0;
-    let constructionStep = 0;
-    const CONSTRUCTION_STEPS = 6;
-    let recursionStep = 0;
-    const RECURSION_STEPS = 8;
-    let fibAnimating = false;
-    let fibStep = 0;
-    let convAnimating = false;
+<main>
 
-    const defaultConfig = {
-      main_title: 'La Sezione Aurea',
-      subtitle: 'φ ≈ 1,618033988749...',
-      background_color: '#0a0e1a',
-      surface_color: '#141a2e',
-      text_color: '#e8dcc8',
-      gold_color: '#c9a84c',
-      secondary_gold: '#8b6914',
-      font_family: 'Cormorant Garamond',
-      font_size: 16
-    };
+  <!-- ══════════════════════════════ -->
+  <!-- § 0  INTRODUZIONE             -->
+  <!-- ══════════════════════════════ -->
+  <section id="intro" class="active">
+    <div class="card">
+      <div class="sec-num">01 — Definizione</div>
+      <h2 class="sec-title">La <span>Sezione Aurea</span></h2>
 
-    function applyConfig(config) {
-      const bg = config.background_color || defaultConfig.background_color;
-      const surface = config.surface_color || defaultConfig.surface_color;
-      const text = config.text_color || defaultConfig.text_color;
-      const gold = config.gold_color || defaultConfig.gold_color;
-      const secGold = config.secondary_gold || defaultConfig.secondary_gold;
-      const font = config.font_family || defaultConfig.font_family;
-      const baseSize = config.font_size || defaultConfig.font_size;
+      <div class="def-box pri">
+        <div class="def-label">Cos'è la sezione aurea?</div>
+        <p>La <strong>sezione aurea</strong> è una proporzione matematica speciale: un segmento viene diviso in modo che il rapporto tra la parte maggiore e la parte minore sia uguale al rapporto tra l'intero segmento e la parte maggiore.</p>
+      </div>
 
-      document.documentElement.style.setProperty('--bg-deep', bg);
-      document.documentElement.style.setProperty('--surface', surface);
-      document.documentElement.style.setProperty('--text-primary', text);
-      document.documentElement.style.setProperty('--gold-accent', gold);
-      document.documentElement.style.setProperty('--gold-secondary', secGold);
+      <div class="formula-box mono" style="font-size:1.1rem;text-align:center;">
+        a / b &nbsp;=&nbsp; (a + b) / a &nbsp;=&nbsp; <span style="color:var(--pri);font-weight:600;">φ ≈ 1,618</span>
+      </div>
 
-      const wrapper = document.getElementById('app-wrapper');
-      if (wrapper) wrapper.style.backgroundColor = bg;
+      <p style="margin-top:1rem;line-height:1.8;color:rgba(228,226,240,0.85);">Il numero φ (phi) è una costante irrazionale che si ritrova in modo sorprendente in natura, nell'arte, nell'architettura e nel design. La sua presenza è legata alla <strong style="color:var(--sec);">successione di Fibonacci</strong> e alla geometria del <strong style="color:var(--pri);">rettangolo aureo</strong>.</p>
 
-      const displayFont = `${font}, serif`;
-      document.querySelectorAll('.font-display').forEach(el => {
-        el.style.fontFamily = displayFont;
-      });
+      <div class="row" style="margin-top:1.2rem;">
+        <div style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.4rem;">🌻</div>
+          <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--pri);">Natura</div>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Spirali, conchiglie, petali floreali</p>
+        </div>
+        <div style="background:rgba(45,212,164,0.08);border:1px solid rgba(45,212,164,0.2);border-radius:12px;padding:1rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.4rem;">🎨</div>
+          <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--sec);">Arte</div>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.3rem;">Leonardo, Dalí, Partenone</p>
+        </div>
+      </div>
 
-      const titleEl = document.getElementById('slide1-title');
-      if (titleEl) titleEl.style.fontSize = `${baseSize * 1.8}px`;
-      const subtitleEl = document.getElementById('slide1-subtitle');
-      if (subtitleEl) subtitleEl.style.fontSize = `${baseSize * 0.8}px`;
+      <p style="margin-top:1rem;line-height:1.8;color:rgba(228,226,240,0.7);">La chiave di tutto è la sua <strong style="color:var(--amber);">proprietà auto-referenziale</strong>: φ è l'unico numero per cui φ² = φ + 1, ovvero <span class="mono">φ² − φ − 1 = 0</span>.</p>
+    </div>
+  </section>
 
-      const title = config.main_title || defaultConfig.main_title;
-      const sub = config.subtitle || defaultConfig.subtitle;
-      if (titleEl) titleEl.textContent = title;
-      if (subtitleEl) subtitleEl.textContent = sub;
+  <!-- ══════════════════════════════ -->
+  <!-- § 1  SEGMENTO                 -->
+  <!-- ══════════════════════════════ -->
+  <section id="segmento">
+    <div class="card">
+      <div class="sec-num">02 — Proporzione</div>
+      <h2 class="sec-title">Suddivisione in <span>Sezione Aurea</span></h2>
 
-      document.querySelectorAll('.golden-card').forEach(el => {
-        el.style.borderColor = `${gold}26`;
-        el.style.background = `linear-gradient(135deg, ${surface}e6, ${surface}b3)`;
-      });
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">Muovi lo slider per cambiare la lunghezza del segmento AB e osserva come si divide il punto C in modo aureo.</p>
 
-      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
-        if (i === currentSlide) {
-          dot.style.background = gold;
-          dot.style.boxShadow = `0 0 12px ${gold}80`;
-        } else {
-          dot.style.background = `${gold}4d`;
-          dot.style.borderColor = `${gold}80`;
-        }
-      });
+      <div class="card-inner">
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <label for="segment-slider" style="font-size:0.85rem;color:var(--muted);white-space:nowrap;">Lunghezza AB:</label>
+          <input type="range" id="segment-slider" min="200" max="600" value="400">
+          <span id="segment-length-display" class="mono" style="color:var(--pri);min-width:2.5rem;">400</span>
+        </div>
+      </div>
 
-      document.querySelectorAll('.nav-arrow').forEach(a => {
-        a.style.borderColor = `${gold}4d`;
-        a.style.color = gold;
-      });
+      <div class="canvas" style="margin-bottom:1rem;">
+        <canvas id="segmentCanvas" width="700" height="200" style="width:100%;border-radius:8px;"></canvas>
+      </div>
 
-      document.querySelectorAll('.step-btn').forEach(b => {
-        b.style.borderColor = `${gold}4d`;
-        b.style.color = gold;
-        b.style.background = `${gold}1a`;
-      });
+      <div class="row">
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Segmento AC</div>
+          <div id="info-ac" class="mono" style="font-size:1.4rem;color:var(--pri);font-weight:600;">247</div>
+        </div>
+        <div style="background:rgba(45,212,164,0.08);border:1px solid rgba(45,212,164,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Segmento CB</div>
+          <div id="info-cb" class="mono" style="font-size:1.4rem;color:var(--sec);font-weight:600;">153</div>
+        </div>
+      </div>
 
-      document.querySelectorAll('.golden-divider').forEach(d => {
-        d.style.background = `linear-gradient(90deg, transparent, ${gold}66, transparent)`;
-      });
+      <div class="def-box amber" style="margin-top:1rem;">
+        <div class="def-label">Rapporto aureo</div>
+        <p>AC / CB = <span id="ratio-display" class="mono" style="color:var(--pri);font-weight:700;">1.618</span> ≈ φ &nbsp;|&nbsp; AB / AC = <span id="ratio-display2" class="mono" style="color:var(--pri);font-weight:700;">1.618</span> ≈ φ</p>
+      </div>
+    </div>
+  </section>
 
-      drawSegment();
-      drawConstruction(constructionStep);
-      drawRecursion(recursionStep);
-      drawFibonacci(fibStep);
-      drawConvergenceGraph();
-      drawGioconda();
-      drawDali();
-      drawApple();
-      drawAstonMartin();
-    }
+  <!-- ══════════════════════════════ -->
+  <!-- § 2  COSTRUZIONE              -->
+  <!-- ══════════════════════════════ -->
+  <section id="costruzione">
+    <div class="card">
+      <div class="sec-num">03 — Geometria</div>
+      <h2 class="sec-title">Costruzione <span>Geometrica</span></h2>
 
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange: async (config) => {
-          applyConfig(config);
-        },
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
-            },
-            {
-              get: () => config.surface_color || defaultConfig.surface_color,
-              set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
-            },
-            {
-              get: () => config.gold_color || defaultConfig.gold_color,
-              set: (v) => { config.gold_color = v; window.elementSdk.setConfig({ gold_color: v }); }
-            },
-            {
-              get: () => config.secondary_gold || defaultConfig.secondary_gold,
-              set: (v) => { config.secondary_gold = v; window.elementSdk.setConfig({ secondary_gold: v }); }
-            }
-          ],
-          borderables: [],
-          fontEditable: {
-            get: () => config.font_family || defaultConfig.font_family,
-            set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
-          },
-          fontSizeable: {
-            get: () => config.font_size || defaultConfig.font_size,
-            set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
-          }
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['main_title', config.main_title || defaultConfig.main_title],
-          ['subtitle', config.subtitle || defaultConfig.subtitle]
-        ])
-      });
-    }
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">Metodo classico del rettangolo aureo — segui i 6 passi della costruzione con compasso e riga.</p>
 
-    function initNav() {
-      const dotsContainer = document.getElementById('nav-dots');
-      for (let i = 0; i < TOTAL_SLIDES; i++) {
-        const dot = document.createElement('button');
-        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Vai alla slide ${i + 1}`);
-        dot.addEventListener('click', () => goToSlide(i));
-        dotsContainer.appendChild(dot);
-      }
-      updateNav();
-    }
+      <div class="btn-row" style="justify-content:center;margin-bottom:0.8rem;margin-top:0;">
+        <button class="btn btn-ghost" id="construction-prev" disabled>← Indietro</button>
+        <span id="construction-step-label" class="mono" style="color:var(--pri);padding:0.4rem 1rem;align-self:center;">Passo 1 / 6</span>
+        <button class="btn btn-primary" id="construction-next">Avanti →</button>
+      </div>
 
-    function goToSlide(index) {
-      if (index < 0 || index >= TOTAL_SLIDES) return;
-      currentSlide = index;
-      const wrapper = document.getElementById('slides-wrapper');
-      wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-      updateNav();
-    }
+      <div id="construction-step-desc" class="def-box pri" style="margin-bottom:1rem;">
+        <p>Iniziamo con un segmento AB di lunghezza qualsiasi.</p>
+      </div>
 
-    function updateNav() {
-      const dots = document.querySelectorAll('.nav-dot');
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentSlide);
-        if (i === currentSlide) {
-          dot.style.background = gold;
-          dot.style.boxShadow = `0 0 12px ${gold}80`;
-        } else {
-          dot.style.background = `${gold}4d`;
-          dot.style.boxShadow = 'none';
-        }
-      });
-      document.getElementById('nav-prev').disabled = currentSlide === 0;
-      document.getElementById('nav-next').disabled = currentSlide === TOTAL_SLIDES - 1;
-      document.getElementById('slide-counter').textContent = `${currentSlide + 1} / ${TOTAL_SLIDES}`;
-    }
+      <div class="canvas">
+        <canvas id="constructionCanvas" width="700" height="380" style="width:100%;border-radius:8px;"></canvas>
+      </div>
+    </div>
+  </section>
 
-    document.getElementById('nav-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
-    document.getElementById('nav-next').addEventListener('click', () => goToSlide(currentSlide + 1));
+  <!-- ══════════════════════════════ -->
+  <!-- § 3  RETTANGOLO AUREO         -->
+  <!-- ══════════════════════════════ -->
+  <section id="rettangolo">
+    <div class="card">
+      <div class="sec-num">04 — Ricorsione</div>
+      <h2 class="sec-title">Rettangoli Aurei <span>Annidati</span></h2>
 
-    let scrollTimeout;
-    document.addEventListener('wheel', (e) => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        if (e.deltaY > 0) {
-          goToSlide(currentSlide + 1);
-        } else {
-          goToSlide(currentSlide - 1);
-        }
-      }, 100);
-    }, { passive: true });
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">Il rettangolo aureo ha una proprietà straordinaria: se si rimuove un quadrato, rimane un rettangolo aureo più piccolo, all'infinito.</p>
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goToSlide(currentSlide + 1);
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goToSlide(currentSlide - 1);
+      <div class="btn-row" style="justify-content:center;margin-bottom:0.8rem;margin-top:0;">
+        <button class="btn btn-ghost" id="recursion-prev" disabled>← Indietro</button>
+        <span id="recursion-step-label" class="mono" style="color:var(--pri);padding:0.4rem 1rem;align-self:center;">Livello 0</span>
+        <button class="btn btn-primary" id="recursion-next">Avanti →</button>
+      </div>
+
+      <div id="recursion-step-desc" class="def-box sec" style="margin-bottom:1rem;">
+        <p>Rettangolo aureo iniziale senza suddivisione.</p>
+      </div>
+
+      <div class="canvas">
+        <canvas id="recursionCanvas" width="700" height="350" style="width:100%;border-radius:8px;"></canvas>
+      </div>
+
+      <div class="row" style="margin-top:1rem;">
+        <div class="def-box pri glow-pulse">
+          <div class="def-label">Proprietà fondamentale</div>
+          <p>Rettangolo aureo: <strong>larghezza / altezza = φ ≈ 1,618</strong></p>
+        </div>
+        <div class="def-box amber">
+          <div class="def-label">I 6 passi della costruzione</div>
+          <div style="font-size:0.9rem;line-height:1.8;color:rgba(228,226,240,0.8);">
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.3rem;"><span class="step-badge">1</span><span>Segmento AB orizzontale</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.3rem;"><span class="step-badge">2</span><span>Quadrato ABCD con AB come base</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.3rem;"><span class="step-badge">3</span><span>Punto medio M di AB</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.3rem;"><span class="step-badge">4</span><span>Segmento MC (M in basso, C in alto a destra)</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.3rem;"><span class="step-badge">5</span><span>Arco centro M, raggio MC → punto E</span></div>
+            <div style="display:flex;gap:0.6rem;align-items:flex-start;"><span class="step-badge">6</span><span>Rettangolo ADFE è aureo: AE/AB = φ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 4  FIBONACCI                -->
+  <!-- ══════════════════════════════ -->
+  <section id="fibonacci">
+    <div class="card">
+      <div class="sec-num">05 — Successione</div>
+      <h2 class="sec-title">Successione di <span>Fibonacci</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);">Ogni termine è la somma dei due precedenti. Affiancando quadrati con lato uguale a ciascun numero si costruisce una spirale che approssima sempre meglio la spirale aurea.</p>
+
+      <div class="formula mono" style="font-size:1.2rem;">F(n) = F(n−1) + F(n−2) &nbsp;→&nbsp; 1, 1, 2, 3, 5, 8, 13, 21, 34, 55…</div>
+
+      <div class="def-box amber" style="margin:1rem 0;">
+        <div class="def-label">Come si costruisce</div>
+        <p>Si parte da due quadrati di lato <strong>1</strong>. Si affianca un quadrato di lato <strong>2</strong> (= 1+1), poi uno di lato <strong>3</strong> (= 2+1), poi <strong>5</strong>, <strong>8</strong>… Ogni nuovo quadrato ha lato pari all'ultimo numero di Fibonacci. La spirale congiunge gli angoli interni dei quadrati con archi di quarto di cerchio.</p>
+      </div>
+
+      <div class="canvas" style="margin-bottom:1rem;">
+        <canvas id="fibCanvas" width="700" height="340" style="width:100%;border-radius:8px;"></canvas>
+      </div>
+
+      <div class="btn-row" style="justify-content:center;margin-bottom:1rem;">
+        <button class="btn btn-ghost" id="fib-prev-btn" disabled>← Indietro</button>
+        <span id="fib-step-label" class="mono" style="color:var(--pri);padding:0.4rem 1rem;align-self:center;">Passo 0 / 10</span>
+        <button class="btn btn-primary" id="fib-next-btn">Avanti →</button>
+        <button class="btn btn-ghost" id="fib-reset-btn">↺ Reset</button>
+      </div>
+
+      <div id="fib-numbers" style="display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;align-items:center;margin-top:0.5rem;min-height:2rem;"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 5  CONVERGENZA              -->
+  <!-- ══════════════════════════════ -->
+  <section id="convergenza">
+    <div class="card">
+      <div class="sec-num">06 — Convergenza</div>
+      <h2 class="sec-title">Fibonacci <span>Converge a φ</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);">Il rapporto F(n+1)/F(n) tende a φ all'aumentare di n — una delle connessioni più belle della matematica.</p>
+
+      <div class="def-box pri" style="margin-bottom:1rem;">
+        <div class="def-label">Limite della successione</div>
+        <p><strong>lim F(n+1) / F(n) = φ</strong> &nbsp;per n → ∞</p>
+      </div>
+
+      <div class="canvas" style="margin-bottom:1rem;">
+        <div class="canvas-title">Rapporto F(n+1) / F(n) — convergenza a φ</div>
+        <canvas id="convergenceCanvas" width="700" height="220" style="width:100%;border-radius:8px;"></canvas>
+      </div>
+
+      <div class="btn-row" style="justify-content:center;margin-bottom:1rem;">
+        <button class="btn btn-primary" id="conv-animate-btn">▶ Anima convergenza</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>n</th>
+              <th>F(n)</th>
+              <th>F(n+1)</th>
+              <th>Rapporto</th>
+            </tr>
+          </thead>
+          <tbody id="ratio-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 6  NATURA                   -->
+  <!-- ══════════════════════════════ -->
+  <section id="natura">
+    <div class="card">
+      <div class="sec-num">07 — Natura</div>
+      <h2 class="sec-title">La Sezione Aurea <span>in Natura</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">Proporzioni armoniose nel nostro ecosistema — φ appare dove ci si aspetta efficienza e bellezza.</p>
+
+      <div class="row">
+        <div class="def-box sec glow-pulse">
+          <div class="def-label">🌻 Girasole</div>
+          <p>I semi si dispongono in spirali auree. Il rapporto tra le spirali in direzione oraria e antioraria è sempre un numero di Fibonacci: <strong>34/55, 55/89</strong>…</p>
+        </div>
+        <div class="def-box pri glow-pulse" style="animation-delay:0.5s;">
+          <div class="def-label">🐚 Nautilus</div>
+          <p>La conchiglia segue una spirale logaritmica aurea, mantenendo la stessa proporzione φ attraverso tutte le sue camere.</p>
+        </div>
+      </div>
+      <div class="row" style="margin-top:0;">
+        <div class="def-box amber">
+          <div class="def-label">🌿 Petali Floreali</div>
+          <p>I fiori hanno spesso <strong>3, 5, 8, 13, 21</strong> petali — tutti numeri di Fibonacci. I gigli 3, i ranuncoli 5, le margherite tipicamente 21.</p>
+        </div>
+        <div class="def-box red">
+          <div class="def-label">🦅 Corpo Umano</div>
+          <p>Il rapporto altezza totale / distanza ombelico-suolo ≈ φ. Lo stesso vale per molte altre proporzioni corporee studiate da Leonardo.</p>
+        </div>
+      </div>
+
+      <div class="card-inner" style="margin-top:1rem;background:rgba(201,168,76,0.06);border-color:rgba(201,168,76,0.2);">
+        <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">🧠 Quiz Natura</h3>
+        <p style="margin-bottom:0.6rem;">Quante spirali di semi ha tipicamente un girasole grande?</p>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;" id="naturaQuiz">
+          <button class="quiz-option" onclick="checkQuiz('naturaQuiz',this,false)">10 e 16</button>
+          <button class="quiz-option" onclick="checkQuiz('naturaQuiz',this,true)">34 e 55</button>
+          <button class="quiz-option" onclick="checkQuiz('naturaQuiz',this,false)">20 e 30</button>
+          <button class="quiz-option" onclick="checkQuiz('naturaQuiz',this,false)">40 e 60</button>
+        </div>
+        <p id="naturaQuizFeedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 7  ARTE E ARCHITETTURA      -->
+  <!-- ══════════════════════════════ -->
+  <section id="arte">
+    <div class="card">
+      <div class="sec-num">08 — Arte</div>
+      <h2 class="sec-title">Sezione Aurea nell'<span>Arte</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">Capolavori costruiti sulla proporzione aurea — da Leonardo da Vinci a Salvador Dalí.</p>
+
+      <div class="row">
+        <div class="card-inner" style="margin-bottom:0;">
+          <h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--pri);margin-bottom:0.6rem;">🎨 La Gioconda</h3>
+          <canvas id="giocondaCanvas" width="400" height="250" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.2);"></canvas>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;text-align:center;">Proporzioni auree nella composizione del volto</p>
+        </div>
+        <div class="card-inner" style="margin-bottom:0;">
+          <h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--amber);margin-bottom:0.6rem;">🎨 L'Ultima Cena — Dalí</h3>
+          <canvas id="daliCanvas" width="400" height="250" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.2);"></canvas>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;text-align:center;">Dipinta su rettangolo aureo (277×172 cm)</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin-top:1rem;">
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">🏛️</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Partenone</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Facciata aurea (447 a.C.)</p>
+        </div>
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">🗼</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Torre Eiffel</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Proporzioni auree (1889)</p>
+        </div>
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">⛪</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Notre-Dame</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Architettura gotica</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 8  DESIGN MODERNO           -->
+  <!-- ══════════════════════════════ -->
+  <section id="design">
+    <div class="card">
+      <div class="sec-num">09 — Design</div>
+      <h2 class="sec-title">Sezione Aurea nel <span>Design Moderno</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1rem;">La proporzione perfetta continua a guidare il design contemporaneo — dalle interfacce digitali ai prodotti di lusso.</p>
+
+      <div class="row">
+        <div class="card-inner" style="margin-bottom:0;">
+          <h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--pri);margin-bottom:0.6rem;">📱 Apple</h3>
+          <canvas id="appleCanvas" width="400" height="200" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.2);"></canvas>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;text-align:center;">Sezioni auree nell'interfaccia iOS</p>
+        </div>
+        <div class="card-inner" style="margin-bottom:0;">
+          <h3 style="font-family:'Fraunces',serif;font-size:1rem;color:var(--amber);margin-bottom:0.6rem;">🏎️ Aston Martin</h3>
+          <canvas id="astonCanvas" width="400" height="200" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.2);"></canvas>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;text-align:center;">Design automobilistico con proporzioni auree</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin-top:1rem;">
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">💻</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Grafica Web</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Layout responsive</p>
+        </div>
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">📸</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Fotografia</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Regola dei terzi</p>
+        </div>
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:0.3rem;">✏️</div>
+          <div style="font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--pri);">Tipografia</div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.3rem;">Armonia letterale</p>
+        </div>
+      </div>
+
+      <div class="def-box sec" style="margin-top:1rem;">
+        <div class="def-label">La bellezza è matematica</div>
+        <p><em>La sezione aurea non è solo un numero — è il linguaggio nascosto dell'armonia visiva.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ -->
+  <!-- § 9  VERIFICA                 -->
+  <!-- ══════════════════════════════ -->
+  <section id="verifica">
+    <div class="card">
+      <div class="sec-num">10 — Verifica</div>
+      <h2 class="sec-title">Metti alla <span>Prova</span></h2>
+
+      <p style="line-height:1.8;color:rgba(228,226,240,0.85);margin-bottom:1.2rem;">Tre domande per testare la tua comprensione della sezione aurea.</p>
+
+      <div class="card-inner" style="background:rgba(201,168,76,0.06);border-color:rgba(201,168,76,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+          <span style="font-family:'Fraunces',serif;font-weight:700;color:#fff;">Domanda 1</span>
+          <span class="badge badge-pri">⭐</span>
+        </div>
+        <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Quale valore ha φ con 3 decimali?</p>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;" id="quiz1">
+          <button class="quiz-option" onclick="checkQuiz('quiz1',this,false)">1.414</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz1',this,true)">1.618</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz1',this,false)">2.718</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz1',this,false)">3.141</button>
+        </div>
+        <p id="quiz1Feedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+      </div>
+
+      <div class="card-inner" style="margin-top:0.8rem;background:rgba(45,212,164,0.06);border-color:rgba(45,212,164,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+          <span style="font-family:'Fraunces',serif;font-weight:700;color:#fff;">Domanda 2</span>
+          <span class="badge badge-sec">⭐⭐</span>
+        </div>
+        <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Qual è la proprietà algebrica fondamentale di φ?</p>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;" id="quiz2">
+          <button class="quiz-option" onclick="checkQuiz('quiz2',this,false)">φ² = φ − 1</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz2',this,true)">φ² = φ + 1</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz2',this,false)">φ² = 2φ</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz2',this,false)">φ = 1/φ</button>
+        </div>
+        <p id="quiz2Feedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+      </div>
+
+      <div class="card-inner" style="margin-top:0.8rem;background:rgba(245,200,66,0.06);border-color:rgba(245,200,66,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+          <span style="font-family:'Fraunces',serif;font-weight:700;color:#fff;">Domanda 3</span>
+          <span class="badge badge-amber">⭐⭐⭐</span>
+        </div>
+        <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Il 13° numero di Fibonacci è 233 e il 14° è 377. Qual è il loro rapporto (arrotondato)?</p>
+        <div style="display:flex;flex-direction:column;gap:0.45rem;" id="quiz3">
+          <button class="quiz-option" onclick="checkQuiz('quiz3',this,false)">1.500</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz3',this,false)">1.600</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz3',this,true)">1.618</button>
+          <button class="quiz-option" onclick="checkQuiz('quiz3',this,false)">1.700</button>
+        </div>
+        <p id="quiz3Feedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">MatematicaViva</span>
+  <span class="footer-center">
+    Distribuito con licenza Creative Commons BY-NC-ND 4.0 · matematicaviva.github.io
+    <small>Prof.ssa M. Prandelli</small>
+  </span>
+  <span class="footer-copy">© 2026 MatematicaViva</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PHI = (1 + Math.sqrt(5)) / 2;
+
+// ══ NAV ══
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('main section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    const id = btn.dataset.section;
+    const sec = document.getElementById(id);
+    if (sec) sec.classList.add('active');
+    redrawActive(id);
+  });
+});
+
+// ══ FULLSCREEN ══
+document.getElementById('fullscreen-btn').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    document.getElementById('fullscreen-btn').textContent = '✕ Esci schermo intero';
+  } else {
+    document.exitFullscreen();
+    document.getElementById('fullscreen-btn').textContent = '⛶ Schermo intero';
+  }
+});
+
+// ══ TOAST ══
+function showToast(msg, type = 'info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══ QUIZ ══
+function checkQuiz(containerId, btn, correct) {
+  const container = document.getElementById(containerId);
+  const btns = container.querySelectorAll('.quiz-option');
+  btns.forEach(b => { b.disabled = true; b.style.pointerEvents = 'none'; });
+  const fbId = containerId + 'Feedback';
+  const fb = document.getElementById(fbId);
+  if (correct) {
+    btn.classList.add('correct');
+    if (fb) { fb.textContent = '✅ Corretto! Ottimo lavoro!'; fb.style.color = 'var(--sec)'; }
+    showToast('Risposta esatta! 🎉', 'success');
+  } else {
+    btn.classList.add('wrong');
+    if (fb) { fb.textContent = '❌ Non corretto. Riprova la prossima volta!'; fb.style.color = 'var(--red)'; }
+    showToast('Non esatto, riprova.', 'error');
+  }
+}
+
+// ══ CANVAS HELPERS ══
+function getCanvasScale(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = canvas.getAttribute('height') * dpr * (rect.width / canvas.getAttribute('width'));
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w: rect.width, h: canvas.height / dpr };
+}
+
+function getColors() {
+  return {
+    pri: '#c9a84c',
+    sec: '#2dd4a4',
+    amber: '#f5c842',
+    red: '#f06080',
+    text: '#e4e2f0',
+    muted: '#9895b5',
+    border: 'rgba(255,255,255,0.07)',
+    bg: '#0c0c14',
+  };
+}
+
+function hexToRGBA(hex, a) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ══ SEGMENT CANVAS ══
+function drawSegment() {
+  const canvas = document.getElementById('segmentCanvas');
+  if (!canvas) return;
+  const len = parseInt(document.getElementById('segment-slider').value);
+  document.getElementById('segment-length-display').textContent = len;
+  const ac = Math.round(len / PHI);
+  const cb = len - ac;
+  document.getElementById('info-ac').textContent = ac;
+  document.getElementById('info-cb').textContent = cb;
+  document.getElementById('ratio-display').textContent = (ac / cb).toFixed(3);
+  document.getElementById('ratio-display2').textContent = (len / ac).toFixed(3);
+
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width || 700;
+  const h = 200;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const colors = getColors();
+  const margin = 60;
+  const totalW = w - 2 * margin;
+  const scale = totalW / 600;
+  const startX = margin;
+  const cX = startX + (len / 600) * totalW / PHI;
+  const endX = startX + (len / 600) * totalW;
+  const y = h / 2;
+
+  // Segment AB - part AC
+  ctx.strokeStyle = colors.pri;
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(startX, y);
+  ctx.lineTo(cX, y);
+  ctx.stroke();
+
+  // Segment CB
+  ctx.strokeStyle = colors.sec;
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(cX, y);
+  ctx.lineTo(endX, y);
+  ctx.stroke();
+
+  // Points
+  [[startX, 'A'], [cX, 'C'], [endX, 'B']].forEach(([x, label]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = label === 'C' ? colors.amber : '#fff';
+    ctx.fill();
+    ctx.fillStyle = colors.text;
+    ctx.font = '13px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y - 16);
+  });
+
+  // Labels
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillStyle = colors.pri;
+  ctx.textAlign = 'center';
+  ctx.fillText('AC = ' + ac, (startX + cX) / 2, y + 24);
+  ctx.fillStyle = colors.sec;
+  ctx.fillText('CB = ' + cb, (cX + endX) / 2, y + 24);
+}
+
+document.getElementById('segment-slider').addEventListener('input', drawSegment);
+
+// ══ CONSTRUCTION CANVAS ══
+let constructionStep = 0;
+const CONSTRUCTION_STEPS = 6;
+const constructionDescs = [
+  'Iniziamo con un segmento orizzontale AB di lunghezza qualsiasi.',
+  'Costruiamo il quadrato ABCD con AB come base (D sopra A, C sopra B).',
+  'Troviamo il punto medio M del segmento AB.',
+  'Tracciamo il segmento MC — da M (centro della base) fino a C (vertice in alto a destra).',
+  'Arco con centro M e raggio MC: ruotiamo MC fino all\'estensione di AB, trovando E.',
+  'Il rettangolo ADFE è aureo: AE / AB = φ ≈ 1,618 ✓'
+];
+
+function drawConstruction(step) {
+  const canvas = document.getElementById('constructionCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 700;
+  const h = 380;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const c = getColors();
+
+  // Layout: square of side s, centred, leaving room on the right for E
+  const s = Math.min(w * 0.28, 110);
+  // A = bottom-left, B = bottom-right of the base segment AB
+  // D = top of A, C = top of B  →  quadrato ABCD con AB in basso
+  const bY = h * 0.68;          // y of baseline AB
+  const aX = w / 2 - s * PHI / 2; // leave golden-ratio space to the right
+
+  const A = { x: aX,       y: bY };
+  const B = { x: aX + s,   y: bY };
+  const C = { x: aX + s,   y: bY - s };   // C sopra B
+  const D = { x: aX,       y: bY - s };   // D sopra A
+  // M = punto medio di AB (sul segmento di base)
+  const M = { x: (A.x + B.x) / 2, y: bY };
+  // MC: da M (base) a C (vertice in alto a destra)
+  const MC = Math.sqrt((C.x - M.x) ** 2 + (C.y - M.y) ** 2);
+  // E: punto sull'estensione di AB a destra, distanza MC da M
+  const E  = { x: M.x + MC, y: bY };
+  // F: sopra E, stessa altezza del quadrato
+  const F  = { x: E.x,      y: bY - s };
+
+  function dot(p, col, r = 5) {
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = col; ctx.fill();
+  }
+  function lbl(p, txt, dx, dy) {
+    ctx.fillStyle = c.text; ctx.font = 'bold 13px DM Mono,monospace'; ctx.textAlign = 'center';
+    ctx.fillText(txt, p.x + dx, p.y + dy);
+  }
+  function seg(p1, p2, col, lw = 2, dash = []) {
+    ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // ── Passo 0: segmento AB ──
+  seg(A, B, c.pri, 3);
+  dot(A, '#fff'); lbl(A, 'A', -14, 16);
+  dot(B, '#fff'); lbl(B, 'B',  14, 16);
+
+  // ── Passo 1: quadrato ABCD ──
+  if (step >= 1) {
+    ctx.fillStyle = hexToRGBA(c.pri, 0.07);
+    ctx.fillRect(A.x, D.y, s, s);
+    ctx.strokeStyle = hexToRGBA(c.pri, 0.65); ctx.lineWidth = 2; ctx.setLineDash([]);
+    ctx.strokeRect(A.x, D.y, s, s);
+    dot(D, '#fff'); lbl(D, 'D', -14, -10);
+    dot(C, '#fff'); lbl(C, 'C',  14, -10);
+  }
+
+  // ── Passo 2: punto medio M di AB ──
+  if (step >= 2) {
+    // Tick marks on AB to show midpoint
+    ctx.strokeStyle = hexToRGBA(c.amber, 0.7); ctx.lineWidth = 1.5;
+    [-4, 4].forEach(dx => {
+      ctx.beginPath(); ctx.moveTo(M.x + dx, bY - 7); ctx.lineTo(M.x + dx, bY + 7); ctx.stroke();
     });
+    dot(M, c.amber, 6);
+    lbl(M, 'M', 0, -12);
+    // AM = MB labels
+    ctx.font = '10px DM Mono,monospace'; ctx.fillStyle = hexToRGBA(c.amber, 0.7); ctx.textAlign = 'center';
+    ctx.fillText('AM', (A.x + M.x) / 2, bY + 22);
+    ctx.fillText('MB', (M.x + B.x) / 2, bY + 22);
+    ctx.font = '10px DM Mono,monospace'; ctx.fillStyle = hexToRGBA(c.amber, 0.5);
+    ctx.fillText('=', M.x, bY + 22);
+  }
 
-    function drawSegment() {
-      const svg = document.getElementById('segment-svg');
-      if (!svg) return;
-      const length = parseInt(document.getElementById('segment-slider').value);
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const secGold = (window.elementSdk && window.elementSdk.config.secondary_gold) || defaultConfig.secondary_gold;
-      const textCol = (window.elementSdk && window.elementSdk.config.text_color) || defaultConfig.text_color;
+  // ── Passo 3: segmento MC (tratteggiato) ──
+  if (step >= 3) {
+    seg(M, C, hexToRGBA(c.amber, 0.8), 2, [6, 4]);
+    // Length label along MC
+    const mx = (M.x + C.x) / 2, my = (M.y + C.y) / 2;
+    ctx.font = '11px DM Mono,monospace'; ctx.fillStyle = c.amber; ctx.textAlign = 'left';
+    ctx.fillText('MC = √(s²/4 + s²) = s√5/2', mx + 8, my - 4);
+  }
 
-      const startX = (700 - length) / 2;
-      const endX = startX + length;
-      const majorLen = length / PHI;
-      const minorLen = length - majorLen;
-      const splitX = startX + majorLen;
-      const y = 60;
+  // ── Passo 4: arco con centro M e raggio MC ──
+  if (step >= 4) {
+    // angleC: direzione da M verso C  (C è in alto a destra → angolo negativo in canvas)
+    const angleC = Math.atan2(C.y - M.y, C.x - M.x); // es. circa -63° = -1.107 rad
+    // angleE: direzione da M verso E (puramente a destra → 0 rad)
+    const angleE = 0;
+    // L'arco deve scendere da C (in alto) fino a E (sulla baseline) in senso orario.
+    // ctx.arc(cx, cy, r, startAngle, endAngle, anticlockwise=false) → senso orario.
+    // Da angleC (negativo) a 0 in senso orario è l'arco corto che passa per il I quadrante — CORRETTO.
+    ctx.strokeStyle = hexToRGBA(c.amber, 0.7); ctx.lineWidth = 2; ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    ctx.arc(M.x, M.y, MC, angleC, angleE, false); // false = clockwise
+    ctx.stroke();
+    ctx.setLineDash([]);
+    dot(E, c.sec, 7);
+    lbl(E, 'E', 16, 16);
+    // ME = MC label sotto l'arco
+    ctx.font = '11px DM Mono,monospace'; ctx.fillStyle = c.sec; ctx.textAlign = 'center';
+    ctx.fillText('ME = MC = r', (M.x + E.x) / 2, bY + 34);
+  }
 
-      svg.innerHTML = `
-        <line x1="${startX}" y1="${y}" x2="${endX}" y2="${y}" stroke="${textCol}33" stroke-width="2"/>
+  // ── Passo 5: rettangolo aureo ADFE ──
+  if (step >= 5) {
+    // Fill golden extension
+    ctx.fillStyle = hexToRGBA(c.sec, 0.09);
+    ctx.fillRect(A.x, D.y, E.x - A.x, s);
+    // Golden rectangle outline
+    ctx.strokeStyle = hexToRGBA(c.sec, 0.85); ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.strokeRect(A.x, D.y, E.x - A.x, s);
+    seg(E, F, c.sec, 2.5);
+    dot(F, c.sec, 5); lbl(F, 'F', 14, -10);
+    // Ratio label
+    ctx.font = 'bold 12px DM Mono,monospace'; ctx.fillStyle = c.sec; ctx.textAlign = 'center';
+    ctx.fillText('AE / AB = φ ≈ 1.618', (A.x + E.x) / 2, D.y - 14);
+    // highlight AB vs AE
+    seg(A, B, c.pri, 3);      // re-draw AB on top
+    seg(B, E, hexToRGBA(c.sec, 0.6), 3);  // BE = extension
+    ctx.font = '10px DM Mono,monospace'; ctx.fillStyle = hexToRGBA(c.sec, 0.7); ctx.textAlign = 'center';
+    ctx.fillText('BE = AB(φ−1)', (B.x + E.x) / 2, bY + 46);
+  }
 
-        <line x1="${startX}" y1="${y}" x2="${splitX}" y2="${y}" stroke="${gold}" stroke-width="4"
-          stroke-dasharray="1000" stroke-dashoffset="1000">
-          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1s" fill="freeze"/>
-        </line>
+  document.getElementById('construction-step-label').textContent = `Passo ${step + 1} / ${CONSTRUCTION_STEPS}`;
+  document.getElementById('construction-step-desc').querySelector('p').textContent = constructionDescs[step];
+  document.getElementById('construction-prev').disabled = step === 0;
+  document.getElementById('construction-next').disabled = step === CONSTRUCTION_STEPS - 1;
+}
 
-        <line x1="${splitX}" y1="${y}" x2="${endX}" y2="${y}" stroke="${secGold}" stroke-width="4"
-          stroke-dasharray="1000" stroke-dashoffset="1000">
-          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1s" begin="0.5s" fill="freeze"/>
-        </line>
+document.getElementById('construction-prev').addEventListener('click', () => {
+  if (constructionStep > 0) { constructionStep--; drawConstruction(constructionStep); }
+});
+document.getElementById('construction-next').addEventListener('click', () => {
+  if (constructionStep < CONSTRUCTION_STEPS - 1) { constructionStep++; drawConstruction(constructionStep); }
+});
 
-        <circle cx="${startX}" cy="${y}" r="5" fill="${gold}" opacity="0">
-          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.2s" fill="freeze"/>
-        </circle>
-        <circle cx="${splitX}" cy="${y}" r="5" fill="${gold}" opacity="0">
-          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.8s" fill="freeze"/>
-        </circle>
-        <circle cx="${endX}" cy="${y}" r="5" fill="${secGold}" opacity="0">
-          <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.2s" fill="freeze"/>
-        </circle>
+// ══ RECURSION CANVAS ══
+let recursionStep = 0;
+const RECURSION_STEPS = 8;
+const recursionDescs = [
+  'Rettangolo aureo iniziale — proporzione AB/BC = φ.',
+  'Primo quadrato rimosso: rimane un rettangolo aureo più piccolo.',
+  'Secondo quadrato rimosso — la proporzione si mantiene.',
+  'Terzo livello di suddivisione ricorsiva.',
+  'Quarto livello — i quadrati seguono la spirale aurea.',
+  'Quinto livello — si traccia la spirale logaritmica.',
+  'Sesto livello — la spirale converge al punto aureo.',
+  'Spirale aurea completa — auto-similarità infinita.'
+];
 
-        <text x="${startX}" y="${y - 15}" text-anchor="middle" fill="${textCol}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">A</text>
-        <text x="${splitX}" y="${y - 15}" text-anchor="middle" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">C</text>
-        <text x="${endX}" y="${y - 15}" text-anchor="middle" fill="${secGold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">B</text>
+function drawRecursion(step) {
+  const canvas = document.getElementById('recursionCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 700;
+  const h = 350;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
 
-        <line x1="${startX}" y1="${y + 20}" x2="${splitX}" y2="${y + 20}" stroke="${gold}" stroke-width="1.5"/>
-        <line x1="${startX}" y1="${y + 16}" x2="${startX}" y2="${y + 24}" stroke="${gold}" stroke-width="1"/>
-        <line x1="${splitX}" y1="${y + 16}" x2="${splitX}" y2="${y + 24}" stroke="${gold}" stroke-width="1"/>
-        <text x="${(startX + splitX) / 2}" y="${y + 32}" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="10">
-          AC = ${majorLen.toFixed(1)}
-        </text>
+  const c = getColors();
+  const margin = 30;
+  const RH = h - 2 * margin;
+  const RW = RH * PHI;
+  const ox = (w - RW) / 2;
+  const oy = margin;
+  const palette = [c.pri, c.amber, c.sec, '#4fa3f7', '#f06080', c.pri, c.amber, c.sec];
 
-        <line x1="${splitX}" y1="${y + 42}" x2="${endX}" y2="${y + 42}" stroke="${secGold}" stroke-width="1.5"/>
-        <line x1="${splitX}" y1="${y + 38}" x2="${splitX}" y2="${y + 46}" stroke="${secGold}" stroke-width="1"/>
-        <line x1="${endX}" y1="${y + 38}" x2="${endX}" y2="${y + 46}" stroke="${secGold}" stroke-width="1"/>
-        <text x="${(splitX + endX) / 2}" y="${y + 54}" text-anchor="middle" fill="${secGold}" font-family="'DM Sans',sans-serif" font-size="10">
-          CB = ${minorLen.toFixed(1)}
-        </text>
-
-        <text x="350" y="${y + 80}" text-anchor="middle" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="12">
-          AC / CB = ${(majorLen / minorLen).toFixed(4)} ≈ φ
-        </text>
-      `;
-
-      document.getElementById('segment-length-display').textContent = length;
-      document.getElementById('info-ab').textContent = length;
-      document.getElementById('info-ac').textContent = majorLen.toFixed(1);
-      document.getElementById('info-cb').textContent = minorLen.toFixed(1);
-      document.getElementById('ratio-display').textContent = (majorLen / minorLen).toFixed(4);
+  // Cut order: LEFT, TOP, RIGHT, BOTTOM (repeat)
+  // Arc geometry — verified for endpoint continuity:
+  //   ph0 LEFT:   center=TL=(x,y),       π/2 → 0,    CCW  (BL→TR)
+  //   ph1 TOP:    center=TR=(x+sq,y),     π   → π/2,  CCW  (TL→BR)
+  //   ph2 RIGHT:  center=BR=(x+sq,y+sq), 3π/2 → π,   CCW  (TR→BL)
+  //   ph3 BOTTOM: center=BL=(x,y+sq),    0   → 3π/2, CCW  (BR→TL)
+  const squares = [];
+  let rx = ox, ry = oy, rw = RW, rh = RH;
+  for (let i = 0; i < RECURSION_STEPS; i++) {
+    const ph = i % 4;
+    let sq, x, y, cx, cy, a1, a2;
+    if (ph === 0) {
+      sq=rh; x=rx;       y=ry;       cx=x+sq; cy=y+sq; a1=Math.PI;      a2=3*Math.PI/2; // center=BR
+      rx+=sq; rw-=sq;
+    } else if (ph === 1) {
+      sq=rw; x=rx;       y=ry;       cx=x;    cy=y+sq; a1=3*Math.PI/2;  a2=2*Math.PI;   // center=BL
+      ry+=sq; rh-=sq;
+    } else if (ph === 2) {
+      sq=rh; x=rx+rw-sq; y=ry;       cx=x;    cy=y;    a1=0;            a2=Math.PI/2;   // center=TL
+      rw-=sq;
+    } else {
+      sq=rw; x=rx;       y=ry+rh-sq; cx=x+sq; cy=y;    a1=Math.PI/2;   a2=Math.PI;     // center=TR
+      rh-=sq;
     }
+    squares.push({ x, y, sq, cx, cy, a1, a2, col: palette[i % palette.length] });
+  }
 
-    document.getElementById('segment-slider').addEventListener('input', drawSegment);
+  // 1) Outer rectangle
+  ctx.strokeStyle = hexToRGBA(c.pri, 0.8);
+  ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.strokeRect(ox, oy, RW, RH);
+  ctx.fillStyle = hexToRGBA(c.pri, 0.04);
+  ctx.fillRect(ox, oy, RW, RH);
 
-    const constructionDescriptions = [
-      'Passo 1: Segmento AB verticale',
-      'Passo 2: Quadrato ABCD costruito sul lato AB',
-      'Passo 3: Punto medio M di BD trovato',
-      'Passo 4: Segmento MC tratteggiato (linea guida)',
-      'Passo 5: Arco di circonferenza da C con centro M verso l\'estensione di BD',
-      'Passo 6: ✓ ABEF è il rettangolo aureo!'
-    ];
+  // 2) Squares
+  for (let i = 0; i < step; i++) {
+    const { x, y, sq, col } = squares[i];
+    ctx.fillStyle = hexToRGBA(col, 0.13);
+    ctx.fillRect(x, y, sq, sq);
+    ctx.strokeStyle = hexToRGBA(col, 0.55);
+    ctx.lineWidth = 1.5; ctx.setLineDash([]);
+    ctx.strokeRect(x, y, sq, sq);
+  }
 
-    function drawConstruction(step) {
-      const svg = document.getElementById('construction-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const secGold = (window.elementSdk && window.elementSdk.config.secondary_gold) || defaultConfig.secondary_gold;
-      const textCol = (window.elementSdk && window.elementSdk.config.text_color) || defaultConfig.text_color;
-
-      const sqSize = 100;
-      const ox = 200;
-      const oy = 100;
-
-      let content = `<rect x="0" y="0" width="700" height="400" fill="none"/>`;
-
-      // Segmento AB (Passo 1)
-      if (step >= 0) {
-        content += `
-          <line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy + sqSize}" stroke="${gold}" stroke-width="3"
-            stroke-dasharray="200" stroke-dashoffset="200">
-            <animate attributeName="stroke-dashoffset" from="200" to="0" dur="0.8s" fill="freeze"/>
-          </line>
-          <circle cx="${ox}" cy="${oy}" r="4" fill="${gold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.2s" fill="freeze"/>
-          </circle>
-          <circle cx="${ox}" cy="${oy + sqSize}" r="4" fill="${gold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.5s" fill="freeze"/>
-          </circle>
-          <text x="${ox - 15}" y="${oy}" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">A</text>
-          <text x="${ox - 15}" y="${oy + sqSize}" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">B</text>
-        `;
-      }
-
-      // Quadrato ABCD (Passo 2)
-      if (step >= 1) {
-        const dx = ox + sqSize;
-        const cy = oy + sqSize;
-        content += `
-          <line x1="${ox}" y1="${cy}" x2="${dx}" y2="${cy}" stroke="${gold}" stroke-width="2"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="0.6s" fill="freeze"/>
-          </line>
-          <line x1="${dx}" y1="${oy}" x2="${dx}" y2="${cy}" stroke="${gold}" stroke-width="2"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="0.8s" fill="freeze"/>
-          </line>
-          <line x1="${ox}" y1="${oy}" x2="${dx}" y2="${oy}" stroke="${gold}" stroke-width="2"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.0s" fill="freeze"/>
-          </line>
-          <rect x="${ox}" y="${oy}" width="${sqSize}" height="${sqSize}" fill="${gold}0d" stroke="none"/>
-          <circle cx="${dx}" cy="${oy}" r="4" fill="${gold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.1s" fill="freeze"/>
-          </circle>
-          <circle cx="${dx}" cy="${cy}" r="4" fill="${gold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.3s" fill="freeze"/>
-          </circle>
-          <text x="${dx + 10}" y="${oy}" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">C</text>
-          <text x="${dx + 10}" y="${cy}" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold">D</text>
-        `;
-      }
-
-      // Punto medio M (Passo 3) - CORRETTO: su BD, non su AD
-      if (step >= 2) {
-        const bx = ox;
-        const by = oy + sqSize;
-        const dx = ox + sqSize;
-        const dy = oy + sqSize;
-        const mx = (bx + dx) / 2;
-        const my = (by + dy) / 2;
-        content += `
-          <circle cx="${mx}" cy="${my}" r="5" fill="${secGold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.5s" fill="freeze"/>
-          </circle>
-          <text x="${mx}" y="${my - 12}" text-anchor="middle" fill="${secGold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold" opacity="0">
-            M
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.7s" fill="freeze"/>
-          </text>
-        `;
-      }
-
-      // Segmento MC tratteggiato (Passo 4)
-      if (step >= 3) {
-        const bx = ox;
-        const by = oy + sqSize;
-        const dx = ox + sqSize;
-        const dy = oy + sqSize;
-        const mx = (bx + dx) / 2;
-        const my = (by + dy) / 2;
-        const cx = ox + sqSize;
-        const cy = oy;
-
-        content += `
-          <line x1="${mx}" y1="${my}" x2="${cx}" y2="${cy}" stroke="${secGold}" stroke-width="1.5" stroke-dasharray="8,4" opacity="0">
-            <animate attributeName="opacity" from="0" to="0.8" dur="0.6s" begin="1.8s" fill="freeze"/>
-          </line>
-        `;
-      }
-
-      // Arco di circonferenza da C (Passo 5)
-      if (step >= 4) {
-        const bx = ox;
-        const by = oy + sqSize;
-        const dx = ox + sqSize;
-        const dy = oy + sqSize;
-        const mx = (bx + dx) / 2;
-        const my = (by + dy) / 2;
-        const cx = ox + sqSize;
-        const cy = oy;
-
-        const radius = Math.sqrt((cx - mx) ** 2 + (cy - my) ** 2);
-        const arcEnd = mx + radius;
-        const arcY = my;
-
-        content += `
-          <circle cx="${mx}" cy="${my}" r="${radius}" fill="none" stroke="${secGold}" stroke-width="1.5" stroke-dasharray="10,5" opacity="0">
-            <animate attributeName="opacity" from="0" to="0.6" dur="0.8s" begin="2.4s" fill="freeze"/>
-          </circle>
-          <circle cx="${arcEnd}" cy="${arcY}" r="4" fill="${secGold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="3.0s" fill="freeze"/>
-          </circle>
-          <text x="${arcEnd + 12}" y="${arcY + 8}" fill="${secGold}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold" opacity="0">
-            E
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="3.2s" fill="freeze"/>
-          </text>
-        `;
-      }
-
-      // Rettangolo aureo ABEF (Passo 6)
-      if (step >= 5) {
-        const bx = ox;
-        const by = oy + sqSize;
-        const dx = ox + sqSize;
-        const dy = oy + sqSize;
-        const mx = (bx + dx) / 2;
-        const my = (by + dy) / 2;
-        const cx = ox + sqSize;
-        const cy = oy;
-
-        const radius = Math.sqrt((cx - mx) ** 2 + (cy - my) ** 2);
-        const ex = mx + radius;
-
-        const rectW = ex - ox;
-
-        content += `
-          <rect x="${ox}" y="${oy}" width="${rectW}" height="${sqSize}"
-            fill="none" stroke="${gold}" stroke-width="3" stroke-dasharray="1000" stroke-dashoffset="1000">
-            <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.2s" begin="3.3s" fill="freeze"/>
-          </rect>
-          <text x="${ox + rectW / 2}" y="${oy + sqSize + 40}" text-anchor="middle" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="16" font-weight="bold" opacity="0">
-            ✓ Rettangolo Aureo
-            <animate attributeName="opacity" from="0" to="1" dur="0.6s" begin="4.3s" fill="freeze"/>
-          </text>
-          <text x="${ox + rectW / 2}" y="${oy + sqSize + 60}" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="11" opacity="0">
-            Larghezza / Altezza = φ
-            <animate attributeName="opacity" from="0" to="0.7" dur="0.4s" begin="4.7s" fill="freeze"/>
-          </text>
-        `;
-      }
-
-      svg.innerHTML = content;
-
-      document.getElementById('construction-step-label').textContent = `Passo ${step + 1} / ${CONSTRUCTION_STEPS}`;
-      document.getElementById('construction-step-desc').innerHTML = `<p style="color:rgba(232,220,200,0.8);">${constructionDescriptions[step]}</p>`;
-      document.getElementById('construction-prev').disabled = step === 0;
-      document.getElementById('construction-next').disabled = step === CONSTRUCTION_STEPS - 1;
+  // 3) Spiral — single continuous path, all CCW arcs
+  if (step > 0) {
+    ctx.strokeStyle = '#c9a84c';
+    ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath();
+    for (let i = 0; i < step; i++) {
+      const { cx, cy, sq, a1, a2 } = squares[i];
+      ctx.arc(cx, cy, sq, a1, a2, false); // false = CW
     }
+    ctx.stroke();
+  }
 
-    document.getElementById('construction-prev').addEventListener('click', () => {
-      if (constructionStep > 0) { constructionStep--; drawConstruction(constructionStep); }
+  document.getElementById('recursion-step-label').textContent = `Livello ${step}`;
+  document.getElementById('recursion-step-desc').querySelector('p').textContent = recursionDescs[step] || recursionDescs[RECURSION_STEPS - 1];
+  document.getElementById('recursion-prev').disabled = step === 0;
+  document.getElementById('recursion-next').disabled = step === RECURSION_STEPS - 1;
+}
+
+document.getElementById('recursion-prev').addEventListener('click', () => {
+  if (recursionStep > 0) { recursionStep--; drawRecursion(recursionStep); }
+});
+document.getElementById('recursion-next').addEventListener('click', () => {
+  if (recursionStep < RECURSION_STEPS - 1) { recursionStep++; drawRecursion(recursionStep); }
+});
+
+// ══ FIBONACCI CANVAS ══
+// Squares placed from smallest to largest, growing outward in spiral order.
+// Cut order (same verified geometry as drawRecursion): LEFT, TOP, RIGHT, BOTTOM.
+// We pre-compute all positions in "unit" coordinates, then scale to canvas.
+//
+// The n squares of Fibonacci fill a rectangle F(n+2) × F(n+1) exactly.
+// We simulate from largest→smallest (like drawRecursion), then reverse for animation.
+
+const FIBS = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+let fibStep = 0;
+const FIB_PAL = ['#c9a84c','#f5c842','#2dd4a4','#4fa3f7','#f06080','#a78bfa','#fb923c','#34d399','#60a5fa','#f472b6'];
+
+// Build square descriptors from largest to smallest, then reverse.
+function buildFibSquares() {
+  const n = FIBS.length;
+  // Bounding box: F(n-1)+F(n-2) wide, F(n-1) tall (landscape)
+  let rx=0, ry=0, rw=FIBS[n-1]+FIBS[n-2], rh=FIBS[n-1];
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    const ph = i % 4;
+    let sq, x, y, cx, cy, a1, a2;
+    // Arc centers = opposite corner (verified in drawRecursion)
+    if (ph===0){ sq=rh; x=rx;       y=ry;       cx=x+sq; cy=y+sq; a1=Math.PI;     a2=3*Math.PI/2; rx+=sq; rw-=sq; }
+    else if(ph===1){ sq=rw; x=rx;   y=ry;       cx=x;    cy=y+sq; a1=3*Math.PI/2; a2=2*Math.PI;   ry+=sq; rh-=sq; }
+    else if(ph===2){ sq=rh; x=rx+rw-sq; y=ry;   cx=x;    cy=y;    a1=0;           a2=Math.PI/2;   rw-=sq; }
+    else {     sq=rw; x=rx;         y=ry+rh-sq; cx=x+sq; cy=y;    a1=Math.PI/2;   a2=Math.PI;     rh-=sq; }
+    result.push({ x, y, sq, cx, cy, a1, a2, fibVal: FIBS[n-1-i], col: FIB_PAL[i % FIB_PAL.length] });
+  }
+  return result.reverse(); // index 0 = smallest (F=1), drawn first
+}
+const FIB_SQUARES = buildFibSquares();
+// Total bounding box in unit coords
+const FIB_N = FIBS.length;
+const FIB_UW = FIBS[FIB_N-1] + FIBS[FIB_N-2]; // total width in units
+const FIB_UH = FIBS[FIB_N-1];                   // total height in units
+
+function drawFibonacci(step) {
+  const canvas = document.getElementById('fibCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 700;
+  const h = 340;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const c = getColors();
+
+  // Idle state
+  if (step === 0) {
+    ctx.fillStyle = hexToRGBA(c.muted, 0.5);
+    ctx.font = '14px Plus Jakarta Sans, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Premi ▶ Anima per costruire la spirale di Fibonacci', w/2, h/2);
+    return;
+  }
+
+  // Scale & offset so the full bounding box fits centred with margin
+  const mg = 28;
+  const sc = Math.min((w - 2*mg) / FIB_UW, (h - 2*mg) / FIB_UH);
+  const ox = (w - FIB_UW * sc) / 2;
+  const oy = (h - FIB_UH * sc) / 2;
+  const px = v => ox + v * sc;
+  const py = v => oy + v * sc;
+  const ps = v => v * sc;
+
+  // 1) Draw all squares visible so far
+  const visible = FIB_SQUARES.slice(0, step);
+  for (const s of visible) {
+    ctx.fillStyle = hexToRGBA(s.col, 0.14);
+    ctx.fillRect(px(s.x), py(s.y), ps(s.sq), ps(s.sq));
+    ctx.strokeStyle = hexToRGBA(s.col, 0.6);
+    ctx.lineWidth = 1.5; ctx.setLineDash([]);
+    ctx.strokeRect(px(s.x), py(s.y), ps(s.sq), ps(s.sq));
+    const pxSq = ps(s.sq);
+    if (pxSq > 14) {
+      ctx.fillStyle = hexToRGBA(s.col, 0.9);
+      ctx.font = `bold ${Math.min(15, Math.max(9, pxSq * 0.3))}px DM Mono,monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText(s.fibVal, px(s.x) + pxSq/2, py(s.y) + pxSq/2 + 4);
+    }
+  }
+
+  // 2) Spiral: draw one arc per square, each arc appears when that square appears.
+  //    This way the spiral grows one piece at a time alongside the squares.
+  if (step >= 1) {
+    ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    for (let i = 0; i < visible.length; i++) {
+      const s = visible[i];
+      const isLast = i === visible.length - 1;
+      // Last arc is brighter to show the newest piece
+      ctx.strokeStyle = isLast ? '#f5c842' : hexToRGBA('#f5c842', 0.65);
+      ctx.lineWidth = isLast ? 3 : 2;
+      ctx.beginPath();
+      ctx.arc(px(s.cx), py(s.cy), ps(s.sq), s.a1, s.a2, false);
+      ctx.stroke();
+    }
+  }
+
+  // 3) Number strip below canvas
+  const cont = document.getElementById('fib-numbers');
+  if (cont) {
+    cont.innerHTML = '';
+    visible.forEach((s, i) => {
+      const span = document.createElement('span');
+      span.textContent = s.fibVal;
+      const last = i === visible.length - 1;
+      span.style.cssText = `background:${last?'rgba(245,200,66,0.25)':'rgba(201,168,76,0.1)'};border:1px solid rgba(201,168,76,${last?'0.7':'0.25'});border-radius:8px;padding:0.2rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.85rem;color:${last?'#f5c842':'var(--pri)'};font-weight:${last?'700':'400'};`;
+      cont.appendChild(span);
+      if (i < visible.length - 1) {
+        const op = document.createElement('span');
+        op.textContent = '+';
+        op.style.cssText = 'color:var(--muted);font-size:0.8rem;align-self:center;';
+        cont.appendChild(op);
+      }
     });
-    document.getElementById('construction-next').addEventListener('click', () => {
-      if (constructionStep < CONSTRUCTION_STEPS - 1) { constructionStep++; drawConstruction(constructionStep); }
-    });
+  }
+}
 
-    const recursionDescriptions = [
-      'Livello 0: Rettangolo aureo completo.',
-      'Livello 1: Primo quadrato estratto.',
-      'Livello 2: Il quadrato genera un nuovo rettangolo aureo più piccolo.',
-      'Livello 3: Ricorsione continua infinitamente.',
-      'Livello 4: Ogni nuova suddivisione mantiene la proporzione φ.',
-      'Livello 5: La bellezza geometrica si ripete.',
-      'Livello 6: Proporzioni perfette a infiniti livelli.',
-      'Livello 7: Armonia matematica pura.'
-    ];
+function updateFibControls() {
+  document.getElementById('fib-prev-btn').disabled = fibStep === 0;
+  document.getElementById('fib-next-btn').disabled = fibStep >= FIBS.length;
+  document.getElementById('fib-step-label').textContent = `Passo ${fibStep} / ${FIBS.length}`;
+}
 
-    function drawRecursion(step) {
-      const svg = document.getElementById('recursion-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const secGold = (window.elementSdk && window.elementSdk.config.secondary_gold) || defaultConfig.secondary_gold;
-      const textCol = (window.elementSdk && window.elementSdk.config.text_color) || defaultConfig.text_color;
+document.getElementById('fib-next-btn').addEventListener('click', () => {
+  if (fibStep < FIBS.length) { fibStep++; drawFibonacci(fibStep); updateFibControls(); }
+});
+document.getElementById('fib-prev-btn').addEventListener('click', () => {
+  if (fibStep > 0) { fibStep--; drawFibonacci(fibStep); updateFibControls(); }
+});
+document.getElementById('fib-reset-btn').addEventListener('click', () => {
+  fibStep = 0; drawFibonacci(0);
+  const cont = document.getElementById('fib-numbers');
+  if (cont) cont.innerHTML = '';
+  updateFibControls();
+});
+updateFibControls();
 
-      const colors = [gold, secGold, gold, secGold, gold, secGold, gold, secGold];
+// ══ CONVERGENCE CANVAS ══
+let convAnimating = false;
 
-      let content = `<rect x="0" y="0" width="700" height="380" fill="none"/>`;
+function drawConvergence(count) {
+  const canvas = document.getElementById('convergenceCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 700;
+  const h = 220;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
 
-      let x = 100;
-      let y = 80;
-      let w = 280;
-      let h = w / PHI;
+  const c = getColors();
+  const fibs = [1,1,2,3,5,8,13,21,34,55,89,144,233,377];
+  const ratios = [];
+  for (let i = 1; i < fibs.length - 1; i++) ratios.push(fibs[i+1] / fibs[i]);
 
-      const rectangles = [];
-      const squares = [];
+  const padL = 50, padR = 30, padT = 20, padB = 35;
+  const gw = w - padL - padR;
+  const gh = h - padT - padB;
+  const yMin = 1.0, yMax = 2.3;
+  const n = count !== undefined ? Math.min(count, ratios.length) : ratios.length;
 
-      for (let i = 0; i <= step && i < RECURSION_STEPS; i++) {
-        rectangles.push({ x, y, w, h, color: colors[i] });
+  const toX = i => padL + (i / (ratios.length - 1)) * gw;
+  const toY = v => padT + (1 - (v - yMin) / (yMax - yMin)) * gh;
 
-        const squareSize = h;
-        squares.push({ x: x + w - squareSize, y, w: squareSize, h: squareSize, color: colors[i] });
+  // Grid lines
+  for (let v = 1.0; v <= 2.3; v += 0.3) {
+    ctx.strokeStyle = hexToRGBA(c.text, 0.07);
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(padL, toY(v)); ctx.lineTo(w - padR, toY(v)); ctx.stroke();
+    ctx.fillStyle = hexToRGBA(c.muted, 0.6);
+    ctx.font = '10px DM Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(v.toFixed(1), padL - 6, toY(v) + 3);
+  }
 
-        x = x;
-        y = y;
-        w = w - squareSize;
-        h = w / PHI;
+  // Phi line
+  const phiY = toY(PHI);
+  ctx.strokeStyle = hexToRGBA(c.pri, 0.5);
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 3]);
+  ctx.beginPath(); ctx.moveTo(padL, phiY); ctx.lineTo(w - padR, phiY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = c.pri;
+  ctx.font = 'bold 13px Fraunces, serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('φ', w - padR + 6, phiY + 4);
 
-        if (w < 8) break;
-      }
-
-      // Disegna i rettangoli aurei EVIDENTI
-      rectangles.forEach((rect, idx) => {
-        const delay = idx * 0.2;
-
-        content += `
-          <rect x="${rect.x}" y="${rect.y}" width="${rect.w}" height="${rect.h}"
-            fill="${rect.color}20" stroke="${rect.color}" stroke-width="2" rx="0"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.5s" begin="${delay}s" fill="freeze"/>
-          </rect>
-        `;
-
-        if (idx < 4) {
-          content += `
-            <text x="${rect.x + 12}" y="${rect.y + 20}" 
-              fill="${rect.color}" font-family="'Cormorant Garamond',serif" font-size="14" font-weight="bold" opacity="0">
-              Liv. ${idx}
-              <animate attributeName="opacity" from="0" to="0.7" dur="0.4s" begin="${delay + 0.3}s" fill="freeze"/>
-            </text>
-          `;
-        }
-      });
-
-      // Disegna i quadrati in modo chiaramente visibile
-      squares.forEach((sq, idx) => {
-        const delay = idx * 0.2 + 0.15;
-
-        content += `
-          <rect x="${sq.x}" y="${sq.y}" width="${sq.w}" height="${sq.h}"
-            fill="none" stroke="${sq.color}" stroke-width="1.5" stroke-dasharray="6,3" rx="0"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="0.6" dur="0.4s" begin="${delay}s" fill="freeze"/>
-          </rect>
-        `;
-      });
-
-      svg.innerHTML = content;
-
-      document.getElementById('recursion-step-label').textContent = `Livello ${step}`;
-      document.getElementById('recursion-step-desc').innerHTML = `<p style="color:rgba(232,220,200,0.8);">${recursionDescriptions[step]}</p>`;
-      document.getElementById('recursion-prev').disabled = step === 0;
-      document.getElementById('recursion-next').disabled = step === RECURSION_STEPS - 1;
+  if (n > 1) {
+    ctx.strokeStyle = hexToRGBA(c.sec, 0.9);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const px = toX(i), py = toY(ratios[i]);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
     }
+    ctx.stroke();
+  }
 
-    document.getElementById('recursion-prev').addEventListener('click', () => {
-      if (recursionStep > 0) { recursionStep--; drawRecursion(recursionStep); }
-    });
-    document.getElementById('recursion-next').addEventListener('click', () => {
-      if (recursionStep < RECURSION_STEPS - 1) { recursionStep++; drawRecursion(recursionStep); }
-    });
+  for (let i = 0; i < n; i++) {
+    ctx.beginPath();
+    ctx.arc(toX(i), toY(ratios[i]), 4, 0, Math.PI * 2);
+    ctx.fillStyle = c.pri;
+    ctx.fill();
+  }
 
-    const fibNums = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34];
+  // X labels
+  ctx.fillStyle = hexToRGBA(c.muted, 0.8);
+  ctx.font = '10px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  [0, 3, 6, 9, 12].forEach(i => {
+    if (i < ratios.length) ctx.fillText('n=' + (i+1), toX(i), h - 8);
+  });
 
-    function initFibNumbers() {
-      const container = document.getElementById('fib-numbers');
-      container.innerHTML = '';
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      fibNums.forEach((n, i) => {
-        const el = document.createElement('div');
-        el.className = 'inline-flex items-center';
-        el.innerHTML = `
-          <span class="inline-flex items-center justify-center rounded font-display text-xs font-bold px-1.5 py-0.5"
-            style="background:${gold}1a;border:1px solid ${gold}40;color:${gold};min-width:28px;
-            animation:countUp 0.5s ease-out ${i * 0.12}s both;">
-            ${n}
-          </span>
-          ${i < fibNums.length - 1 ? `<span class="mx-0.5 text-xs" style="color:${gold}40;">→</span>` : ''}
-        `;
-        container.appendChild(el);
-      });
-    }
+  // Fill table
+  fillRatioTable(n);
+}
 
-    function drawFibonacci(maxStep) {
-      const svg = document.getElementById('fib-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const secGold = (window.elementSdk && window.elementSdk.config.secondary_gold) || defaultConfig.secondary_gold;
-      const textCol = (window.elementSdk && window.elementSdk.config.text_color) || defaultConfig.text_color;
+function fillRatioTable(count) {
+  const tbody = document.getElementById('ratio-table-body');
+  if (!tbody) return;
+  const fibs = [1,1,2,3,5,8,13,21,34,55,89,144];
+  tbody.innerHTML = '';
+  const limit = Math.min(count + 1, fibs.length - 1);
+  for (let i = 1; i < limit; i++) {
+    const ratio = fibs[i+1] ? fibs[i+1] / fibs[i] : null;
+    if (!ratio) continue;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i}</td>
+      <td>${fibs[i]}</td>
+      <td>${fibs[i+1]}</td>
+      <td style="color:var(--pri);">${ratio.toFixed(6)}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
 
-      const fibs = [1, 1, 2, 3, 5, 8, 13];
-      const scale = 18;
-      const colors = [gold, secGold, `${gold}cc`, `${textCol}80`];
+document.getElementById('conv-animate-btn').addEventListener('click', () => {
+  if (convAnimating) return;
+  convAnimating = true;
+  let step = 1;
+  drawConvergence(step);
+  const interval = setInterval(() => {
+    step++;
+    drawConvergence(step);
+    if (step >= 12) { clearInterval(interval); convAnimating = false; }
+  }, 350);
+});
 
-      let content = '';
-      let cx = 280, cy = 150;
-      let x = cx, y = cy;
-      const limit = Math.min(maxStep + 1, fibs.length);
+// ══ ART CANVASES ══
+function drawGioconda() {
+  const canvas = document.getElementById('giocondaCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 400; const h = 250;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const c = getColors();
+  const g = c.pri;
 
-      for (let i = 0; i < limit; i++) {
-        const s = fibs[i] * scale;
-        const c = colors[i % colors.length];
-        const d = i % 4;
-        let rx, ry;
+  ctx.strokeStyle = hexToRGBA(g, 0.8); ctx.lineWidth = 2;
+  ctx.strokeRect(30, 15, w-60, h-30);
+  ctx.fillStyle = hexToRGBA(g, 0.08);
+  ctx.fillRect(30, 15, w-60, h-30);
 
-        if (i === 0) { rx = x; ry = y - s; }
-        else if (d === 0) { rx = x; ry = y - s; }
-        else if (d === 1) { rx = x; ry = y; }
-        else if (d === 2) { rx = x - s; ry = y; }
-        else { rx = x - s; ry = y - s; }
+  // Golden ratio divisions
+  const goldenW = (w-60) / PHI;
+  const goldenH = (h-30) / PHI;
+  ctx.strokeStyle = hexToRGBA(g, 0.4); ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(30 + goldenW, 15); ctx.lineTo(30 + goldenW, h-15); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(30, 15 + goldenH); ctx.lineTo(w-30, 15 + goldenH); ctx.stroke();
+  ctx.setLineDash([]);
 
-        content += `
-          <rect x="${rx}" y="${ry}" width="${s}" height="${s}"
-            fill="${c}15" stroke="${c}" stroke-width="1" rx="1"
-            opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="${i * 0.25}s" fill="freeze"/>
-          </rect>
-          <text x="${rx + s / 2}" y="${ry + s / 2 + 4}" text-anchor="middle" fill="${c}"
-            font-family="'Cormorant Garamond',serif" font-size="${Math.max(8, Math.min(s / 4, 18))}" font-weight="bold"
-            opacity="0">
-            ${fibs[i]}
-            <animate attributeName="opacity" from="0" to="0.7" dur="0.3s" begin="${i * 0.25 + 0.15}s" fill="freeze"/>
-          </text>
-        `;
+  // Stylized face
+  ctx.fillStyle = hexToRGBA(g, 0.15);
+  ctx.beginPath(); ctx.ellipse(w/2 - 10, 80, 35, 45, 0, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = hexToRGBA(g, 0.5); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(w/2 - 10, 80, 35, 45, 0, 0, Math.PI*2); ctx.stroke();
 
-        if (d === 0) { x = rx + s; y = ry; }
-        else if (d === 1) { x = rx; y = ry + s; }
-        else if (d === 2) { x = rx - fibs[Math.min(i + 1, fibs.length - 1)] * scale; y = ry; }
-        else { x = rx; y = ry - fibs[Math.min(i + 1, fibs.length - 1)] * scale; }
-      }
+  // Body
+  ctx.fillStyle = hexToRGBA(g, 0.1);
+  ctx.beginPath(); ctx.ellipse(w/2, 160, 50, 55, 0, 0, Math.PI*2); ctx.fill();
 
-      svg.innerHTML = content;
-    }
+  ctx.fillStyle = hexToRGBA(g, 0.5); ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('Sezione aurea verticale', w/2, h - 20);
+}
 
-    document.getElementById('fib-animate-btn').addEventListener('click', () => {
-      if (fibAnimating) return;
-      fibAnimating = true;
-      fibStep = 0;
-      drawFibonacci(fibStep);
+function drawDali() {
+  const canvas = document.getElementById('daliCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 400; const h = 250;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const c = getColors(); const g = c.amber;
 
-      const interval = setInterval(() => {
-        fibStep++;
-        if (fibStep >= 7) {
-          clearInterval(interval);
-          fibAnimating = false;
-          return;
-        }
-        drawFibonacci(fibStep);
-      }, 600);
-    });
+  // Outer rect with golden proportions
+  ctx.strokeStyle = hexToRGBA(g, 0.8); ctx.lineWidth = 2;
+  ctx.strokeRect(25, 20, w-50, h-40);
+  ctx.fillStyle = hexToRGBA(g, 0.06);
+  ctx.fillRect(25, 20, w-50, h-40);
 
-    document.getElementById('fib-reset-btn').addEventListener('click', () => {
-      fibStep = 0;
-      fibAnimating = false;
-      drawFibonacci(0);
-    });
+  // Vertical golden lines
+  const gW = (w-50) / PHI;
+  [gW, gW + (w-50-gW)/PHI].forEach(x => {
+    ctx.strokeStyle = hexToRGBA(g, 0.35); ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(25 + x, 20); ctx.lineTo(25 + x, h-20); ctx.stroke();
+  });
+  ctx.setLineDash([]);
 
-    function drawConvergenceGraph(animateCount) {
-      const svg = document.getElementById('convergence-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const secGold = (window.elementSdk && window.elementSdk.config.secondary_gold) || defaultConfig.secondary_gold;
-      const textCol = (window.elementSdk && window.elementSdk.config.text_color) || defaultConfig.text_color;
+  // Dodecahedron hint
+  ctx.fillStyle = hexToRGBA(g, 0.15);
+  ctx.beginPath(); ctx.arc(w/2, h/2 - 10, 40, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = hexToRGBA(g, 0.5); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(w/2, h/2 - 10, 40, 0, Math.PI*2); ctx.stroke();
 
-      const fibs = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
-      const ratios = [];
-      for (let i = 1; i < fibs.length; i++) {
-        ratios.push(fibs[i] / fibs[i - 1]);
-      }
+  ctx.fillStyle = hexToRGBA(g, 0.5); ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('Rettangolo aureo 277×172 cm', w/2, h - 10);
+}
 
-      const padL = 50, padR = 20, padT = 15, padB = 30;
-      const gw = 700 - padL - padR;
-      const gh = 240 - padT - padB;
+function drawApple() {
+  const canvas = document.getElementById('appleCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 400; const h = 200;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const c = getColors(); const g = c.pri;
 
-      const yMin = 1.0, yMax = 2.2;
-      const toX = (i) => padL + (i / (ratios.length - 1)) * gw;
-      const toY = (v) => padT + (1 - (v - yMin) / (yMax - yMin)) * gh;
+  ctx.strokeStyle = hexToRGBA(g, 0.7); ctx.lineWidth = 2;
+  ctx.strokeRect(60, 40, w-120, h-80);
+  ctx.fillStyle = hexToRGBA(g, 0.06);
+  ctx.fillRect(60, w-120, w-120, h-80);
 
-      const count = animateCount !== undefined ? Math.min(animateCount, ratios.length) : ratios.length;
+  // App icons with golden spacing
+  const iconSize = 30;
+  const spacing = (w - 120 - 3 * iconSize) / 4;
+  for (let i = 0; i < 3; i++) {
+    const ix = 60 + spacing + i * (iconSize + spacing);
+    const iy = h/2 - iconSize/2 + 5;
+    ctx.fillStyle = hexToRGBA(g, 0.2);
+    ctx.beginPath(); ctx.roundRect(ix, iy, iconSize, iconSize, 8); ctx.fill();
+    ctx.strokeStyle = hexToRGBA(g, 0.5); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(ix, iy, iconSize, iconSize, 8); ctx.stroke();
+  }
 
-      let content = '';
+  ctx.fillStyle = hexToRGBA(g, 0.5); ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('Interfaccia con proporzioni auree', w/2, h - 15);
+}
 
-      for (let v = 1.0; v <= 2.2; v += 0.3) {
-        const y = toY(v);
-        content += `<line x1="${padL}" y1="${y}" x2="${700 - padR}" y2="${y}" stroke="${textCol}15" stroke-width="0.5"/>`;
-      }
+function drawAston() {
+  const canvas = document.getElementById('astonCanvas');
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || 400; const h = 200;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const c = getColors(); const g = c.amber;
 
-      const phiY = toY(PHI);
-      content += `
-        <line x1="${padL}" y1="${phiY}" x2="${700 - padR}" y2="${phiY}" stroke="${gold}" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
-        <text x="${700 - padR + 3}" y="${phiY + 3}" fill="${gold}" font-family="'Cormorant Garamond',serif" font-size="11" font-weight="bold">φ</text>
-      `;
+  // Car silhouette
+  ctx.fillStyle = hexToRGBA(g, 0.15);
+  ctx.strokeStyle = hexToRGBA(g, 0.7); ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(30, 120); ctx.lineTo(60, 80); ctx.lineTo(160, 65);
+  ctx.quadraticCurveTo(230, 60, 270, 80); ctx.lineTo(340, 115);
+  ctx.lineTo(340, 135); ctx.quadraticCurveTo(330, 140, 300, 140);
+  ctx.lineTo(80, 140); ctx.quadraticCurveTo(40, 140, 30, 130); ctx.closePath();
+  ctx.fill(); ctx.stroke();
 
-      if (count > 1) {
-        let pathD = `M ${toX(0)} ${toY(ratios[0])}`;
-        for (let i = 1; i < count; i++) {
-          pathD += ` L ${toX(i)} ${toY(ratios[i])}`;
-        }
-        content += `
-          <path d="${pathD}" fill="none" stroke="${gold}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-            stroke-dasharray="1500" stroke-dashoffset="1500">
-            <animate attributeName="stroke-dashoffset" from="1500" to="0" dur="1.2s" fill="freeze"/>
-          </path>
-        `;
-      }
+  // Wheels
+  [100, 280].forEach(x => {
+    ctx.beginPath(); ctx.arc(x, 140, 18, 0, Math.PI*2);
+    ctx.fillStyle = hexToRGBA(g, 0.2); ctx.fill();
+    ctx.strokeStyle = hexToRGBA(g, 0.7); ctx.lineWidth = 1.5; ctx.stroke();
+  });
 
-      for (let i = 0; i < count; i++) {
-        const x = toX(i);
-        const y = toY(ratios[i]);
-        content += `
-          <circle cx="${x}" cy="${y}" r="3" fill="${gold}" opacity="0">
-            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="${i * 0.1}s" fill="freeze"/>
-          </circle>
-        `;
-      }
+  // Golden ratio line
+  const gX = 30 + (340-30) / PHI;
+  ctx.strokeStyle = hexToRGBA(g, 0.4); ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(gX, 55); ctx.lineTo(gX, 150); ctx.stroke();
+  ctx.setLineDash([]);
 
-      svg.innerHTML = content;
+  ctx.fillStyle = hexToRGBA(g, 0.5); ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('Design aureo — sezione φ', w/2, h - 15);
+}
 
-      fillRatioTable(count);
-    }
+// ══ REDRAW ALL ══
+function redrawActive(id) {
+  if (id === 'segmento') drawSegment();
+  else if (id === 'costruzione') drawConstruction(constructionStep);
+  else if (id === 'rettangolo') drawRecursion(recursionStep);
+  else if (id === 'fibonacci') drawFibonacci(fibStep);
+  else if (id === 'convergenza') drawConvergence(12);
+  else if (id === 'arte') { drawGioconda(); drawDali(); }
+  else if (id === 'design') { drawApple(); drawAston(); }
+}
 
-    function fillRatioTable(count) {
-      const tbody = document.getElementById('ratio-table-body');
-      if (!tbody) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-      const fibs = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-      tbody.innerHTML = '';
+// ══ RESIZE ══
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const active = document.querySelector('main section.active');
+    if (active) redrawActive(active.id);
+  }, 150);
+});
 
-      const limit = count !== undefined ? Math.min(count + 1, fibs.length - 1) : fibs.length - 1;
-
-      for (let i = 1; i < limit; i++) {
-        const ratio = fibs[i + 1] ? fibs[i + 1] / fibs[i] : null;
-        if (!ratio) continue;
-        const error = Math.abs(ratio - PHI);
-        const tr = document.createElement('tr');
-        tr.style.borderTop = `1px solid ${gold}15`;
-        tr.innerHTML = `
-          <td class="py-0.5 px-1 font-mono text-xs">${i}</td>
-          <td class="py-0.5 px-1 font-mono text-xs">${fibs[i]}</td>
-          <td class="py-0.5 px-1 font-mono text-xs">${fibs[i + 1]}</td>
-          <td class="py-0.5 px-1 font-mono text-xs" style="color:${gold};">${ratio.toFixed(4)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-
-    document.getElementById('conv-animate-btn').addEventListener('click', () => {
-      if (convAnimating) return;
-      convAnimating = true;
-      let step = 1;
-      drawConvergenceGraph(step);
-
-      const interval = setInterval(() => {
-        step++;
-        if (step >= 12) {
-          clearInterval(interval);
-          convAnimating = false;
-          return;
-        }
-        drawConvergenceGraph(step);
-      }, 350);
-    });
-
-    function drawGioconda() {
-      const svg = document.getElementById('gioconda-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="400" height="300" fill="none"/>
-        <rect x="30" y="20" width="340" height="250" fill="${gold}15" stroke="${gold}" stroke-width="2" rx="2"/>
-        <circle cx="150" cy="120" r="40" fill="${gold}20"/>
-        <ellipse cx="200" cy="110" rx="50" ry="60" fill="${gold}20"/>
-        <path d="M 100 180 Q 150 210 200 200 Q 250 190 280 180" fill="none" stroke="${gold}" stroke-width="1.5"/>
-        <line x1="200" y1="30" x2="200" y2="270" stroke="${gold}" stroke-width="1" stroke-dasharray="4,2" opacity="0.4"/>
-        <text x="200" y="290" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="9" opacity="0.6">Sezione aurea verticale</text>
-      `;
-    }
-
-    function drawDali() {
-      const svg = document.getElementById('dali-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="400" height="300" fill="none"/>
-        <rect x="40" y="30" width="320" height="200" fill="${gold}15" stroke="${gold}" stroke-width="2" rx="2"/>
-        <line x1="70" y1="40" x2="70" y2="220" stroke="${gold}" stroke-width="1.5" opacity="0.6"/>
-        <line x1="100" y1="40" x2="100" y2="220" stroke="${gold}" stroke-width="1" opacity="0.3"/>
-        <line x1="200" y1="40" x2="200" y2="220" stroke="${gold}" stroke-width="1" opacity="0.3"/>
-        <line x1="310" y1="40" x2="310" y2="220" stroke="${gold}" stroke-width="1" opacity="0.3"/>
-        <circle cx="130" cy="90" r="25" fill="${gold}25"/>
-        <polygon points="150,80 170,110 140,110" fill="${gold}25"/>
-        <path d="M 250 100 Q 270 120 250 140" fill="${gold}15" stroke="${gold}" stroke-width="1.5"/>
-        <text x="200" y="250" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="9" opacity="0.6">Rettangolo aureo (277×172 cm)</text>
-      `;
-    }
-
-    function drawApple() {
-      const svg = document.getElementById('apple-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="400" height="240" fill="none"/>
-        <rect x="80" y="60" width="240" height="120" fill="${gold}15" stroke="${gold}" stroke-width="2" rx="4"/>
-        <circle cx="120" cy="100" r="20" fill="${gold}25"/>
-        <circle cx="200" cy="100" r="20" fill="${gold}25"/>
-        <circle cx="280" cy="100" r="20" fill="${gold}25"/>
-        <line x1="130" y1="150" x2="270" y2="150" stroke="${gold}" stroke-width="1.5" rx="2"/>
-        <line x1="180" y1="60" x2="220" y2="60" stroke="${gold}" stroke-width="1" opacity="0.4"/>
-        <line x1="200" y1="50" x2="200" y2="170" stroke="${gold}" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-        <text x="200" y="200" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="9" opacity="0.6">Interfaccia con proporzioni auree</text>
-      `;
-    }
-
-    function drawAstonMartin() {
-      const svg = document.getElementById('aston-svg');
-      if (!svg) return;
-      const gold = (window.elementSdk && window.elementSdk.config.gold_color) || defaultConfig.gold_color;
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="400" height="240" fill="none"/>
-        <g opacity="0">
-          <animate attributeName="opacity" from="0" to="1" dur="0.5s" begin="0.1s" fill="freeze"/>
-          <path d="M 40 110 L 70 80 L 180 70 Q 240 70 280 90 L 360 130 L 355 145 Q 340 155 280 160 L 80 160 Q 60 155 45 140 Z"
-            fill="${gold}20" stroke="${gold}" stroke-width="1.5"/>
-          <circle cx="100" cy="160" r="12" fill="none" stroke="${gold}" stroke-width="1.5"/>
-          <circle cx="320" cy="160" r="12" fill="none" stroke="${gold}" stroke-width="1.5"/>
-          <ellipse cx="100" cy="160" rx="6" ry="6" fill="${gold}25"/>
-          <ellipse cx="320" cy="160" rx="6" ry="6" fill="${gold}25"/>
-          <line x1="200" y1="60" x2="200" y2="170" stroke="${gold}" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
-        </g>
-        <text x="200" y="200" text-anchor="middle" fill="${gold}" font-family="'DM Sans',sans-serif" font-size="9" opacity="0.6">Design aureo dell'automobile</text>
-      `;
-    }
-
-    function init() {
-      initNav();
-      drawSegment();
-      drawConstruction(0);
-      drawRecursion(0);
-      initFibNumbers();
-      drawFibonacci(0);
-      drawConvergenceGraph();
-      drawGioconda();
-      drawDali();
-      drawApple();
-      drawAstonMartin();
-    }
-
-    init();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd73f4077135f8e',t:'MTc3MTAxNjM0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+// ══ INIT ══
+drawSegment();
+drawConstruction(0);
+drawRecursion(0);
+drawFibonacci(0);
+drawConvergence(12);
+</script>
+</body>
 </html>
