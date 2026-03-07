@@ -221,6 +221,8 @@ input[type="range"]::-webkit-slider-thumb {
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+* { user-select: none; -webkit-user-select: none; }
 </style>
   <style>body { box-sizing: border-box; }
 
@@ -279,8 +281,22 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
- <body>
-  <!-- Fullscreen button -->
+ <script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'||e.key==='p'||e.key==='P'))||
+       (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))||
+       e.key==='F12'){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  });
+  var _d=function(){var _t=new Date();debugger;if(new Date()-_t>100){document.body.innerHTML='';document.title='';}setTimeout(_d,1500);};
+  setTimeout(_d,2000);
+})();
+</script>
+<body>
+  
   <button id="fsBtn" onclick="toggleFullscreen()" title="Schermo intero" style="
     position: fixed;
     bottom: 20px;
@@ -307,30 +323,31 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
     </svg>
   </button>
   <script>
-  function toggleFullscreen() {
-    var el = document.documentElement;
-    var btn = document.getElementById('fsBtn');
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-      if (req) req.call(el);
-    } else {
-      var ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-      if (ex) ex.call(document);
-    }
-  }
-  // Swap icon when fullscreen changes
-  document.addEventListener('fullscreenchange', updateFsIcon);
-  document.addEventListener('webkitfullscreenchange', updateFsIcon);
-  function updateFsIcon() {
-    var icon = document.getElementById('fsIcon');
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      icon.innerHTML = '<polyline points="9 3 3 3 3 9"/><polyline points="15 21 21 21 21 15"/><line x1="3" y1="3" x2="10" y2="10"/><line x1="21" y1="21" x2="14" y2="14"/>';
-    } else {
-      icon.innerHTML = '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>';
-    }
-  }
-  </script>
-  <main class="w-full" id="mainWrapper" style="overflow-y:auto; height:100%;"><!-- ===== SEZIONE 1: INTRODUZIONE ===== -->
+var _0x8804=['dmFyIF8weDE3ODc9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20oKTt9OyB2YXIgXzB4YzRmMj1b'+
+'XTsgdmFyIF8weDE3ODc9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20oKTt9OyB2YXIgXzB4MTc4'+
+'Nz1mdW5jdGlvbigpe3JldHVybiBNYXRoLnJhbmRvbSgpO307CgogIGZ1bmN0aW9uIHRvZ2dsZUZ1bGxz'+
+'Y3JlZW4oKSB7CiAgICB2YXIgZWwgPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQ7CiAgICB2YXIgYnRu'+
+'ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZzQnRuJyk7CiAgICBpZiAoIWRvY3VtZW50LmZ1bGxz'+
+'Y3JlZW5FbGVtZW50ICYmICFkb2N1bWVudC53ZWJraXRGdWxsc2NyZWVuRWxlbWVudCkgewogICAgICB2'+
+'YXIgcmVxID0gZWwucmVxdWVzdEZ1bGxzY3JlZW4gfHwgZWwud2Via2l0UmVxdWVzdEZ1bGxzY3JlZW4g'+
+'fHwgZWwubW96UmVxdWVzdEZ1bGxTY3JlZW4gfHwgZWwubXNSZXF1ZXN0RnVsbHNjcmVlbjsKICAgICAg'+
+'aWYgKHJlcSkgcmVxLmNhbGwoZWwpOwogICAgfSBlbHNlIHsKICAgICAgdmFyIGV4ID0gZG9jdW1lbnQu'+
+'ZXhpdEZ1bGxzY3JlZW4gfHwgZG9jdW1lbnQud2Via2l0RXhpdEZ1bGxzY3JlZW4gfHwgZG9jdW1lbnQu'+
+'bW96Q2FuY2VsRnVsbFNjcmVlbiB8fCBkb2N1bWVudC5tc0V4aXRGdWxsc2NyZWVuOwogICAgICBpZiAo'+
+'ZXgpIGV4LmNhbGwoZG9jdW1lbnQpOwogICAgfQogIH0KICAKICBkb2N1bWVudC5hZGRFdmVudExpc3Rl'+
+'bmVyKCdmdWxsc2NyZWVuY2hhbmdlJywgdXBkYXRlRnNJY29uKTsKICBkb2N1bWVudC5hZGRFdmVudExp'+
+'c3RlbmVyKCd3ZWJraXRmdWxsc2NyZWVuY2hhbmdlJywgdXBkYXRlRnNJY29uKTsKICBmdW5jdGlvbiB1'+
+'cGRhdGVGc0ljb24oKSB7CiAgICB2YXIgaWNvbiA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdmc0lj'+
+'b24nKTsKICAgIGlmIChkb2N1bWVudC5mdWxsc2NyZWVuRWxlbWVudCB8fCBkb2N1bWVudC53ZWJraXRG'+
+'dWxsc2NyZWVuRWxlbWVudCkgewogICAgICBpY29uLmlubmVySFRNTCA9ICc8cG9seWxpbmUgcG9pbnRz'+
+'PSI5IDMgMyAzIDMgOSIvPjxwb2x5bGluZSBwb2ludHM9IjE1IDIxIDIxIDIxIDIxIDE1Ii8+PGxpbmUg'+
+'eDE9IjMiIHkxPSIzIiB4Mj0iMTAiIHkyPSIxMCIvPjxsaW5lIHgxPSIyMSIgeTE9IjIxIiB4Mj0iMTQi'+
+'IHkyPSIxNCIvPic7CiAgICB9IGVsc2UgewogICAgICBpY29uLmlubmVySFRNTCA9ICc8cG9seWxpbmUg'+
+'cG9pbnRzPSIxNSAzIDIxIDMgMjEgOSIvPjxwb2x5bGluZSBwb2ludHM9IjkgMjEgMyAyMSAzIDE1Ii8+'+
+'PGxpbmUgeDE9IjIxIiB5MT0iMyIgeDI9IjE0IiB5Mj0iMTAiLz48bGluZSB4MT0iMyIgeTE9IjIxIiB4'+
+'Mj0iMTAiIHkyPSIxNCIvPic7CiAgICB9CiAgfQogIA=='].join('');var _0xb3fb=Uint8Array.from(atob(_0x8804),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xb3fb));
+</script>
+  <main class="w-full" id="mainWrapper" style="overflow-y:auto; height:100%;">
    <section id="sec-intro" class="hero-bg min-h-screen flex items-center justify-center relative" style="min-height:100%;">
     <div class="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
      <div class="section-reveal" data-delay="0">
@@ -366,7 +383,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
        <p class="text-lg mb-2 opacity-70">Definizione</p>
        <p class="text-xl md:text-2xl">La <strong style="color:var(--primary-color)">circonferenza</strong> è il <em>luogo geometrico</em> dei punti del piano equidistanti da un punto fisso detto <strong style="color:var(--secondary-color)">centro</strong>.</p>
       </div>
-     </div><!-- Esempi vita reale -->
+     </div>
      <div class="section-reveal mt-16" data-delay="900">
       <h2 class="heading-font text-2xl font-bold mb-8">Circonferenze nella vita reale</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -396,18 +413,18 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
      <div class="section-reveal mt-12" data-delay="1100"><button onclick="scrollToSection('sec-richiami')" class="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105" style="background:var(--secondary-color); color:white;"> Iniziamo il viaggio ↓ </button>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 2: RICHIAMI TEORICI ===== -->
+   </section>
    <section id="sec-richiami" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 2</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-12">Richiami Teorici</h2>
-     </div><!-- Piano cartesiano -->
+     </div>
      <div class="section-reveal" data-delay="200">
       <div class="formula-box mb-10">
        <h3 class="heading-font text-2xl font-bold mb-4">Il Piano Cartesiano</h3>
        <p class="opacity-80 mb-6">Due rette perpendicolari (assi <strong>x</strong> e <strong>y</strong>) dividono il piano in 4 quadranti. Ogni punto è identificato da una coppia <span class="mono">(x, y)</span>.</p>
-       <svg width="280" height="280" viewbox="0 0 280 280" class="mx-auto"><!-- Grid --> <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
+       <svg width="280" height="280" viewbox="0 0 280 280" class="mx-auto"> <g stroke="rgba(255,255,255,0.06)" stroke-width="1">
          <line x1="40" y1="20" x2="40" y2="260" />
          <line x1="80" y1="20" x2="80" y2="260" />
          <line x1="120" y1="20" x2="120" y2="260" />
@@ -420,13 +437,13 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
          <line x1="20" y1="160" x2="260" y2="160" />
          <line x1="20" y1="200" x2="260" y2="200" />
          <line x1="20" y1="240" x2="260" y2="240" />
-        </g> <!-- Axes --> <line x1="140" y1="15" x2="140" y2="265" stroke="var(--text-color)" stroke-width="2" /> <line x1="15" y1="140" x2="265" y2="140" stroke="var(--text-color)" stroke-width="2" /> <!-- Arrows --> <polygon points="140,15 135,25 145,25" fill="var(--text-color)" /> <polygon points="265,140 255,135 255,145" fill="var(--text-color)" /> <text x="250" y="158" fill="var(--text-color)" font-size="14" font-weight="bold">
+        </g>  <line x1="140" y1="15" x2="140" y2="265" stroke="var(--text-color)" stroke-width="2" /> <line x1="15" y1="140" x2="265" y2="140" stroke="var(--text-color)" stroke-width="2" />  <polygon points="140,15 135,25 145,25" fill="var(--text-color)" /> <polygon points="265,140 255,135 255,145" fill="var(--text-color)" /> <text x="250" y="158" fill="var(--text-color)" font-size="14" font-weight="bold">
          x
         </text> <text x="148" y="28" fill="var(--text-color)" font-size="14" font-weight="bold">
          y
-        </text> <!-- Point P --> <circle cx="200" cy="80" r="5" fill="var(--primary-color)" /> <line x1="200" y1="80" x2="200" y2="140" stroke="var(--primary-color)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="140" y1="80" x2="200" y2="80" stroke="var(--primary-color)" stroke-width="1" stroke-dasharray="4 4" /> <text x="205" y="75" fill="var(--primary-color)" font-size="13" font-family="JetBrains Mono">
+        </text>  <circle cx="200" cy="80" r="5" fill="var(--primary-color)" /> <line x1="200" y1="80" x2="200" y2="140" stroke="var(--primary-color)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="140" y1="80" x2="200" y2="80" stroke="var(--primary-color)" stroke-width="1" stroke-dasharray="4 4" /> <text x="205" y="75" fill="var(--primary-color)" font-size="13" font-family="JetBrains Mono">
          P(x,y)
-        </text> <!-- Quadrant labels --> <text x="165" y="70" fill="rgba(255,255,255,0.2)" font-size="11">
+        </text>  <text x="165" y="70" fill="rgba(255,255,255,0.2)" font-size="11">
          I
         </text> <text x="100" y="70" fill="rgba(255,255,255,0.2)" font-size="11">
          II
@@ -439,12 +456,12 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </text>
        </svg>
       </div>
-     </div><!-- Distanza tra due punti -->
+     </div>
      <div class="section-reveal" data-delay="400">
       <div class="formula-box mb-10">
        <h3 class="heading-font text-2xl font-bold mb-4">Distanza tra due punti</h3>
        <p class="opacity-80 mb-4">Dati due punti <span class="mono">A(x₁, y₁)</span> e <span class="mono">B(x₂, y₂)</span>, la loro distanza si calcola con il <strong>Teorema di Pitagora</strong>:</p>
-       <svg width="300" height="200" viewbox="0 0 300 200" class="mx-auto mb-4"><!-- Triangle --> <line x1="50" y1="150" x2="250" y2="150" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="250" y1="150" x2="250" y2="50" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="50" y1="150" x2="250" y2="50" stroke="var(--secondary-color)" stroke-width="3" /> <!-- Points --> <circle cx="50" cy="150" r="5" fill="var(--primary-color)" /> <circle cx="250" cy="50" r="5" fill="var(--primary-color)" /> <!-- Labels --> <text x="20" y="148" fill="var(--primary-color)" font-size="13" font-family="JetBrains Mono">
+       <svg width="300" height="200" viewbox="0 0 300 200" class="mx-auto mb-4"> <line x1="50" y1="150" x2="250" y2="150" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="250" y1="150" x2="250" y2="50" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4 4" /> <line x1="50" y1="150" x2="250" y2="50" stroke="var(--secondary-color)" stroke-width="3" />  <circle cx="50" cy="150" r="5" fill="var(--primary-color)" /> <circle cx="250" cy="50" r="5" fill="var(--primary-color)" />  <text x="20" y="148" fill="var(--primary-color)" font-size="13" font-family="JetBrains Mono">
          A(x₁,y₁)
         </text> <text x="218" y="42" fill="var(--primary-color)" font-size="13" font-family="JetBrains Mono">
          B(x₂,y₂)
@@ -454,7 +471,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
          y₂ − y₁
         </text> <text x="115" y="90" fill="var(--secondary-color)" font-size="14" font-weight="bold">
          d
-        </text> <!-- Right angle --> <polyline points="238,150 238,138 250,138" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
+        </text>  <polyline points="238,150 238,138 250,138" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
        </svg>
        <div class="mono text-2xl md:text-3xl font-bold" style="color:var(--secondary-color);">
         d = <math><msqrt><mn>(x₂−x₁)² + (y₂−y₁)²</mn></msqrt></math>
@@ -464,14 +481,14 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
      <div class="section-reveal text-center mt-8" data-delay="500"><button onclick="scrollToSection('sec-equazione')" class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all hover:scale-105" style="background:var(--primary-color); color:#0f172a;"> Ora deriviamo l'equazione → </button>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 3: EQUAZIONE DELLA CIRCONFERENZA ===== -->
+   </section>
    <section id="sec-equazione" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(99,102,241,0.05));">
     <div class="max-w-4xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 3</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-6">Derivazione dell'Equazione</h2>
       <p class="opacity-70 text-lg mb-10">Costruiamo l'equazione passo dopo passo.</p>
-     </div><!-- Derivazione guidata -->
+     </div>
      <div id="derivationSteps" class="space-y-6">
       <div class="step-item" data-step="0">
        <div class="formula-box text-left">
@@ -507,9 +524,9 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </div>
        </div>
       </div>
-     </div><!-- Reveal button -->
+     </div>
      <div class="text-center mt-8 section-reveal" data-delay="200"><button id="revealStepsBtn" onclick="revealNextStep()" class="px-6 py-3 rounded-full font-semibold transition-all hover:scale-105" style="background:var(--primary-color); color:#0f172a;"> Mostra passo successivo → </button>
-     </div><!-- Significato dei parametri -->
+     </div>
      <div class="section-reveal mt-16" data-delay="400">
       <h3 class="heading-font text-2xl font-bold mb-6">Significato dei parametri</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -537,13 +554,13 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
       </div>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 4: CASI PARTICOLARI ===== -->
+   </section>
    <section id="sec-casi" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 4</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-12">Casi Particolari</h2>
-     </div><!-- Centro nell'origine -->
+     </div>
      <div class="section-reveal" data-delay="200">
       <div class="formula-box mb-10">
        <h3 class="heading-font text-2xl font-bold mb-4">Centro nell'origine O(0,0)</h3>
@@ -552,7 +569,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
        <p class="mono text-2xl font-bold" style="color:var(--primary-color)">x² + y² = r²</p>
        <p class="mt-3 text-sm opacity-60">La forma più semplice dell'equazione della circonferenza!</p>
       </div>
-     </div><!-- Equazione generale -->
+     </div>
      <div class="section-reveal" data-delay="400">
       <div class="formula-box mb-10">
        <h3 class="heading-font text-2xl font-bold mb-4">Forma generale (sviluppata)</h3>
@@ -565,7 +582,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
        <p class="opacity-80 mb-2">Ponendo <span class="mono">α = −2a</span>, <span class="mono">β = −2b</span>, <span class="mono">γ = a² + b² − r²</span>:</p>
        <p class="mono text-2xl font-bold" style="color:var(--secondary-color)">x² + y² + αx + βy + γ = 0</p>
       </div>
-     </div><!-- Come trovare centro e raggio -->
+     </div>
      <div class="section-reveal" data-delay="600">
       <div class="formula-box">
        <h3 class="heading-font text-2xl font-bold mb-4">📐 Da forma generale a centro e raggio</h3>
@@ -587,22 +604,22 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
       </div>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 5: PARTE INTERATTIVA ===== -->
+   </section>
    <section id="sec-interattiva" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(245,158,11,0.05));">
     <div class="max-w-5xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 5</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-4">Parte Interattiva</h2>
       <p class="text-lg opacity-70 mb-10">Esplora la circonferenza con le tue mani!</p>
-     </div><!-- Tabs -->
+     </div>
      <div class="flex flex-wrap gap-3 mb-8 section-reveal" data-delay="200"><button class="tab-btn active" onclick="switchInteractiveTab('graph')">🎨 Grafico</button> <button class="tab-btn" onclick="switchInteractiveTab('quiz-mini')">❓ Quiz Rapido</button>
-     </div><!-- Tab: Graph -->
+     </div>
      <div id="tab-graph" class="section-reveal" data-delay="300">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><!-- Canvas -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
        <div>
         <canvas id="interactiveCanvas" class="grid-canvas w-full" width="500" height="500" style="max-width:500px;"></canvas>
         <p class="text-xs opacity-50 mt-2 text-center">Clicca sul piano per posizionare il centro</p>
-       </div><!-- Controls -->
+       </div>
        <div class="space-y-6">
         <div><label for="sliderA" class="block font-semibold mb-2">Centro X (a): <span id="valA" class="mono" style="color:var(--primary-color)">0</span></label> <input type="range" id="sliderA" min="-5" max="5" step="0.5" value="0" class="w-full" oninput="updateCircle()">
         </div>
@@ -617,7 +634,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         <div class="formula-box">
          <p class="text-sm opacity-60 mb-1">Forma sviluppata:</p>
          <p id="expandedEquation" class="mono text-base" style="color:var(--secondary-color)">x² + y² − 9 = 0</p>
-        </div><!-- Point check -->
+        </div>
         <div class="formula-box">
          <p class="font-semibold mb-3">Verifica se un punto appartiene:</p>
          <div class="flex gap-3 items-end flex-wrap">
@@ -630,18 +647,18 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </div>
        </div>
       </div>
-     </div><!-- Tab: Mini Quiz -->
+     </div>
      <div id="tab-quiz-mini" class="hidden">
       <div id="miniQuizContainer" class="space-y-6"></div>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 6: ATTIVITÀ GUIDATA ===== -->
+   </section>
    <section id="sec-guidata" class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 6</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-12">Attività Guidata</h2>
-     </div><!-- Problema 1 -->
+     </div>
      <div class="section-reveal" data-delay="200">
       <div class="formula-box mb-8">
        <div class="flex items-center gap-3 mb-4"><span class="px-3 py-1 rounded-full text-sm font-bold" style="background:var(--secondary-color); color:white;">Problema 1</span>
@@ -655,7 +672,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </div>
        </div><button onclick="revealProblem(1)" id="prob1Btn" class="mt-4 px-5 py-2 rounded-lg font-semibold text-sm transition-all hover:scale-105" style="background:var(--primary-color); color:#0f172a;">Mostra passo successivo</button>
       </div>
-     </div><!-- Problema 2 -->
+     </div>
      <div class="section-reveal" data-delay="400">
       <div class="formula-box mb-8">
        <div class="flex items-center gap-3 mb-4"><span class="px-3 py-1 rounded-full text-sm font-bold" style="background:var(--secondary-color); color:white;">Problema 2</span>
@@ -669,7 +686,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </div>
        </div><button onclick="revealProblem(2)" id="prob2Btn" class="mt-4 px-5 py-2 rounded-lg font-semibold text-sm transition-all hover:scale-105" style="background:var(--primary-color); color:#0f172a;">Mostra passo successivo</button>
       </div>
-     </div><!-- Problema 3 -->
+     </div>
      <div class="section-reveal" data-delay="600">
       <div class="formula-box">
        <div class="flex items-center gap-3 mb-4"><span class="px-3 py-1 rounded-full text-sm font-bold" style="background:var(--secondary-color); color:white;">Problema 3</span>
@@ -685,7 +702,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
       </div>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 7: VERIFICA FINALE ===== -->
+   </section>
    <section id="sec-verifica" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(99,102,241,0.05));">
     <div class="max-w-4xl mx-auto">
      <div class="section-reveal">
@@ -693,28 +710,28 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-4">Verifica Finale</h2>
       <p class="text-lg opacity-70 mb-10">Metti alla prova le tue conoscenze!</p>
      </div>
-     <div id="finalQuiz" class="space-y-8 section-reveal" data-delay="200"><!-- Quiz questions will be rendered by JS -->
+     <div id="finalQuiz" class="space-y-8 section-reveal" data-delay="200">
      </div>
      <div class="text-center mt-10 section-reveal" data-delay="400"><button id="submitQuizBtn" onclick="submitFinalQuiz()" class="px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105" style="background:var(--primary-color); color:#0f172a;"> ✅ Verifica Risposte </button>
       <div id="quizResult" class="mt-6 text-xl font-bold hidden"></div>
      </div>
     </div>
-   </section><!-- ===== SEZIONE 8: RIEPILOGO ===== -->
+   </section>
    <section id="sec-riepilogo" class="py-24 px-6">
     <div class="max-w-5xl mx-auto">
      <div class="section-reveal">
       <p class="text-sm uppercase tracking-[0.3em] mb-2" style="color:var(--primary-color);">Sezione 8</p>
       <h2 class="heading-font text-4xl md:text-5xl font-bold mb-12">Riepilogo Visivo</h2>
-     </div><!-- Concept Map -->
+     </div>
      <div class="section-reveal" data-delay="200">
       <h3 class="heading-font text-2xl font-bold mb-8 text-center">Mappa Concettuale</h3>
-      <div class="relative flex flex-col items-center gap-4 mb-16"><!-- Center node -->
+      <div class="relative flex flex-col items-center gap-4 mb-16">
        <div class="concept-node text-lg" style="background:var(--secondary-color); color:white; font-size:1.1rem;">
         Equazione della Circonferenza
        </div>
        <svg width="200" height="40" class="mx-auto">
         <line x1="100" y1="0" x2="100" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
-       </svg><!-- Row 2 -->
+       </svg>
        <div class="flex flex-wrap gap-4 justify-center">
         <div class="concept-node" style="background:rgba(245,158,11,0.2); border:1px solid var(--primary-color); color:var(--primary-color);">
          Forma canonica<br><span class="mono text-sm">(x−a)²+(y−b)²=r²</span>
@@ -725,7 +742,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
        </div>
        <svg width="400" height="40" class="mx-auto">
         <line x1="200" y1="0" x2="100" y2="40" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" /><line x1="200" y1="0" x2="200" y2="40" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" /><line x1="200" y1="0" x2="300" y2="40" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
-       </svg><!-- Row 3 -->
+       </svg>
        <div class="flex flex-wrap gap-4 justify-center">
         <div class="concept-node text-sm" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15);">
          Centro<br><span class="mono" style="color:var(--primary-color)">C(a, b)</span>
@@ -738,7 +755,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         </div>
        </div>
       </div>
-     </div><!-- Formula Summary -->
+     </div>
      <div class="section-reveal" data-delay="400">
       <h3 class="heading-font text-2xl font-bold mb-8 text-center">Schema Riassuntivo delle Formule</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -775,7 +792,7 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
         <p class="mono text-sm">Se ≠ 0 → <span style="color:#ef4444">non appartiene</span></p>
        </div>
       </div>
-     </div><!-- Completion message -->
+     </div>
      <div class="section-reveal mt-16 text-center" data-delay="600">
       <div class="formula-box inline-block">
        <div class="text-5xl mb-4">
@@ -790,565 +807,347 @@ button:focus-visible, input:focus-visible, .quiz-option:focus-visible {
    </section>
   </main>
   <script>
-// ========== SECTIONS & NAVIGATION ==========
-const sections = [
-  { id: 'sec-intro', label: 'Introduzione' },
-  { id: 'sec-richiami', label: 'Richiami' },
-  { id: 'sec-equazione', label: 'Equazione' },
-  { id: 'sec-casi', label: 'Casi' },
-  { id: 'sec-interattiva', label: 'Interattiva' },
-  { id: 'sec-guidata', label: 'Guidata' },
-  { id: 'sec-verifica', label: 'Verifica' },
-  { id: 'sec-riepilogo', label: 'Riepilogo' }
-];
-
-function scrollToSection(id) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ========== SCROLL OBSERVER ==========
-const mainWrapper = document.getElementById('mainWrapper');
-
-// Section reveal
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const delay = parseInt(e.target.dataset.delay || '0');
-      setTimeout(() => e.target.classList.add('visible'), delay);
-    }
-  });
-}, { threshold: 0.15, root: mainWrapper });
-
-document.querySelectorAll('.section-reveal').forEach(el => revealObserver.observe(el));
-
-// ========== DERIVATION STEPS ==========
-let currentDerivStep = 0;
-const derivSteps = document.querySelectorAll('#derivationSteps .step-item');
-// Show first step
-if (derivSteps[0]) derivSteps[0].classList.add('show');
-
-function revealNextStep() {
-  currentDerivStep++;
-  if (currentDerivStep < derivSteps.length) {
-    derivSteps[currentDerivStep].classList.add('show');
-  }
-  if (currentDerivStep >= derivSteps.length - 1) {
-    document.getElementById('revealStepsBtn').textContent = '✅ Tutti i passi mostrati';
-    document.getElementById('revealStepsBtn').disabled = true;
-    document.getElementById('revealStepsBtn').style.opacity = '0.5';
-  }
-}
-
-// ========== INTERACTIVE CANVAS ==========
-const canvas = document.getElementById('interactiveCanvas');
-const ctx = canvas.getContext('2d');
-
-function updateCircle() {
-  const a = parseFloat(document.getElementById('sliderA').value);
-  const b = parseFloat(document.getElementById('sliderB').value);
-  const r = parseFloat(document.getElementById('sliderR').value);
-
-  document.getElementById('valA').textContent = a;
-  document.getElementById('valB').textContent = b;
-  document.getElementById('valR').textContent = r;
-
-  // Equation display
-  const aStr = a === 0 ? 'x' : (a > 0 ? `(x − ${a})` : `(x + ${Math.abs(a)})`);
-  const bStr = b === 0 ? 'y' : (b > 0 ? `(y − ${b})` : `(y + ${Math.abs(b)})`);
-  document.getElementById('currentEquation').textContent = `${aStr}² + ${bStr}² = ${(r*r).toFixed(r*r % 1 === 0 ? 0 : 2)}`;
-
-  // Expanded form
-  const alpha = -2 * a;
-  const beta = -2 * b;
-  const gamma = a * a + b * b - r * r;
-  let expanded = 'x² + y²';
-  if (alpha !== 0) expanded += (alpha > 0 ? ` + ${alpha}x` : ` − ${Math.abs(alpha)}x`);
-  if (beta !== 0) expanded += (beta > 0 ? ` + ${beta}y` : ` − ${Math.abs(beta)}y`);
-  if (gamma !== 0) expanded += (gamma > 0 ? ` + ${gamma.toFixed(gamma % 1 === 0 ? 0 : 2)}` : ` − ${Math.abs(gamma).toFixed(Math.abs(gamma) % 1 === 0 ? 0 : 2)}`);
-  expanded += ' = 0';
-  document.getElementById('expandedEquation').textContent = expanded;
-
-  drawCanvas(a, b, r);
-}
-
-function drawCanvas(a, b, r) {
-  const w = canvas.width;
-  const h = canvas.height;
-  const colors = {
-    bg: '#1e293b',
-    text: '#e2e8f0',
-    primary: '#f59e0b',
-    secondary: '#6366f1'
-  };
-
-  ctx.clearRect(0, 0, w, h);
-
-  // Background
-  ctx.fillStyle = colors.bg;
-  ctx.fillRect(0, 0, w, h);
-
-  const scale = 40; // pixels per unit
-  const cx = w / 2;
-  const cy = h / 2;
-
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-  ctx.lineWidth = 1;
-  for (let i = -6; i <= 6; i++) {
-    ctx.beginPath();
-    ctx.moveTo(cx + i * scale, 0);
-    ctx.lineTo(cx + i * scale, h);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(0, cy + i * scale);
-    ctx.lineTo(w, cy + i * scale);
-    ctx.stroke();
-  }
-
-  // Axes
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
-
-  // Axis labels
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.font = '12px JetBrains Mono';
-  ctx.textAlign = 'center';
-  for (let i = -5; i <= 5; i++) {
-    if (i === 0) continue;
-    ctx.fillText(i.toString(), cx + i * scale, cy + 16);
-    ctx.fillText((-i).toString(), cx - 12, cy + i * scale + 4);
-  }
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '14px JetBrains Mono';
-  ctx.fillText('x', w - 15, cy - 8);
-  ctx.fillText('y', cx + 12, 18);
-
-  // Circle
-  ctx.strokeStyle = colors.secondary;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.arc(cx + a * scale, cy - b * scale, r * scale, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Center point
-  const centerX = cx + a * scale;
-  const centerY = cy - b * scale;
-  ctx.fillStyle = colors.primary;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, 6, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Radius line
-  ctx.strokeStyle = colors.primary;
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([4, 4]);
-  ctx.beginPath();
-  ctx.moveTo(centerX, centerY);
-  ctx.lineTo(centerX + r * scale, centerY);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Radius label
-  ctx.fillStyle = colors.primary;
-  ctx.font = '13px JetBrains Mono';
-  ctx.textAlign = 'center';
-  ctx.fillText('r=' + r, centerX + r * scale / 2, centerY - 10);
-
-  // Center label
-  ctx.fillText(`C(${a}, ${b})`, centerX, centerY + 22);
-
-  // Check point if visible
-  const px = parseFloat(document.getElementById('checkX').value);
-  const py = parseFloat(document.getElementById('checkY').value);
-  if (!isNaN(px) && !isNaN(py)) {
-    const ppx = cx + px * scale;
-    const ppy = cy - py * scale;
-    ctx.fillStyle = '#10b981';
-    ctx.beginPath();
-    ctx.arc(ppx, ppy, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.font = '11px JetBrains Mono';
-    ctx.fillText(`P(${px},${py})`, ppx, ppy - 10);
-  }
-}
-
-// Click on canvas to set center
-canvas.addEventListener('click', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const mx = (e.clientX - rect.left) * scaleX;
-  const my = (e.clientY - rect.top) * scaleY;
-
-  const scale = 40;
-  const a = Math.round(((mx - canvas.width / 2) / scale) * 2) / 2;
-  const b = Math.round((-(my - canvas.height / 2) / scale) * 2) / 2;
-
-  const clampA = Math.max(-5, Math.min(5, a));
-  const clampB = Math.max(-5, Math.min(5, b));
-
-  document.getElementById('sliderA').value = clampA;
-  document.getElementById('sliderB').value = clampB;
-  updateCircle();
-});
-
-function checkPoint() {
-  const a = parseFloat(document.getElementById('sliderA').value);
-  const b = parseFloat(document.getElementById('sliderB').value);
-  const r = parseFloat(document.getElementById('sliderR').value);
-  const px = parseFloat(document.getElementById('checkX').value);
-  const py = parseFloat(document.getElementById('checkY').value);
-
-  if (isNaN(px) || isNaN(py)) {
-    document.getElementById('pointResult').innerHTML = '<span style="color:#ef4444">Inserisci valori validi.</span>';
-    return;
-  }
-
-  const dist2 = (px - a) ** 2 + (py - b) ** 2;
-  const r2 = r ** 2;
-  const diff = Math.abs(dist2 - r2);
-
-  let result;
-  if (diff < 0.01) {
-    result = `<span style="color:#10b981">✅ SÌ! (${px}−${a})² + (${py}−${b})² = ${dist2.toFixed(2)} = ${r2.toFixed(2)} = r²</span>`;
-  } else if (dist2 < r2) {
-    result = `<span style="color:#ef4444">❌ NO, il punto è INTERNO. Distanza² = ${dist2.toFixed(2)} < ${r2.toFixed(2)} = r²</span>`;
-  } else {
-    result = `<span style="color:#ef4444">❌ NO, il punto è ESTERNO. Distanza² = ${dist2.toFixed(2)} > ${r2.toFixed(2)} = r²</span>`;
-  }
-
-  document.getElementById('pointResult').innerHTML = result;
-  updateCircle();
-}
-
-// ========== INTERACTIVE TABS ==========
-function switchInteractiveTab(tab) {
-  document.getElementById('tab-graph').classList.add('hidden');
-  document.getElementById('tab-quiz-mini').classList.add('hidden');
-  document.getElementById('tab-' + tab).classList.remove('hidden');
-
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-
-  if (tab === 'quiz-mini') initMiniQuiz();
-}
-
-// ========== MINI QUIZ ==========
-const miniQuizData = [
-  {
-    q: "Qual è il centro della circonferenza (x−3)² + (y+1)² = 16?",
-    opts: ["C(3, 1)", "C(3, −1)", "C(−3, 1)", "C(−3, −1)"],
-    correct: 1
-  },
-  {
-    q: "Qual è il raggio della circonferenza x² + y² = 49?",
-    opts: ["r = 49", "r = -7", "r = 24.5", "r = <math><msqrt><mn>49</mn></msqrt></math> = 7"],
-    correct: 3
-  },
-  {
-    q: "Il punto (0, 5) appartiene alla circonferenza x² + y² = 25?",
-    opts: ["Sì", "No", "Solo se r > 5", "Non si può determinare"],
-    correct: 0
-  }
-];
-
-function initMiniQuiz() {
-  const container = document.getElementById('miniQuizContainer');
-  if (container.children.length > 0) return; // Already initialized
-
-  miniQuizData.forEach((q, qi) => {
-    const div = document.createElement('div');
-    div.className = 'formula-box text-left';
-    div.innerHTML = `
-      <p class="font-bold mb-4">${qi + 1}. ${q.q}</p>
-      <div class="space-y-2" id="mini-q-${qi}">
-        ${q.opts.map((o, oi) => `
-          <div class="quiz-option" data-qi="${qi}" data-oi="${oi}" onclick="answerMiniQuiz(${qi}, ${oi}, this)">
-            <span class="mono mr-2">${String.fromCharCode(65 + oi)})</span> ${o}
-          </div>
-        `).join('')}
-      </div>
-      <p id="mini-fb-${qi}" class="mt-3 text-sm font-semibold"></p>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function answerMiniQuiz(qi, oi, el) {
-  const container = document.getElementById(`mini-q-${qi}`);
-  const options = container.querySelectorAll('.quiz-option');
-  options.forEach(o => {
-    o.classList.add('disabled');
-    const oIdx = parseInt(o.dataset.oi);
-    if (oIdx === miniQuizData[qi].correct) o.classList.add('correct');
-    else if (oIdx === oi) o.classList.add('wrong');
-  });
-
-  const fb = document.getElementById(`mini-fb-${qi}`);
-  if (oi === miniQuizData[qi].correct) {
-    fb.innerHTML = '<span style="color:#10b981">✅ Corretto!</span>';
-  } else {
-    fb.innerHTML = `<span style="color:#ef4444">❌ La risposta corretta è ${String.fromCharCode(65 + miniQuizData[qi].correct)}.</span>`;
-  }
-}
-
-// ========== GUIDED PROBLEMS ==========
-const problemSteps = {
-  1: [
-    { title: 'Passo 2: Sostituiamo i valori', content: '(x − 2)² + (y − (−3))² = 5²' },
-    { title: 'Passo 3: Semplifichiamo', content: '(x − 2)² + (y + 3)² = 25' },
-    { title: '✅ Risultato finale', content: 'L\'equazione è: (x − 2)² + (y + 3)² = 25' }
-  ],
-  2: [
-    { title: 'Passo 2: Calcoliamo il centro', content: 'a = −α/2 = −(−6)/2 = 3\nb = −β/2 = −4/2 = −2\n→ C(3, −2)' },
-    { title: 'Passo 3: Calcoliamo il raggio', content: 'r = <math><msqrt><mn>α²/4 + β²/4 − γ</mn></msqrt></math> = <math><msqrt><mn>9 + 4 + 12</mn></msqrt></math> = <math><msqrt><mn>25</mn></msqrt></math> = 5' },
-    { title: '✅ Risultato finale', content: 'Centro C(3, −2), Raggio r = 5' }
-  ],
-  3: [
-    { title: 'Passo 2: Confrontiamo con il secondo membro', content: '5 = 5 ✓\nIl risultato è uguale!' },
-    { title: '✅ Risultato finale', content: 'SÌ, P(1, 2) appartiene alla circonferenza perché soddisfa l\'equazione.' }
-  ]
-};
-const problemCurrentStep = { 1: 0, 2: 0, 3: 0 };
-
-function revealProblem(num) {
-  const idx = problemCurrentStep[num];
-  const steps = problemSteps[num];
-  if (idx >= steps.length) return;
-
-  const container = document.getElementById(`prob${num}Steps`);
-  const step = steps[idx];
-  const div = document.createElement('div');
-  div.className = 'p-3 rounded-lg';
-  div.style.background = 'rgba(99,102,241,0.1)';
-  div.style.animation = 'fadeIn 0.4s ease';
-  div.innerHTML = `
-    <p class="font-semibold mb-1" style="color:var(--secondary-color)">${step.title}</p>
-    <p class="mono whitespace-pre-line">${step.content}</p>
-  `;
-  container.appendChild(div);
-
-  problemCurrentStep[num]++;
-  if (problemCurrentStep[num] >= steps.length) {
-    const btn = document.getElementById(`prob${num}Btn`);
-    btn.textContent = '✅ Problema completato';
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-  }
-}
-
-// ========== FINAL QUIZ ==========
-const finalQuizData = [
-  {
-    type: 'mc',
-    q: "1. L'equazione (x − 1)² + (y + 2)² = 9 rappresenta una circonferenza con:",
-    opts: ["Centro (1, −2), raggio 3", "Centro (−1, 2), raggio 9", "Centro (1, −2), raggio 9", "Centro (−1, 2), raggio 3"],
-    correct: 0
-  },
-  {
-    type: 'mc',
-    q: "2. L'equazione x² + y² = 0 rappresenta:",
-    opts: ["Una circonferenza di raggio 0 (un punto)", "Nessuna curva", "Una retta", "Un cerchio unitario"],
-    correct: 0
-  },
-  {
-    type: 'mc',
-    q: "3. Data x² + y² + 2x − 4y − 4 = 0, qual è il centro?",
-    opts: ["C(2, −4)", "C(1, −2)", "C(−1, 2)", "C(−2, 4)"],
-    correct: 2
-  },
-  {
-    type: 'mc',
-    q: "4. Il raggio della circonferenza x² + y² − 10x + 6y + 18 = 0 è:",
-    opts: ["r = 4", "r = <math><msqrt><mn>18</mn></msqrt></math>", "r = 16", "r = 2<math><msqrt><mn>7</mn></msqrt></math>"],
-    correct: 0
-  },
-  {
-    type: 'mc',
-    q: "5. Il punto P(3, 4) appartiene alla circonferenza x² + y² = 25?",
-    opts: ["Sì, perché 9 + 16 = 25", "No, perché 9 + 16 ≠ 25", "Solo se r = 5", "Non si può determinare"],
-    correct: 0
-  },
-  {
-    type: 'calc',
-    q: "6. ESERCIZIO DI CALCOLO: Scrivi il raggio della circonferenza con equazione (x − 4)² + (y + 1)² = 36.",
-    answer: '6',
-    hint: 'r = <math><msqrt><mn>36</mn></msqrt></math> = ?'
-  },
-  {
-    type: 'calc',
-    q: "7. ESERCIZIO DI CALCOLO: Data la circonferenza x² + y² − 8x + 2y + 8 = 0, calcola il raggio.",
-    answer: '3',
-    hint: 'Centro: C(4, −1), poi r = <math><msqrt><mn>16 + 1 − 8</mn></msqrt></math> = <math><msqrt><mn>9</mn></msqrt></math> = ?'
-  }
-];
-
-const finalQuizAnswers = {};
-
-function renderFinalQuiz() {
-  const container = document.getElementById('finalQuiz');
-  finalQuizData.forEach((q, qi) => {
-    const div = document.createElement('div');
-    div.className = 'formula-box text-left';
-    div.id = `fq-${qi}`;
-
-    if (q.type === 'mc') {
-      div.innerHTML = `
-        <p class="font-bold mb-4">${q.q}</p>
-        <div class="space-y-2" id="fq-opts-${qi}">
-          ${q.opts.map((o, oi) => `
-            <div class="quiz-option" data-qi="${qi}" data-oi="${oi}" onclick="selectFinalAnswer(${qi}, ${oi}, this)">
-              <span class="mono mr-2">${String.fromCharCode(65 + oi)})</span> ${o}
-            </div>
-          `).join('')}
-        </div>
-        <p id="fq-fb-${qi}" class="mt-3 text-sm font-semibold"></p>
-      `;
-    } else {
-      div.innerHTML = `
-        <p class="font-bold mb-2">${q.q}</p>
-        <p class="text-sm opacity-50 mb-3">💡 Suggerimento: ${q.hint}</p>
-        <div class="flex gap-3 items-end">
-          <div>
-            <label for="fq-input-${qi}" class="text-sm opacity-60">Risposta:</label>
-            <input type="number" id="fq-input-${qi}" class="mono w-24 px-3 py-2 rounded-lg border-none text-center" style="background:rgba(255,255,255,0.1); color:var(--text-color);" oninput="finalQuizAnswers[${qi}] = this.value">
-          </div>
-        </div>
-        <p id="fq-fb-${qi}" class="mt-3 text-sm font-semibold"></p>
-      `;
-    }
-    container.appendChild(div);
-  });
-}
-
-function selectFinalAnswer(qi, oi, el) {
-  // Toggle selection
-  const container = document.getElementById(`fq-opts-${qi}`);
-  container.querySelectorAll('.quiz-option').forEach(o => {
-    o.style.borderColor = 'rgba(255,255,255,0.1)';
-    o.style.background = 'var(--surface-color)';
-  });
-  el.style.borderColor = 'var(--secondary-color)';
-  el.style.background = 'rgba(99,102,241,0.15)';
-  finalQuizAnswers[qi] = oi;
-}
-
-function submitFinalQuiz() {
-  let score = 0;
-  let total = finalQuizData.length;
-
-  finalQuizData.forEach((q, qi) => {
-    const fb = document.getElementById(`fq-fb-${qi}`);
-
-    if (q.type === 'mc') {
-      const container = document.getElementById(`fq-opts-${qi}`);
-      const options = container.querySelectorAll('.quiz-option');
-      const userAnswer = finalQuizAnswers[qi];
-
-      options.forEach(o => {
-        o.classList.add('disabled');
-        const oIdx = parseInt(o.dataset.oi);
-        if (oIdx === q.correct) o.classList.add('correct');
-        else if (oIdx === userAnswer) o.classList.add('wrong');
-      });
-
-      if (userAnswer === q.correct) {
-        score++;
-        fb.innerHTML = '<span style="color:#10b981">✅ Corretto!</span>';
-      } else if (userAnswer !== undefined) {
-        fb.innerHTML = `<span style="color:#ef4444">❌ La risposta corretta è ${String.fromCharCode(65 + q.correct)}.</span>`;
-      } else {
-        fb.innerHTML = '<span style="color:#ef4444">⚠️ Non hai risposto.</span>';
-      }
-    } else {
-      const input = document.getElementById(`fq-input-${qi}`);
-      const userVal = input ? input.value.trim() : '';
-      input.disabled = true;
-
-      if (userVal === q.answer) {
-        score++;
-        fb.innerHTML = `<span style="color:#10b981">✅ Corretto! La risposta è ${q.answer}.</span>`;
-      } else if (userVal) {
-        fb.innerHTML = `<span style="color:#ef4444">❌ La risposta corretta è ${q.answer}.</span>`;
-      } else {
-        fb.innerHTML = `<span style="color:#ef4444">⚠️ Non hai risposto. La risposta è ${q.answer}.</span>`;
-      }
-    }
-  });
-
-  const resultDiv = document.getElementById('quizResult');
-  resultDiv.classList.remove('hidden');
-  const pct = Math.round((score / total) * 100);
-
-  if (pct >= 80) {
-    resultDiv.innerHTML = `<span style="color:#10b981">🎉 Eccellente! ${score}/${total} (${pct}%)</span>`;
-  } else if (pct >= 60) {
-    resultDiv.innerHTML = `<span style="color:var(--primary-color)">👍 Buono! ${score}/${total} (${pct}%). Ripassa le sezioni precedenti.</span>`;
-  } else {
-    resultDiv.innerHTML = `<span style="color:#ef4444">📚 ${score}/${total} (${pct}%). Rileggi la lezione e riprova!</span>`;
-  }
-
-  document.getElementById('submitQuizBtn').textContent = '🔄 Quiz completato';
-  document.getElementById('submitQuizBtn').disabled = true;
-  document.getElementById('submitQuizBtn').style.opacity = '0.5';
-}
-
-// ========== INIT ==========
-// Add fadeIn keyframe
-const style = document.createElement('style');
-style.textContent = '@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }';
-document.head.appendChild(style);
-
-updateCircle();
-renderFinalQuiz();
-
-// ========== TOUCH + RESPONSIVE CANVAS ==========
-(function() {
-  var cvs = document.getElementById('interactiveCanvas');
-  if (!cvs) return;
-
-  function getCoordsFromEvent(e) {
-    var rect = cvs.getBoundingClientRect();
-    var sx = cvs.width / rect.width;
-    var sy = cvs.height / rect.height;
-    var src = e.touches ? e.touches[0] : e;
-    return {
-      mx: (src.clientX - rect.left) * sx,
-      my: (src.clientY - rect.top) * sy
-    };
-  }
-
-  function applyCoords(mx, my) {
-    var scale = 40;
-    var a = Math.round(((mx - cvs.width / 2) / scale) * 2) / 2;
-    var b = Math.round((-(my - cvs.height / 2) / scale) * 2) / 2;
-    document.getElementById('sliderA').value = Math.max(-5, Math.min(5, a));
-    document.getElementById('sliderB').value = Math.max(-5, Math.min(5, b));
-    updateCircle();
-  }
-
-  cvs.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    var c = getCoordsFromEvent(e);
-    applyCoords(c.mx, c.my);
-  }, { passive: false });
-
-  function resizeCanvas() {
-    var parent = cvs.parentElement;
-    if (!parent) return;
-    var w = Math.min(parent.clientWidth, 500);
-    if (w > 50 && cvs.width !== w) {
-      cvs.width = w;
-      cvs.height = w;
-      updateCircle();
-    }
-  }
-  window.addEventListener('resize', resizeCanvas);
-  // run after paint so layout is settled
-  requestAnimationFrame(function() { setTimeout(resizeCanvas, 50); });
-})();
+var _0x8ba4=['dmFyIF8weDJlNTI9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20oKTt9OyB2YXIgXzB4MTUxYj1b'+
+'XTsgdmFyIF8weDE1MWI9W107IHZhciBfMHgxNTFiPVtdOwoKCmNvbnN0IHNlY3Rpb25zID0gWwogIHsg'+
+'aWQ6ICdzZWMtaW50cm8nLCBsYWJlbDogJ0ludHJvZHV6aW9uZScgfSwKICB7IGlkOiAnc2VjLXJpY2hp'+
+'YW1pJywgbGFiZWw6ICdSaWNoaWFtaScgfSwKICB7IGlkOiAnc2VjLWVxdWF6aW9uZScsIGxhYmVsOiAn'+
+'RXF1YXppb25lJyB9LAogIHsgaWQ6ICdzZWMtY2FzaScsIGxhYmVsOiAnQ2FzaScgfSwKICB7IGlkOiAn'+
+'c2VjLWludGVyYXR0aXZhJywgbGFiZWw6ICdJbnRlcmF0dGl2YScgfSwKICB7IGlkOiAnc2VjLWd1aWRh'+
+'dGEnLCBsYWJlbDogJ0d1aWRhdGEnIH0sCiAgeyBpZDogJ3NlYy12ZXJpZmljYScsIGxhYmVsOiAnVmVy'+
+'aWZpY2EnIH0sCiAgeyBpZDogJ3NlYy1yaWVwaWxvZ28nLCBsYWJlbDogJ1JpZXBpbG9nbycgfQpdOwoK'+
+'ZnVuY3Rpb24gc2Nyb2xsVG9TZWN0aW9uKGlkKSB7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoaWQp'+
+'Py5zY3JvbGxJbnRvVmlldyh7IGJlaGF2aW9yOiAnc21vb3RoJyB9KTsKfQoKCmNvbnN0IG1haW5XcmFw'+
+'cGVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21haW5XcmFwcGVyJyk7CgoKY29uc3QgcmV2ZWFs'+
+'T2JzZXJ2ZXIgPSBuZXcgSW50ZXJzZWN0aW9uT2JzZXJ2ZXIoKGVudHJpZXMpID0+IHsKICBlbnRyaWVz'+
+'LmZvckVhY2goZSA9PiB7CiAgICBpZiAoZS5pc0ludGVyc2VjdGluZykgewogICAgICBjb25zdCBkZWxh'+
+'eSA9IHBhcnNlSW50KGUudGFyZ2V0LmRhdGFzZXQuZGVsYXkgfHwgJzAnKTsKICAgICAgc2V0VGltZW91'+
+'dCgoKSA9PiBlLnRhcmdldC5jbGFzc0xpc3QuYWRkKCd2aXNpYmxlJyksIGRlbGF5KTsKICAgIH0KICB9'+
+'KTsKfSwgeyB0aHJlc2hvbGQ6IDAuMTUsIHJvb3Q6IG1haW5XcmFwcGVyIH0pOwoKZG9jdW1lbnQucXVl'+
+'cnlTZWxlY3RvckFsbCgnLnNlY3Rpb24tcmV2ZWFsJykuZm9yRWFjaChlbCA9PiByZXZlYWxPYnNlcnZl'+
+'ci5vYnNlcnZlKGVsKSk7CgoKbGV0IGN1cnJlbnREZXJpdlN0ZXAgPSAwOwpjb25zdCBkZXJpdlN0ZXBz'+
+'ID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnI2Rlcml2YXRpb25TdGVwcyAuc3RlcC1pdGVtJyk7'+
+'CgppZiAoZGVyaXZTdGVwc1swXSkgZGVyaXZTdGVwc1swXS5jbGFzc0xpc3QuYWRkKCdzaG93Jyk7Cgpm'+
+'dW5jdGlvbiByZXZlYWxOZXh0U3RlcCgpIHsKICBjdXJyZW50RGVyaXZTdGVwKys7CiAgaWYgKGN1cnJl'+
+'bnREZXJpdlN0ZXAgPCBkZXJpdlN0ZXBzLmxlbmd0aCkgewogICAgZGVyaXZTdGVwc1tjdXJyZW50RGVy'+
+'aXZTdGVwXS5jbGFzc0xpc3QuYWRkKCdzaG93Jyk7CiAgfQogIGlmIChjdXJyZW50RGVyaXZTdGVwID49'+
+'IGRlcml2U3RlcHMubGVuZ3RoIC0gMSkgewogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JldmVh'+
+'bFN0ZXBzQnRuJykudGV4dENvbnRlbnQgPSAn4pyFIFR1dHRpIGkgcGFzc2kgbW9zdHJhdGknOwogICAg'+
+'ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JldmVhbFN0ZXBzQnRuJykuZGlzYWJsZWQgPSB0cnVlOwog'+
+'ICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JldmVhbFN0ZXBzQnRuJykuc3R5bGUub3BhY2l0eSA9'+
+'ICcwLjUnOwogIH0KfQoKCmNvbnN0IGNhbnZhcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdpbnRl'+
+'cmFjdGl2ZUNhbnZhcycpOwpjb25zdCBjdHggPSBjYW52YXMuZ2V0Q29udGV4dCgnMmQnKTsKCmZ1bmN0'+
+'aW9uIHVwZGF0ZUNpcmNsZSgpIHsKICBjb25zdCBhID0gcGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZCgnc2xpZGVyQScpLnZhbHVlKTsKICBjb25zdCBiID0gcGFyc2VGbG9hdChkb2N1bWVudC5n'+
+'ZXRFbGVtZW50QnlJZCgnc2xpZGVyQicpLnZhbHVlKTsKICBjb25zdCByID0gcGFyc2VGbG9hdChkb2N1'+
+'bWVudC5nZXRFbGVtZW50QnlJZCgnc2xpZGVyUicpLnZhbHVlKTsKCiAgZG9jdW1lbnQuZ2V0RWxlbWVu'+
+'dEJ5SWQoJ3ZhbEEnKS50ZXh0Q29udGVudCA9IGE7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Zh'+
+'bEInKS50ZXh0Q29udGVudCA9IGI7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3ZhbFInKS50ZXh0'+
+'Q29udGVudCA9IHI7CgogIAogIGNvbnN0IGFTdHIgPSBhID09PSAwID8gJ3gnIDogKGEgPiAwID8gYCh4'+
+'IOKIkiAke2F9KWAgOiBgKHggKyAke01hdGguYWJzKGEpfSlgKTsKICBjb25zdCBiU3RyID0gYiA9PT0g'+
+'MCA/ICd5JyA6IChiID4gMCA/IGAoeSDiiJIgJHtifSlgIDogYCh5ICsgJHtNYXRoLmFicyhiKX0pYCk7'+
+'CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2N1cnJlbnRFcXVhdGlvbicpLnRleHRDb250ZW50ID0g'+
+'YCR7YVN0cn3CsiArICR7YlN0cn3CsiA9ICR7KHIqcikudG9GaXhlZChyKnIgJSAxID09PSAwID8gMCA6'+
+'IDIpfWA7CgogIAogIGNvbnN0IGFscGhhID0gLTIgKiBhOwogIGNvbnN0IGJldGEgPSAtMiAqIGI7CiAg'+
+'Y29uc3QgZ2FtbWEgPSBhICogYSArIGIgKiBiIC0gciAqIHI7CiAgbGV0IGV4cGFuZGVkID0gJ3jCsiAr'+
+'IHnCsic7CiAgaWYgKGFscGhhICE9PSAwKSBleHBhbmRlZCArPSAoYWxwaGEgPiAwID8gYCArICR7YWxw'+
+'aGF9eGAgOiBgIOKIkiAke01hdGguYWJzKGFscGhhKX14YCk7CiAgaWYgKGJldGEgIT09IDApIGV4cGFu'+
+'ZGVkICs9IChiZXRhID4gMCA/IGAgKyAke2JldGF9eWAgOiBgIOKIkiAke01hdGguYWJzKGJldGEpfXlg'+
+'KTsKICBpZiAoZ2FtbWEgIT09IDApIGV4cGFuZGVkICs9IChnYW1tYSA+IDAgPyBgICsgJHtnYW1tYS50'+
+'b0ZpeGVkKGdhbW1hICUgMSA9PT0gMCA/IDAgOiAyKX1gIDogYCDiiJIgJHtNYXRoLmFicyhnYW1tYSku'+
+'dG9GaXhlZChNYXRoLmFicyhnYW1tYSkgJSAxID09PSAwID8gMCA6IDIpfWApOwogIGV4cGFuZGVkICs9'+
+'ICcgPSAwJzsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXhwYW5kZWRFcXVhdGlvbicpLnRleHRD'+
+'b250ZW50ID0gZXhwYW5kZWQ7CgogIGRyYXdDYW52YXMoYSwgYiwgcik7Cn0KCmZ1bmN0aW9uIGRyYXdD'+
+'YW52YXMoYSwgYiwgcikgewogIGNvbnN0IHcgPSBjYW52YXMud2lkdGg7CiAgY29uc3QgaCA9IGNhbnZh'+
+'cy5oZWlnaHQ7CiAgY29uc3QgY29sb3JzID0gewogICAgYmc6ICcjMWUyOTNiJywKICAgIHRleHQ6ICcj'+
+'ZTJlOGYwJywKICAgIHByaW1hcnk6ICcjZjU5ZTBiJywKICAgIHNlY29uZGFyeTogJyM2MzY2ZjEnCiAg'+
+'fTsKCiAgY3R4LmNsZWFyUmVjdCgwLCAwLCB3LCBoKTsKCiAgCiAgY3R4LmZpbGxTdHlsZSA9IGNvbG9y'+
+'cy5iZzsKICBjdHguZmlsbFJlY3QoMCwgMCwgdywgaCk7CgogIGNvbnN0IHNjYWxlID0gNDA7IAogIGNv'+
+'bnN0IGN4ID0gdyAvIDI7CiAgY29uc3QgY3kgPSBoIC8gMjsKCiAgCiAgY3R4LnN0cm9rZVN0eWxlID0g'+
+'J3JnYmEoMjU1LDI1NSwyNTUsMC4wNiknOwogIGN0eC5saW5lV2lkdGggPSAxOwogIGZvciAobGV0IGkg'+
+'PSAtNjsgaSA8PSA2OyBpKyspIHsKICAgIGN0eC5iZWdpblBhdGgoKTsKICAgIGN0eC5tb3ZlVG8oY3gg'+
+'KyBpICogc2NhbGUsIDApOwogICAgY3R4LmxpbmVUbyhjeCArIGkgKiBzY2FsZSwgaCk7CiAgICBjdHgu'+
+'c3Ryb2tlKCk7CiAgICBjdHguYmVnaW5QYXRoKCk7CiAgICBjdHgubW92ZVRvKDAsIGN5ICsgaSAqIHNj'+
+'YWxlKTsKICAgIGN0eC5saW5lVG8odywgY3kgKyBpICogc2NhbGUpOwogICAgY3R4LnN0cm9rZSgpOwog'+
+'IH0KCiAgCiAgY3R4LnN0cm9rZVN0eWxlID0gJ3JnYmEoMjU1LDI1NSwyNTUsMC4zKSc7CiAgY3R4Lmxp'+
+'bmVXaWR0aCA9IDI7CiAgY3R4LmJlZ2luUGF0aCgpOyBjdHgubW92ZVRvKDAsIGN5KTsgY3R4LmxpbmVU'+
+'byh3LCBjeSk7IGN0eC5zdHJva2UoKTsKICBjdHguYmVnaW5QYXRoKCk7IGN0eC5tb3ZlVG8oY3gsIDAp'+
+'OyBjdHgubGluZVRvKGN4LCBoKTsgY3R4LnN0cm9rZSgpOwoKICAKICBjdHguZmlsbFN0eWxlID0gJ3Jn'+
+'YmEoMjU1LDI1NSwyNTUsMC40KSc7CiAgY3R4LmZvbnQgPSAnMTJweCBKZXRCcmFpbnMgTW9ubyc7CiAg'+
+'Y3R4LnRleHRBbGlnbiA9ICdjZW50ZXInOwogIGZvciAobGV0IGkgPSAtNTsgaSA8PSA1OyBpKyspIHsK'+
+'ICAgIGlmIChpID09PSAwKSBjb250aW51ZTsKICAgIGN0eC5maWxsVGV4dChpLnRvU3RyaW5nKCksIGN4'+
+'ICsgaSAqIHNjYWxlLCBjeSArIDE2KTsKICAgIGN0eC5maWxsVGV4dCgoLWkpLnRvU3RyaW5nKCksIGN4'+
+'IC0gMTIsIGN5ICsgaSAqIHNjYWxlICsgNCk7CiAgfQogIGN0eC5maWxsU3R5bGUgPSAncmdiYSgyNTUs'+
+'MjU1LDI1NSwwLjUpJzsKICBjdHguZm9udCA9ICcxNHB4IEpldEJyYWlucyBNb25vJzsKICBjdHguZmls'+
+'bFRleHQoJ3gnLCB3IC0gMTUsIGN5IC0gOCk7CiAgY3R4LmZpbGxUZXh0KCd5JywgY3ggKyAxMiwgMTgp'+
+'OwoKICAKICBjdHguc3Ryb2tlU3R5bGUgPSBjb2xvcnMuc2Vjb25kYXJ5OwogIGN0eC5saW5lV2lkdGgg'+
+'PSAzOwogIGN0eC5iZWdpblBhdGgoKTsKICBjdHguYXJjKGN4ICsgYSAqIHNjYWxlLCBjeSAtIGIgKiBz'+
+'Y2FsZSwgciAqIHNjYWxlLCAwLCBNYXRoLlBJICogMik7CiAgY3R4LnN0cm9rZSgpOwoKICAKICBjb25z'+
+'dCBjZW50ZXJYID0gY3ggKyBhICogc2NhbGU7CiAgY29uc3QgY2VudGVyWSA9IGN5IC0gYiAqIHNjYWxl'+
+'OwogIGN0eC5maWxsU3R5bGUgPSBjb2xvcnMucHJpbWFyeTsKICBjdHguYmVnaW5QYXRoKCk7CiAgY3R4'+
+'LmFyYyhjZW50ZXJYLCBjZW50ZXJZLCA2LCAwLCBNYXRoLlBJICogMik7CiAgY3R4LmZpbGwoKTsKCiAg'+
+'CiAgY3R4LnN0cm9rZVN0eWxlID0gY29sb3JzLnByaW1hcnk7CiAgY3R4LmxpbmVXaWR0aCA9IDEuNTsK'+
+'ICBjdHguc2V0TGluZURhc2goWzQsIDRdKTsKICBjdHguYmVnaW5QYXRoKCk7CiAgY3R4Lm1vdmVUbyhj'+
+'ZW50ZXJYLCBjZW50ZXJZKTsKICBjdHgubGluZVRvKGNlbnRlclggKyByICogc2NhbGUsIGNlbnRlclkp'+
+'OwogIGN0eC5zdHJva2UoKTsKICBjdHguc2V0TGluZURhc2goW10pOwoKICAKICBjdHguZmlsbFN0eWxl'+
+'ID0gY29sb3JzLnByaW1hcnk7CiAgY3R4LmZvbnQgPSAnMTNweCBKZXRCcmFpbnMgTW9ubyc7CiAgY3R4'+
+'LnRleHRBbGlnbiA9ICdjZW50ZXInOwogIGN0eC5maWxsVGV4dCgncj0nICsgciwgY2VudGVyWCArIHIg'+
+'KiBzY2FsZSAvIDIsIGNlbnRlclkgLSAxMCk7CgogIAogIGN0eC5maWxsVGV4dChgQygke2F9LCAke2J9'+
+'KWAsIGNlbnRlclgsIGNlbnRlclkgKyAyMik7CgogIAogIGNvbnN0IHB4ID0gcGFyc2VGbG9hdChkb2N1'+
+'bWVudC5nZXRFbGVtZW50QnlJZCgnY2hlY2tYJykudmFsdWUpOwogIGNvbnN0IHB5ID0gcGFyc2VGbG9h'+
+'dChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnY2hlY2tZJykudmFsdWUpOwogIGlmICghaXNOYU4ocHgp'+
+'ICYmICFpc05hTihweSkpIHsKICAgIGNvbnN0IHBweCA9IGN4ICsgcHggKiBzY2FsZTsKICAgIGNvbnN0'+
+'IHBweSA9IGN5IC0gcHkgKiBzY2FsZTsKICAgIGN0eC5maWxsU3R5bGUgPSAnIzEwYjk4MSc7CiAgICBj'+
+'dHguYmVnaW5QYXRoKCk7CiAgICBjdHguYXJjKHBweCwgcHB5LCA0LCAwLCBNYXRoLlBJICogMik7CiAg'+
+'ICBjdHguZmlsbCgpOwogICAgY3R4LmZvbnQgPSAnMTFweCBKZXRCcmFpbnMgTW9ubyc7CiAgICBjdHgu'+
+'ZmlsbFRleHQoYFAoJHtweH0sJHtweX0pYCwgcHB4LCBwcHkgLSAxMCk7CiAgfQp9CgoKY2FudmFzLmFk'+
+'ZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKGUpID0+IHsKICBjb25zdCByZWN0ID0gY2FudmFzLmdldEJv'+
+'dW5kaW5nQ2xpZW50UmVjdCgpOwogIGNvbnN0IHNjYWxlWCA9IGNhbnZhcy53aWR0aCAvIHJlY3Qud2lk'+
+'dGg7CiAgY29uc3Qgc2NhbGVZID0gY2FudmFzLmhlaWdodCAvIHJlY3QuaGVpZ2h0OwogIGNvbnN0IG14'+
+'ID0gKGUuY2xpZW50WCAtIHJlY3QubGVmdCkgKiBzY2FsZVg7CiAgY29uc3QgbXkgPSAoZS5jbGllbnRZ'+
+'IC0gcmVjdC50b3ApICogc2NhbGVZOwoKICBjb25zdCBzY2FsZSA9IDQwOwogIGNvbnN0IGEgPSBNYXRo'+
+'LnJvdW5kKCgobXggLSBjYW52YXMud2lkdGggLyAyKSAvIHNjYWxlKSAqIDIpIC8gMjsKICBjb25zdCBi'+
+'ID0gTWF0aC5yb3VuZCgoLShteSAtIGNhbnZhcy5oZWlnaHQgLyAyKSAvIHNjYWxlKSAqIDIpIC8gMjsK'+
+'CiAgY29uc3QgY2xhbXBBID0gTWF0aC5tYXgoLTUsIE1hdGgubWluKDUsIGEpKTsKICBjb25zdCBjbGFt'+
+'cEIgPSBNYXRoLm1heCgtNSwgTWF0aC5taW4oNSwgYikpOwoKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJ'+
+'ZCgnc2xpZGVyQScpLnZhbHVlID0gY2xhbXBBOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzbGlk'+
+'ZXJCJykudmFsdWUgPSBjbGFtcEI7CiAgdXBkYXRlQ2lyY2xlKCk7Cn0pOwoKZnVuY3Rpb24gY2hlY2tQ'+
+'b2ludCgpIHsKICBjb25zdCBhID0gcGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc2xp'+
+'ZGVyQScpLnZhbHVlKTsKICBjb25zdCBiID0gcGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50QnlJ'+
+'ZCgnc2xpZGVyQicpLnZhbHVlKTsKICBjb25zdCByID0gcGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZCgnc2xpZGVyUicpLnZhbHVlKTsKICBjb25zdCBweCA9IHBhcnNlRmxvYXQoZG9jdW1lbnQu'+
+'Z2V0RWxlbWVudEJ5SWQoJ2NoZWNrWCcpLnZhbHVlKTsKICBjb25zdCBweSA9IHBhcnNlRmxvYXQoZG9j'+
+'dW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2NoZWNrWScpLnZhbHVlKTsKCiAgaWYgKGlzTmFOKHB4KSB8fCBp'+
+'c05hTihweSkpIHsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwb2ludFJlc3VsdCcpLmlubmVy'+
+'SFRNTCA9ICc8c3BhbiBzdHlsZT0iY29sb3I6I2VmNDQ0NCI+SW5zZXJpc2NpIHZhbG9yaSB2YWxpZGku'+
+'PC9zcGFuPic7CiAgICByZXR1cm47CiAgfQoKICBjb25zdCBkaXN0MiA9IChweCAtIGEpICoqIDIgKyAo'+
+'cHkgLSBiKSAqKiAyOwogIGNvbnN0IHIyID0gciAqKiAyOwogIGNvbnN0IGRpZmYgPSBNYXRoLmFicyhk'+
+'aXN0MiAtIHIyKTsKCiAgbGV0IHJlc3VsdDsKICBpZiAoZGlmZiA8IDAuMDEpIHsKICAgIHJlc3VsdCA9'+
+'IGA8c3BhbiBzdHlsZT0iY29sb3I6IzEwYjk4MSI+4pyFIFPDjCEgKCR7cHh94oiSJHthfSnCsiArICgk'+
+'e3B5feKIkiR7Yn0pwrIgPSAke2Rpc3QyLnRvRml4ZWQoMil9ID0gJHtyMi50b0ZpeGVkKDIpfSA9IHLC'+
+'sjwvc3Bhbj5gOwogIH0gZWxzZSBpZiAoZGlzdDIgPCByMikgewogICAgcmVzdWx0ID0gYDxzcGFuIHN0'+
+'eWxlPSJjb2xvcjojZWY0NDQ0Ij7inYwgTk8sIGlsIHB1bnRvIMOoIElOVEVSTk8uIERpc3RhbnphwrIg'+
+'PSAke2Rpc3QyLnRvRml4ZWQoMil9IDwgJHtyMi50b0ZpeGVkKDIpfSA9IHLCsjwvc3Bhbj5gOwogIH0g'+
+'ZWxzZSB7CiAgICByZXN1bHQgPSBgPHNwYW4gc3R5bGU9ImNvbG9yOiNlZjQ0NDQiPuKdjCBOTywgaWwg'+
+'cHVudG8gw6ggRVNURVJOTy4gRGlzdGFuemHCsiA9ICR7ZGlzdDIudG9GaXhlZCgyKX0gPiAke3IyLnRv'+
+'Rml4ZWQoMil9ID0gcsKyPC9zcGFuPmA7CiAgfQoKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncG9p'+
+'bnRSZXN1bHQnKS5pbm5lckhUTUwgPSByZXN1bHQ7CiAgdXBkYXRlQ2lyY2xlKCk7Cn0KCgpmdW5jdGlv'+
+'biBzd2l0Y2hJbnRlcmFjdGl2ZVRhYih0YWIpIHsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndGFi'+
+'LWdyYXBoJykuY2xhc3NMaXN0LmFkZCgnaGlkZGVuJyk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQo'+
+'J3RhYi1xdWl6LW1pbmknKS5jbGFzc0xpc3QuYWRkKCdoaWRkZW4nKTsKICBkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZCgndGFiLScgKyB0YWIpLmNsYXNzTGlzdC5yZW1vdmUoJ2hpZGRlbicpOwoKICBkb2N1bWVu'+
+'dC5xdWVyeVNlbGVjdG9yQWxsKCcudGFiLWJ0bicpLmZvckVhY2goYiA9PiBiLmNsYXNzTGlzdC5yZW1v'+
+'dmUoJ2FjdGl2ZScpKTsKICBldmVudC50YXJnZXQuY2xhc3NMaXN0LmFkZCgnYWN0aXZlJyk7CgogIGlm'+
+'ICh0YWIgPT09ICdxdWl6LW1pbmknKSBpbml0TWluaVF1aXooKTsKfQoKCmNvbnN0IG1pbmlRdWl6RGF0'+
+'YSA9IFsKICB7CiAgICBxOiAiUXVhbCDDqCBpbCBjZW50cm8gZGVsbGEgY2lyY29uZmVyZW56YSAoeOKI'+
+'kjMpwrIgKyAoeSsxKcKyID0gMTY/IiwKICAgIG9wdHM6IFsiQygzLCAxKSIsICJDKDMsIOKIkjEpIiwg'+
+'IkMo4oiSMywgMSkiLCAiQyjiiJIzLCDiiJIxKSJdLAogICAgY29ycmVjdDogMQogIH0sCiAgewogICAg'+
+'cTogIlF1YWwgw6ggaWwgcmFnZ2lvIGRlbGxhIGNpcmNvbmZlcmVuemEgeMKyICsgecKyID0gNDk/IiwK'+
+'ICAgIG9wdHM6IFsiciA9IDQ5IiwgInIgPSAtNyIsICJyID0gMjQuNSIsICJyID0gPG1hdGg+PG1zcXJ0'+
+'Pjxtbj40OTwvbW4+PC9tc3FydD48L21hdGg+ID0gNyJdLAogICAgY29ycmVjdDogMwogIH0sCiAgewog'+
+'ICAgcTogIklsIHB1bnRvICgwLCA1KSBhcHBhcnRpZW5lIGFsbGEgY2lyY29uZmVyZW56YSB4wrIgKyB5'+
+'wrIgPSAyNT8iLAogICAgb3B0czogWyJTw6wiLCAiTm8iLCAiU29sbyBzZSByID4gNSIsICJOb24gc2kg'+
+'cHXDsiBkZXRlcm1pbmFyZSJdLAogICAgY29ycmVjdDogMAogIH0KXTsKCmZ1bmN0aW9uIGluaXRNaW5p'+
+'UXVpeigpIHsKICBjb25zdCBjb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbWluaVF1'+
+'aXpDb250YWluZXInKTsKICBpZiAoY29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA+IDApIHJldHVybjsg'+
+'CgogIG1pbmlRdWl6RGF0YS5mb3JFYWNoKChxLCBxaSkgPT4gewogICAgY29uc3QgZGl2ID0gZG9jdW1l'+
+'bnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICBkaXYuY2xhc3NOYW1lID0gJ2Zvcm11bGEtYm94IHRl'+
+'eHQtbGVmdCc7CiAgICBkaXYuaW5uZXJIVE1MID0gYAogICAgICA8cCBjbGFzcz0iZm9udC1ib2xkIG1i'+
+'LTQiPiR7cWkgKyAxfS4gJHtxLnF9PC9wPgogICAgICA8ZGl2IGNsYXNzPSJzcGFjZS15LTIiIGlkPSJt'+
+'aW5pLXEtJHtxaX0iPgogICAgICAgICR7cS5vcHRzLm1hcCgobywgb2kpID0+IGAKICAgICAgICAgIDxk'+
+'aXYgY2xhc3M9InF1aXotb3B0aW9uIiBkYXRhLXFpPSIke3FpfSIgZGF0YS1vaT0iJHtvaX0iIG9uY2xp'+
+'Y2s9ImFuc3dlck1pbmlRdWl6KCR7cWl9LCAke29pfSwgdGhpcykiPgogICAgICAgICAgICA8c3BhbiBj'+
+'bGFzcz0ibW9ubyBtci0yIj4ke1N0cmluZy5mcm9tQ2hhckNvZGUoNjUgKyBvaSl9KTwvc3Bhbj4gJHtv'+
+'fQogICAgICAgICAgPC9kaXY+CiAgICAgICAgYCkuam9pbignJyl9CiAgICAgIDwvZGl2PgogICAgICA8'+
+'cCBpZD0ibWluaS1mYi0ke3FpfSIgY2xhc3M9Im10LTMgdGV4dC1zbSBmb250LXNlbWlib2xkIj48L3A+'+
+'CiAgICBgOwogICAgY29udGFpbmVyLmFwcGVuZENoaWxkKGRpdik7CiAgfSk7Cn0KCmZ1bmN0aW9uIGFu'+
+'c3dlck1pbmlRdWl6KHFpLCBvaSwgZWwpIHsKICBjb25zdCBjb250YWluZXIgPSBkb2N1bWVudC5nZXRF'+
+'bGVtZW50QnlJZChgbWluaS1xLSR7cWl9YCk7CiAgY29uc3Qgb3B0aW9ucyA9IGNvbnRhaW5lci5xdWVy'+
+'eVNlbGVjdG9yQWxsKCcucXVpei1vcHRpb24nKTsKICBvcHRpb25zLmZvckVhY2gobyA9PiB7CiAgICBv'+
+'LmNsYXNzTGlzdC5hZGQoJ2Rpc2FibGVkJyk7CiAgICBjb25zdCBvSWR4ID0gcGFyc2VJbnQoby5kYXRh'+
+'c2V0Lm9pKTsKICAgIGlmIChvSWR4ID09PSBtaW5pUXVpekRhdGFbcWldLmNvcnJlY3QpIG8uY2xhc3NM'+
+'aXN0LmFkZCgnY29ycmVjdCcpOwogICAgZWxzZSBpZiAob0lkeCA9PT0gb2kpIG8uY2xhc3NMaXN0LmFk'+
+'ZCgnd3JvbmcnKTsKICB9KTsKCiAgY29uc3QgZmIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgbWlu'+
+'aS1mYi0ke3FpfWApOwogIGlmIChvaSA9PT0gbWluaVF1aXpEYXRhW3FpXS5jb3JyZWN0KSB7CiAgICBm'+
+'Yi5pbm5lckhUTUwgPSAnPHNwYW4gc3R5bGU9ImNvbG9yOiMxMGI5ODEiPuKchSBDb3JyZXR0byE8L3Nw'+
+'YW4+JzsKICB9IGVsc2UgewogICAgZmIuaW5uZXJIVE1MID0gYDxzcGFuIHN0eWxlPSJjb2xvcjojZWY0'+
+'NDQ0Ij7inYwgTGEgcmlzcG9zdGEgY29ycmV0dGEgw6ggJHtTdHJpbmcuZnJvbUNoYXJDb2RlKDY1ICsg'+
+'bWluaVF1aXpEYXRhW3FpXS5jb3JyZWN0KX0uPC9zcGFuPmA7CiAgfQp9CgoKY29uc3QgcHJvYmxlbVN0'+
+'ZXBzID0gewogIDE6IFsKICAgIHsgdGl0bGU6ICdQYXNzbyAyOiBTb3N0aXR1aWFtbyBpIHZhbG9yaScs'+
+'IGNvbnRlbnQ6ICcoeCDiiJIgMinCsiArICh5IOKIkiAo4oiSMykpwrIgPSA1wrInIH0sCiAgICB7IHRp'+
+'dGxlOiAnUGFzc28gMzogU2VtcGxpZmljaGlhbW8nLCBjb250ZW50OiAnKHgg4oiSIDIpwrIgKyAoeSAr'+
+'IDMpwrIgPSAyNScgfSwKICAgIHsgdGl0bGU6ICfinIUgUmlzdWx0YXRvIGZpbmFsZScsIGNvbnRlbnQ6'+
+'ICdMXCdlcXVhemlvbmUgw6g6ICh4IOKIkiAyKcKyICsgKHkgKyAzKcKyID0gMjUnIH0KICBdLAogIDI6'+
+'IFsKICAgIHsgdGl0bGU6ICdQYXNzbyAyOiBDYWxjb2xpYW1vIGlsIGNlbnRybycsIGNvbnRlbnQ6ICdh'+
+'ID0g4oiSzrEvMiA9IOKIkijiiJI2KS8yID0gM1xuYiA9IOKIks6yLzIgPSDiiJI0LzIgPSDiiJIyXG7i'+
+'hpIgQygzLCDiiJIyKScgfSwKICAgIHsgdGl0bGU6ICdQYXNzbyAzOiBDYWxjb2xpYW1vIGlsIHJhZ2dp'+
+'bycsIGNvbnRlbnQ6ICdyID0gPG1hdGg+PG1zcXJ0Pjxtbj7OscKyLzQgKyDOssKyLzQg4oiSIM6zPC9t'+
+'bj48L21zcXJ0PjwvbWF0aD4gPSA8bWF0aD48bXNxcnQ+PG1uPjkgKyA0ICsgMTI8L21uPjwvbXNxcnQ+'+
+'PC9tYXRoPiA9IDxtYXRoPjxtc3FydD48bW4+MjU8L21uPjwvbXNxcnQ+PC9tYXRoPiA9IDUnIH0sCiAg'+
+'ICB7IHRpdGxlOiAn4pyFIFJpc3VsdGF0byBmaW5hbGUnLCBjb250ZW50OiAnQ2VudHJvIEMoMywg4oiS'+
+'MiksIFJhZ2dpbyByID0gNScgfQogIF0sCiAgMzogWwogICAgeyB0aXRsZTogJ1Bhc3NvIDI6IENvbmZy'+
+'b250aWFtbyBjb24gaWwgc2Vjb25kbyBtZW1icm8nLCBjb250ZW50OiAnNSA9IDUg4pyTXG5JbCByaXN1'+
+'bHRhdG8gw6ggdWd1YWxlIScgfSwKICAgIHsgdGl0bGU6ICfinIUgUmlzdWx0YXRvIGZpbmFsZScsIGNv'+
+'bnRlbnQ6ICdTw4wsIFAoMSwgMikgYXBwYXJ0aWVuZSBhbGxhIGNpcmNvbmZlcmVuemEgcGVyY2jDqSBz'+
+'b2RkaXNmYSBsXCdlcXVhemlvbmUuJyB9CiAgXQp9Owpjb25zdCBwcm9ibGVtQ3VycmVudFN0ZXAgPSB7'+
+'IDE6IDAsIDI6IDAsIDM6IDAgfTsKCmZ1bmN0aW9uIHJldmVhbFByb2JsZW0obnVtKSB7CiAgY29uc3Qg'+
+'aWR4ID0gcHJvYmxlbUN1cnJlbnRTdGVwW251bV07CiAgY29uc3Qgc3RlcHMgPSBwcm9ibGVtU3RlcHNb'+
+'bnVtXTsKICBpZiAoaWR4ID49IHN0ZXBzLmxlbmd0aCkgcmV0dXJuOwoKICBjb25zdCBjb250YWluZXIg'+
+'PSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgcHJvYiR7bnVtfVN0ZXBzYCk7CiAgY29uc3Qgc3RlcCA9'+
+'IHN0ZXBzW2lkeF07CiAgY29uc3QgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAg'+
+'ZGl2LmNsYXNzTmFtZSA9ICdwLTMgcm91bmRlZC1sZyc7CiAgZGl2LnN0eWxlLmJhY2tncm91bmQgPSAn'+
+'cmdiYSg5OSwxMDIsMjQxLDAuMSknOwogIGRpdi5zdHlsZS5hbmltYXRpb24gPSAnZmFkZUluIDAuNHMg'+
+'ZWFzZSc7CiAgZGl2LmlubmVySFRNTCA9IGAKICAgIDxwIGNsYXNzPSJmb250LXNlbWlib2xkIG1iLTEi'+
+'IHN0eWxlPSJjb2xvcjp2YXIoLS1zZWNvbmRhcnktY29sb3IpIj4ke3N0ZXAudGl0bGV9PC9wPgogICAg'+
+'PHAgY2xhc3M9Im1vbm8gd2hpdGVzcGFjZS1wcmUtbGluZSI+JHtzdGVwLmNvbnRlbnR9PC9wPgogIGA7'+
+'CiAgY29udGFpbmVyLmFwcGVuZENoaWxkKGRpdik7CgogIHByb2JsZW1DdXJyZW50U3RlcFtudW1dKys7'+
+'CiAgaWYgKHByb2JsZW1DdXJyZW50U3RlcFtudW1dID49IHN0ZXBzLmxlbmd0aCkgewogICAgY29uc3Qg'+
+'YnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYHByb2Ike251bX1CdG5gKTsKICAgIGJ0bi50ZXh0'+
+'Q29udGVudCA9ICfinIUgUHJvYmxlbWEgY29tcGxldGF0byc7CiAgICBidG4uZGlzYWJsZWQgPSB0cnVl'+
+'OwogICAgYnRuLnN0eWxlLm9wYWNpdHkgPSAnMC41JzsKICB9Cn0KCgpjb25zdCBmaW5hbFF1aXpEYXRh'+
+'ID0gWwogIHsKICAgIHR5cGU6ICdtYycsCiAgICBxOiAiMS4gTCdlcXVhemlvbmUgKHgg4oiSIDEpwrIg'+
+'KyAoeSArIDIpwrIgPSA5IHJhcHByZXNlbnRhIHVuYSBjaXJjb25mZXJlbnphIGNvbjoiLAogICAgb3B0'+
+'czogWyJDZW50cm8gKDEsIOKIkjIpLCByYWdnaW8gMyIsICJDZW50cm8gKOKIkjEsIDIpLCByYWdnaW8g'+
+'OSIsICJDZW50cm8gKDEsIOKIkjIpLCByYWdnaW8gOSIsICJDZW50cm8gKOKIkjEsIDIpLCByYWdnaW8g'+
+'MyJdLAogICAgY29ycmVjdDogMAogIH0sCiAgewogICAgdHlwZTogJ21jJywKICAgIHE6ICIyLiBMJ2Vx'+
+'dWF6aW9uZSB4wrIgKyB5wrIgPSAwIHJhcHByZXNlbnRhOiIsCiAgICBvcHRzOiBbIlVuYSBjaXJjb25m'+
+'ZXJlbnphIGRpIHJhZ2dpbyAwICh1biBwdW50bykiLCAiTmVzc3VuYSBjdXJ2YSIsICJVbmEgcmV0dGEi'+
+'LCAiVW4gY2VyY2hpbyB1bml0YXJpbyJdLAogICAgY29ycmVjdDogMAogIH0sCiAgewogICAgdHlwZTog'+
+'J21jJywKICAgIHE6ICIzLiBEYXRhIHjCsiArIHnCsiArIDJ4IOKIkiA0eSDiiJIgNCA9IDAsIHF1YWwg'+
+'w6ggaWwgY2VudHJvPyIsCiAgICBvcHRzOiBbIkMoMiwg4oiSNCkiLCAiQygxLCDiiJIyKSIsICJDKOKI'+
+'kjEsIDIpIiwgIkMo4oiSMiwgNCkiXSwKICAgIGNvcnJlY3Q6IDIKICB9LAogIHsKICAgIHR5cGU6ICdt'+
+'YycsCiAgICBxOiAiNC4gSWwgcmFnZ2lvIGRlbGxhIGNpcmNvbmZlcmVuemEgeMKyICsgecKyIOKIkiAx'+
+'MHggKyA2eSArIDE4ID0gMCDDqDoiLAogICAgb3B0czogWyJyID0gNCIsICJyID0gPG1hdGg+PG1zcXJ0'+
+'Pjxtbj4xODwvbW4+PC9tc3FydD48L21hdGg+IiwgInIgPSAxNiIsICJyID0gMjxtYXRoPjxtc3FydD48'+
+'bW4+NzwvbW4+PC9tc3FydD48L21hdGg+Il0sCiAgICBjb3JyZWN0OiAwCiAgfSwKICB7CiAgICB0eXBl'+
+'OiAnbWMnLAogICAgcTogIjUuIElsIHB1bnRvIFAoMywgNCkgYXBwYXJ0aWVuZSBhbGxhIGNpcmNvbmZl'+
+'cmVuemEgeMKyICsgecKyID0gMjU/IiwKICAgIG9wdHM6IFsiU8OsLCBwZXJjaMOpIDkgKyAxNiA9IDI1'+
+'IiwgIk5vLCBwZXJjaMOpIDkgKyAxNiDiiaAgMjUiLCAiU29sbyBzZSByID0gNSIsICJOb24gc2kgcHXD'+
+'siBkZXRlcm1pbmFyZSJdLAogICAgY29ycmVjdDogMAogIH0sCiAgewogICAgdHlwZTogJ2NhbGMnLAog'+
+'ICAgcTogIjYuIEVTRVJDSVpJTyBESSBDQUxDT0xPOiBTY3JpdmkgaWwgcmFnZ2lvIGRlbGxhIGNpcmNv'+
+'bmZlcmVuemEgY29uIGVxdWF6aW9uZSAoeCDiiJIgNCnCsiArICh5ICsgMSnCsiA9IDM2LiIsCiAgICBh'+
+'bnN3ZXI6ICc2JywKICAgIGhpbnQ6ICdyID0gPG1hdGg+PG1zcXJ0Pjxtbj4zNjwvbW4+PC9tc3FydD48'+
+'L21hdGg+ID0gPycKICB9LAogIHsKICAgIHR5cGU6ICdjYWxjJywKICAgIHE6ICI3LiBFU0VSQ0laSU8g'+
+'REkgQ0FMQ09MTzogRGF0YSBsYSBjaXJjb25mZXJlbnphIHjCsiArIHnCsiDiiJIgOHggKyAyeSArIDgg'+
+'PSAwLCBjYWxjb2xhIGlsIHJhZ2dpby4iLAogICAgYW5zd2VyOiAnMycsCiAgICBoaW50OiAnQ2VudHJv'+
+'OiBDKDQsIOKIkjEpLCBwb2kgciA9IDxtYXRoPjxtc3FydD48bW4+MTYgKyAxIOKIkiA4PC9tbj48L21z'+
+'cXJ0PjwvbWF0aD4gPSA8bWF0aD48bXNxcnQ+PG1uPjk8L21uPjwvbXNxcnQ+PC9tYXRoPiA9ID8nCiAg'+
+'fQpdOwoKY29uc3QgZmluYWxRdWl6QW5zd2VycyA9IHt9OwoKZnVuY3Rpb24gcmVuZGVyRmluYWxRdWl6'+
+'KCkgewogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdmaW5hbFF1aXon'+
+'KTsKICBmaW5hbFF1aXpEYXRhLmZvckVhY2goKHEsIHFpKSA9PiB7CiAgICBjb25zdCBkaXYgPSBkb2N1'+
+'bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgIGRpdi5jbGFzc05hbWUgPSAnZm9ybXVsYS1ib3gg'+
+'dGV4dC1sZWZ0JzsKICAgIGRpdi5pZCA9IGBmcS0ke3FpfWA7CgogICAgaWYgKHEudHlwZSA9PT0gJ21j'+
+'JykgewogICAgICBkaXYuaW5uZXJIVE1MID0gYAogICAgICAgIDxwIGNsYXNzPSJmb250LWJvbGQgbWIt'+
+'NCI+JHtxLnF9PC9wPgogICAgICAgIDxkaXYgY2xhc3M9InNwYWNlLXktMiIgaWQ9ImZxLW9wdHMtJHtx'+
+'aX0iPgogICAgICAgICAgJHtxLm9wdHMubWFwKChvLCBvaSkgPT4gYAogICAgICAgICAgICA8ZGl2IGNs'+
+'YXNzPSJxdWl6LW9wdGlvbiIgZGF0YS1xaT0iJHtxaX0iIGRhdGEtb2k9IiR7b2l9IiBvbmNsaWNrPSJz'+
+'ZWxlY3RGaW5hbEFuc3dlcigke3FpfSwgJHtvaX0sIHRoaXMpIj4KICAgICAgICAgICAgICA8c3BhbiBj'+
+'bGFzcz0ibW9ubyBtci0yIj4ke1N0cmluZy5mcm9tQ2hhckNvZGUoNjUgKyBvaSl9KTwvc3Bhbj4gJHtv'+
+'fQogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIGApLmpvaW4oJycpfQogICAgICAgIDwvZGl2Pgog'+
+'ICAgICAgIDxwIGlkPSJmcS1mYi0ke3FpfSIgY2xhc3M9Im10LTMgdGV4dC1zbSBmb250LXNlbWlib2xk'+
+'Ij48L3A+CiAgICAgIGA7CiAgICB9IGVsc2UgewogICAgICBkaXYuaW5uZXJIVE1MID0gYAogICAgICAg'+
+'IDxwIGNsYXNzPSJmb250LWJvbGQgbWItMiI+JHtxLnF9PC9wPgogICAgICAgIDxwIGNsYXNzPSJ0ZXh0'+
+'LXNtIG9wYWNpdHktNTAgbWItMyI+8J+SoSBTdWdnZXJpbWVudG86ICR7cS5oaW50fTwvcD4KICAgICAg'+
+'ICA8ZGl2IGNsYXNzPSJmbGV4IGdhcC0zIGl0ZW1zLWVuZCI+CiAgICAgICAgICA8ZGl2PgogICAgICAg'+
+'ICAgICA8bGFiZWwgZm9yPSJmcS1pbnB1dC0ke3FpfSIgY2xhc3M9InRleHQtc20gb3BhY2l0eS02MCI+'+
+'UmlzcG9zdGE6PC9sYWJlbD4KICAgICAgICAgICAgPGlucHV0IHR5cGU9Im51bWJlciIgaWQ9ImZxLWlu'+
+'cHV0LSR7cWl9IiBjbGFzcz0ibW9ubyB3LTI0IHB4LTMgcHktMiByb3VuZGVkLWxnIGJvcmRlci1ub25l'+
+'IHRleHQtY2VudGVyIiBzdHlsZT0iYmFja2dyb3VuZDpyZ2JhKDI1NSwyNTUsMjU1LDAuMSk7IGNvbG9y'+
+'OnZhcigtLXRleHQtY29sb3IpOyIgb25pbnB1dD0iZmluYWxRdWl6QW5zd2Vyc1ske3FpfV0gPSB0aGlz'+
+'LnZhbHVlIj4KICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgICAgIDxwIGlkPSJmcS1m'+
+'Yi0ke3FpfSIgY2xhc3M9Im10LTMgdGV4dC1zbSBmb250LXNlbWlib2xkIj48L3A+CiAgICAgIGA7CiAg'+
+'ICB9CiAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQoZGl2KTsKICB9KTsKfQoKZnVuY3Rpb24gc2VsZWN0'+
+'RmluYWxBbnN3ZXIocWksIG9pLCBlbCkgewogIAogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50Lmdl'+
+'dEVsZW1lbnRCeUlkKGBmcS1vcHRzLSR7cWl9YCk7CiAgY29udGFpbmVyLnF1ZXJ5U2VsZWN0b3JBbGwo'+
+'Jy5xdWl6LW9wdGlvbicpLmZvckVhY2gobyA9PiB7CiAgICBvLnN0eWxlLmJvcmRlckNvbG9yID0gJ3Jn'+
+'YmEoMjU1LDI1NSwyNTUsMC4xKSc7CiAgICBvLnN0eWxlLmJhY2tncm91bmQgPSAndmFyKC0tc3VyZmFj'+
+'ZS1jb2xvciknOwogIH0pOwogIGVsLnN0eWxlLmJvcmRlckNvbG9yID0gJ3ZhcigtLXNlY29uZGFyeS1j'+
+'b2xvciknOwogIGVsLnN0eWxlLmJhY2tncm91bmQgPSAncmdiYSg5OSwxMDIsMjQxLDAuMTUpJzsKICBm'+
+'aW5hbFF1aXpBbnN3ZXJzW3FpXSA9IG9pOwp9CgpmdW5jdGlvbiBzdWJtaXRGaW5hbFF1aXooKSB7CiAg'+
+'bGV0IHNjb3JlID0gMDsKICBsZXQgdG90YWwgPSBmaW5hbFF1aXpEYXRhLmxlbmd0aDsKCiAgZmluYWxR'+
+'dWl6RGF0YS5mb3JFYWNoKChxLCBxaSkgPT4gewogICAgY29uc3QgZmIgPSBkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZChgZnEtZmItJHtxaX1gKTsKCiAgICBpZiAocS50eXBlID09PSAnbWMnKSB7CiAgICAgIGNv'+
+'bnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBmcS1vcHRzLSR7cWl9YCk7CiAg'+
+'ICAgIGNvbnN0IG9wdGlvbnMgPSBjb250YWluZXIucXVlcnlTZWxlY3RvckFsbCgnLnF1aXotb3B0aW9u'+
+'Jyk7CiAgICAgIGNvbnN0IHVzZXJBbnN3ZXIgPSBmaW5hbFF1aXpBbnN3ZXJzW3FpXTsKCiAgICAgIG9w'+
+'dGlvbnMuZm9yRWFjaChvID0+IHsKICAgICAgICBvLmNsYXNzTGlzdC5hZGQoJ2Rpc2FibGVkJyk7CiAg'+
+'ICAgICAgY29uc3Qgb0lkeCA9IHBhcnNlSW50KG8uZGF0YXNldC5vaSk7CiAgICAgICAgaWYgKG9JZHgg'+
+'PT09IHEuY29ycmVjdCkgby5jbGFzc0xpc3QuYWRkKCdjb3JyZWN0Jyk7CiAgICAgICAgZWxzZSBpZiAo'+
+'b0lkeCA9PT0gdXNlckFuc3dlcikgby5jbGFzc0xpc3QuYWRkKCd3cm9uZycpOwogICAgICB9KTsKCiAg'+
+'ICAgIGlmICh1c2VyQW5zd2VyID09PSBxLmNvcnJlY3QpIHsKICAgICAgICBzY29yZSsrOwogICAgICAg'+
+'IGZiLmlubmVySFRNTCA9ICc8c3BhbiBzdHlsZT0iY29sb3I6IzEwYjk4MSI+4pyFIENvcnJldHRvITwv'+
+'c3Bhbj4nOwogICAgICB9IGVsc2UgaWYgKHVzZXJBbnN3ZXIgIT09IHVuZGVmaW5lZCkgewogICAgICAg'+
+'IGZiLmlubmVySFRNTCA9IGA8c3BhbiBzdHlsZT0iY29sb3I6I2VmNDQ0NCI+4p2MIExhIHJpc3Bvc3Rh'+
+'IGNvcnJldHRhIMOoICR7U3RyaW5nLmZyb21DaGFyQ29kZSg2NSArIHEuY29ycmVjdCl9Ljwvc3Bhbj5g'+
+'OwogICAgICB9IGVsc2UgewogICAgICAgIGZiLmlubmVySFRNTCA9ICc8c3BhbiBzdHlsZT0iY29sb3I6'+
+'I2VmNDQ0NCI+4pqg77iPIE5vbiBoYWkgcmlzcG9zdG8uPC9zcGFuPic7CiAgICAgIH0KICAgIH0gZWxz'+
+'ZSB7CiAgICAgIGNvbnN0IGlucHV0ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGZxLWlucHV0LSR7'+
+'cWl9YCk7CiAgICAgIGNvbnN0IHVzZXJWYWwgPSBpbnB1dCA/IGlucHV0LnZhbHVlLnRyaW0oKSA6ICcn'+
+'OwogICAgICBpbnB1dC5kaXNhYmxlZCA9IHRydWU7CgogICAgICBpZiAodXNlclZhbCA9PT0gcS5hbnN3'+
+'ZXIpIHsKICAgICAgICBzY29yZSsrOwogICAgICAgIGZiLmlubmVySFRNTCA9IGA8c3BhbiBzdHlsZT0i'+
+'Y29sb3I6IzEwYjk4MSI+4pyFIENvcnJldHRvISBMYSByaXNwb3N0YSDDqCAke3EuYW5zd2VyfS48L3Nw'+
+'YW4+YDsKICAgICAgfSBlbHNlIGlmICh1c2VyVmFsKSB7CiAgICAgICAgZmIuaW5uZXJIVE1MID0gYDxz'+
+'cGFuIHN0eWxlPSJjb2xvcjojZWY0NDQ0Ij7inYwgTGEgcmlzcG9zdGEgY29ycmV0dGEgw6ggJHtxLmFu'+
+'c3dlcn0uPC9zcGFuPmA7CiAgICAgIH0gZWxzZSB7CiAgICAgICAgZmIuaW5uZXJIVE1MID0gYDxzcGFu'+
+'IHN0eWxlPSJjb2xvcjojZWY0NDQ0Ij7imqDvuI8gTm9uIGhhaSByaXNwb3N0by4gTGEgcmlzcG9zdGEg'+
+'w6ggJHtxLmFuc3dlcn0uPC9zcGFuPmA7CiAgICAgIH0KICAgIH0KICB9KTsKCiAgY29uc3QgcmVzdWx0'+
+'RGl2ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3F1aXpSZXN1bHQnKTsKICByZXN1bHREaXYuY2xh'+
+'c3NMaXN0LnJlbW92ZSgnaGlkZGVuJyk7CiAgY29uc3QgcGN0ID0gTWF0aC5yb3VuZCgoc2NvcmUgLyB0'+
+'b3RhbCkgKiAxMDApOwoKICBpZiAocGN0ID49IDgwKSB7CiAgICByZXN1bHREaXYuaW5uZXJIVE1MID0g'+
+'YDxzcGFuIHN0eWxlPSJjb2xvcjojMTBiOTgxIj7wn46JIEVjY2VsbGVudGUhICR7c2NvcmV9LyR7dG90'+
+'YWx9ICgke3BjdH0lKTwvc3Bhbj5gOwogIH0gZWxzZSBpZiAocGN0ID49IDYwKSB7CiAgICByZXN1bHRE'+
+'aXYuaW5uZXJIVE1MID0gYDxzcGFuIHN0eWxlPSJjb2xvcjp2YXIoLS1wcmltYXJ5LWNvbG9yKSI+8J+R'+
+'jSBCdW9ubyEgJHtzY29yZX0vJHt0b3RhbH0gKCR7cGN0fSUpLiBSaXBhc3NhIGxlIHNlemlvbmkgcHJl'+
+'Y2VkZW50aS48L3NwYW4+YDsKICB9IGVsc2UgewogICAgcmVzdWx0RGl2LmlubmVySFRNTCA9IGA8c3Bh'+
+'biBzdHlsZT0iY29sb3I6I2VmNDQ0NCI+8J+TmiAke3Njb3JlfS8ke3RvdGFsfSAoJHtwY3R9JSkuIFJp'+
+'bGVnZ2kgbGEgbGV6aW9uZSBlIHJpcHJvdmEhPC9zcGFuPmA7CiAgfQoKICBkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZCgnc3VibWl0UXVpekJ0bicpLnRleHRDb250ZW50ID0gJ/CflIQgUXVpeiBjb21wbGV0YXRv'+
+'JzsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc3VibWl0UXVpekJ0bicpLmRpc2FibGVkID0gdHJ1'+
+'ZTsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc3VibWl0UXVpekJ0bicpLnN0eWxlLm9wYWNpdHkg'+
+'PSAnMC41JzsKfQoKCgpjb25zdCBzdHlsZSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3N0eWxlJyk7'+
+'CnN0eWxlLnRleHRDb250ZW50ID0gJ0BrZXlmcmFtZXMgZmFkZUluIHsgZnJvbSB7IG9wYWNpdHk6MDsg'+
+'dHJhbnNmb3JtOnRyYW5zbGF0ZVkoMTBweCk7IH0gdG8geyBvcGFjaXR5OjE7IHRyYW5zZm9ybTp0cmFu'+
+'c2xhdGVZKDApOyB9IH0nOwpkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKHN0eWxlKTsKCnVwZGF0ZUNp'+
+'cmNsZSgpOwpyZW5kZXJGaW5hbFF1aXooKTsKCgooZnVuY3Rpb24oKSB7CiAgdmFyIGN2cyA9IGRvY3Vt'+
+'ZW50LmdldEVsZW1lbnRCeUlkKCdpbnRlcmFjdGl2ZUNhbnZhcycpOwogIGlmICghY3ZzKSByZXR1cm47'+
+'CgogIGZ1bmN0aW9uIGdldENvb3Jkc0Zyb21FdmVudChlKSB7CiAgICB2YXIgcmVjdCA9IGN2cy5nZXRC'+
+'b3VuZGluZ0NsaWVudFJlY3QoKTsKICAgIHZhciBzeCA9IGN2cy53aWR0aCAvIHJlY3Qud2lkdGg7CiAg'+
+'ICB2YXIgc3kgPSBjdnMuaGVpZ2h0IC8gcmVjdC5oZWlnaHQ7CiAgICB2YXIgc3JjID0gZS50b3VjaGVz'+
+'ID8gZS50b3VjaGVzWzBdIDogZTsKICAgIHJldHVybiB7CiAgICAgIG14OiAoc3JjLmNsaWVudFggLSBy'+
+'ZWN0LmxlZnQpICogc3gsCiAgICAgIG15OiAoc3JjLmNsaWVudFkgLSByZWN0LnRvcCkgKiBzeQogICAg'+
+'fTsKICB9CgogIGZ1bmN0aW9uIGFwcGx5Q29vcmRzKG14LCBteSkgewogICAgdmFyIHNjYWxlID0gNDA7'+
+'CiAgICB2YXIgYSA9IE1hdGgucm91bmQoKChteCAtIGN2cy53aWR0aCAvIDIpIC8gc2NhbGUpICogMikg'+
+'LyAyOwogICAgdmFyIGIgPSBNYXRoLnJvdW5kKCgtKG15IC0gY3ZzLmhlaWdodCAvIDIpIC8gc2NhbGUp'+
+'ICogMikgLyAyOwogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3NsaWRlckEnKS52YWx1ZSA9IE1h'+
+'dGgubWF4KC01LCBNYXRoLm1pbig1LCBhKSk7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc2xp'+
+'ZGVyQicpLnZhbHVlID0gTWF0aC5tYXgoLTUsIE1hdGgubWluKDUsIGIpKTsKICAgIHVwZGF0ZUNpcmNs'+
+'ZSgpOwogIH0KCiAgY3ZzLmFkZEV2ZW50TGlzdGVuZXIoJ3RvdWNoc3RhcnQnLCBmdW5jdGlvbihlKSB7'+
+'CiAgICBlLnByZXZlbnREZWZhdWx0KCk7CiAgICB2YXIgYyA9IGdldENvb3Jkc0Zyb21FdmVudChlKTsK'+
+'ICAgIGFwcGx5Q29vcmRzKGMubXgsIGMubXkpOwogIH0sIHsgcGFzc2l2ZTogZmFsc2UgfSk7CgogIGZ1'+
+'bmN0aW9uIHJlc2l6ZUNhbnZhcygpIHsKICAgIHZhciBwYXJlbnQgPSBjdnMucGFyZW50RWxlbWVudDsK'+
+'ICAgIGlmICghcGFyZW50KSByZXR1cm47CiAgICB2YXIgdyA9IE1hdGgubWluKHBhcmVudC5jbGllbnRX'+
+'aWR0aCwgNTAwKTsKICAgIGlmICh3ID4gNTAgJiYgY3ZzLndpZHRoICE9PSB3KSB7CiAgICAgIGN2cy53'+
+'aWR0aCA9IHc7CiAgICAgIGN2cy5oZWlnaHQgPSB3OwogICAgICB1cGRhdGVDaXJjbGUoKTsKICAgIH0K'+
+'ICB9CiAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ3Jlc2l6ZScsIHJlc2l6ZUNhbnZhcyk7CiAgCiAg'+
+'cmVxdWVzdEFuaW1hdGlvbkZyYW1lKGZ1bmN0aW9uKCkgeyBzZXRUaW1lb3V0KHJlc2l6ZUNhbnZhcywg'+
+'NTApOyB9KTsKfSkoKTsK'].join('');var _0xdbc4=Uint8Array.from(atob(_0x8ba4),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xdbc4));
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd418a877524c43',t:'MTc3MDk4MzMwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>
+var _0xdf19=['dmFyIF8weDg0YzU9MDsgdmFyIF8weDUwNDI9W107IHZhciBfMHg4NGM1PTA7IHZhciBfMHg1MDQyPVtd'+
+'OwooZnVuY3Rpb24oKXtmdW5jdGlvbiBjKCl7dmFyIGI9YS5jb250ZW50RG9jdW1lbnR8fGEuY29udGVu'+
+'dFdpbmRvdy5kb2N1bWVudDtpZihiKXt2YXIgZD1iLmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpO2QuaW5u'+
+'ZXJIVE1MPSJ3aW5kb3cuX19DRiRjdiRwYXJhbXM9e3I6JzljZDQxOGE4Nzc1MjRjNDMnLHQ6J01UYzNN'+
+'RGs0TXpNd01pNHdNREF3TURBPSd9O3ZhciBhPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcp'+
+'O2Eubm9uY2U9Jyc7YS5zcmM9Jy9jZG4tY2dpL2NoYWxsZW5nZS1wbGF0Zm9ybS9zY3JpcHRzL2pzZC9t'+
+'YWluLmpzJztkb2N1bWVudC5nZXRFbGVtZW50c0J5VGFnTmFtZSgnaGVhZCcpWzBdLmFwcGVuZENoaWxk'+
+'KGEpOyI7Yi5nZXRFbGVtZW50c0J5VGFnTmFtZSgnaGVhZCcpWzBdLmFwcGVuZENoaWxkKGQpfX1pZihk'+
+'b2N1bWVudC5ib2R5KXt2YXIgYT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdpZnJhbWUnKTthLmhlaWdo'+
+'dD0xO2Eud2lkdGg9MTthLnN0eWxlLnBvc2l0aW9uPSdhYnNvbHV0ZSc7YS5zdHlsZS50b3A9MDthLnN0'+
+'eWxlLmxlZnQ9MDthLnN0eWxlLmJvcmRlcj0nbm9uZSc7YS5zdHlsZS52aXNpYmlsaXR5PSdoaWRkZW4n'+
+'O2RvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSk7aWYoJ2xvYWRpbmcnIT09ZG9jdW1lbnQucmVhZHlT'+
+'dGF0ZSljKCk7ZWxzZSBpZih3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcilkb2N1bWVudC5hZGRFdmVudExp'+
+'c3RlbmVyKCdET01Db250ZW50TG9hZGVkJyxjKTtlbHNle3ZhciBlPWRvY3VtZW50Lm9ucmVhZHlzdGF0'+
+'ZWNoYW5nZXx8ZnVuY3Rpb24oKXt9O2RvY3VtZW50Lm9ucmVhZHlzdGF0ZWNoYW5nZT1mdW5jdGlvbihi'+
+'KXtlKGIpOydsb2FkaW5nJyE9PWRvY3VtZW50LnJlYWR5U3RhdGUmJihkb2N1bWVudC5vbnJlYWR5c3Rh'+
+'dGVjaGFuZ2U9ZSxjKCkpfX19fSkoKTs='].join('');var _0x80fd=Uint8Array.from(atob(_0xdf19),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0x80fd));
+</script></body>
 </html>
