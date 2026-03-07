@@ -50,27 +50,68 @@
 
     /* ── HEADER ── */
     header {
-      position:sticky; top:0; z-index:100;
-      background:rgba(12,12,20,0.88);
-      backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      padding:0.9rem 1.5rem 0.7rem;
-      display:flex; align-items:center; justify-content:space-between; gap:1rem;
-      flex-wrap:wrap;
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,12,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
-    .brand { display:flex; align-items:center; gap:0.7rem; }
-    .brand-icon {
-      width:36px; height:36px;
-      background:linear-gradient(135deg,var(--pri),var(--sec));
-      border-radius:10px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; flex-shrink:0;
-    }
-    .brand-text { font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; color:#fff; }
-    .brand-sub { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
 
-    .header-meta {
-      display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    .hdr-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem 0.6rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--pri), var(--sec));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fs-btn {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .fs-btn:hover { border-color: var(--pri); color: var(--pri); }
+
+    .hdr-bottom {
+      padding: 0.3rem 1.2rem 0.55rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      flex-wrap: wrap;
     }
     .meta-pill {
       font-family:'DM Mono',monospace; font-size:0.72rem;
@@ -84,6 +125,42 @@
       background:var(--pri-glow); color:var(--pri);
       border:1.5px solid rgba(124,106,247,0.35);
       white-space:nowrap; transition:all 0.3s;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(180,180,190,0.35);
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.72rem;
+      position: relative;
+      z-index: 1;
+    }
+    footer .footer-brand {
+      font-weight: 700;
+      color: #E8581A;
+      white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    footer .footer-center {
+      color: var(--muted);
+      text-align: center;
+      flex: 1;
+    }
+    footer .footer-center small {
+      display: block;
+      font-size: 0.67rem;
+      color: #aaaaaa;
+      margin-top: 0.15rem;
+    }
+    footer .footer-copy {
+      color: var(--muted);
+      white-space: nowrap;
+      text-align: right;
     }
 
     /* ── MAIN ── */
@@ -369,14 +446,12 @@
     @media (max-width: 479px) {
       :root { --radius: 11px; }
 
-      header {
-        padding: 0.6rem 0.85rem 0.5rem;
-        gap: 0.5rem;
-      }
+      .hdr-top { padding: 0.6rem 0.85rem 0.4rem; }
+      .hdr-bottom { padding: 0.2rem 0.85rem 0.5rem; }
       .brand-sub { display: none; }
-      .brand-text { font-size: 0.92rem; }
+      .brand-text { font-size: 0.88rem; }
       .brand-icon { width: 30px; height: 30px; font-size: 15px; }
-      .header-meta { gap: 0.45rem; }
+      .fs-btn { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
       .meta-pill { font-size: 0.65rem; padding: 0.22rem 0.55rem; }
       .score-pill { font-size: 0.68rem; padding: 0.22rem 0.65rem; }
 
@@ -511,20 +586,23 @@
 <body>
 
 <header>
-  <div class="brand">
-    <div class="brand-icon">📐</div>
-    <div>
-      <div class="brand-text">Scheda Esercizi</div>
-      <div class="brand-sub">Parallele · Perpendicolari · Trasversale · Triangoli</div>
+  <div class="hdr-top">
+    <div class="brand">
+      <div class="brand-icon">∑</div>
+      <div>
+        <div class="brand-text">MatematicaViva</div>
+        <div class="brand-sub">Classe Prima · Geometria</div>
+      </div>
     </div>
+    <button class="fs-btn" id="fullscreen-btn">⛶ Schermo intero</button>
   </div>
-  <div class="header-meta">
-    <span class="meta-pill">Classe prima</span>
+  <div class="hdr-bottom">
     <span class="meta-pill">35 esercizi</span>
+    <span class="meta-pill">Parallele · Perpendicolari · Triangoli</span>
     <span class="score-pill" id="global-score">0 / 0</span>
-  </div>
-  <div style="width:100%; flex-basis:100%;">
-    <div class="top-progress"><div class="top-progress-fill" id="top-bar"></div></div>
+    <div style="width:100%; flex-basis:100%; margin-top:0.2rem;">
+      <div class="top-progress"><div class="top-progress-fill" id="top-bar"></div></div>
+    </div>
   </div>
 </header>
 
@@ -669,18 +747,16 @@
       <div class="ex-list">
         <div class="ex-list-item" data-n="a">Quali sono ipotesi e tesi?</div>
         <div class="ex-list-item" data-n="b">Perché si chiama <em>postulato</em> e non <em>teorema</em>?</div>
-        <div class="ex-list-item" data-n="c">Come cambierebbe l'enunciato in geometria iperbolica?</div>
       </div>
     </div>
     <div class="answer-area">
-      <textarea class="ans-text" style="min-height:100px;" placeholder="Rispondi ai tre punti..."></textarea>
+      <textarea class="ans-text" style="min-height:100px;" placeholder="Rispondi ai due punti..."></textarea>
       <div class="btn-row">
         <button class="btn btn-sol" onclick="toggleSol('sol5')">📖 Soluzione</button>
       </div>
       <div class="sol-box" id="sol5">
-        <strong>a) Ipotesi:</strong> P è un punto esterno a r. <strong>Tesi:</strong> esiste un'unica retta per P parallela a r.<br>
-        <strong>b)</strong> È un postulato perché <em>non si dimostra</em> a partire dagli altri assiomi euclidei; va assunto come verità primitiva.<br>
-        <strong>c)</strong> In geometria iperbolica per P passano <em>infinite</em> rette parallele a r.
+        <strong>a)</strong> Ip.: P esterno a r. Tesi: unica retta per P parallela a r.<br>
+        <strong>b)</strong> Non è dimostrabile dagli altri assiomi euclidei.
       </div>
     </div>
   </div>
@@ -762,11 +838,11 @@
   <div class="ex" id="ex9">
     <div class="ex-header">
       <span class="ex-num">09</span>
-      <span class="ex-type">Completamento</span>
+      <span class="ex-type">Vera o Falsa — proprietà delle perpendicolari</span>
       <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-r">Ragionamento</span></div>
     </div>
     <div class="ex-body">
-      Completa le affermazioni seguenti scegliendo il termine corretto.
+      Stabilisci se ciascuna affermazione è vera o falsa.
     </div>
     <div id="tf9-container"></div>
     <div class="btn-row">
@@ -902,9 +978,8 @@
       <div class="sol-box" id="sol13">
         a) <strong>Parallele</strong> — alterni interni congruenti (73° = 73°).<br>
         b) <strong>Non parallele</strong> — corrispondenti non congruenti (101° ≠ 79°).<br>
-        c) <strong>Non parallele</strong> — coniugati interni non supplementari (95° + 85° = 180°… <em>attenzione:</em> somma = 180° → <strong>parallele</strong>!).<br>
+        c) <strong>Parallele</strong> — coniugati interni supplementari (95° + 85° = 180°).<br>
         d) <strong>Non parallele</strong> — alterni esterni non congruenti (140° ≠ 40°).
-        <br><small style="color:var(--muted);">Nota: nel caso c) la somma è esattamente 180°, quindi le rette <em>sono</em> parallele (coniugati interni supplementari). Verifica il tuo ragionamento!</small>
       </div>
     </div>
   </div>
@@ -966,16 +1041,15 @@
     </div>
     <div class="ex-body">
       Il criterio dice: «Se gli alterni interni sono congruenti, allora le rette sono parallele.»<br>
-      Scrivi la <strong>contronominale</strong> (contrapposizione) di questo enunciato e spiegane il significato geometrico.
+      Scrivi la <strong>negazione</strong> di questo enunciato e spiegane il significato geometrico.
     </div>
     <div class="answer-area">
-      <textarea class="ans-text" placeholder="Contronominale: Se NON ... allora NON ..."></textarea>
+      <textarea class="ans-text" placeholder="Negazione: Se NON ... allora NON ..."></textarea>
       <div class="btn-row">
         <button class="btn btn-sol" onclick="toggleSol('sol16')">📖 Soluzione</button>
       </div>
       <div class="sol-box" id="sol16">
-        <strong>Contronominale:</strong> «Se le rette <em>non</em> sono parallele, allora gli angoli alterni interni <em>non</em> sono congruenti.»<br>
-        Un enunciato e la sua contronominale sono <em>logicamente equivalenti</em>: se uno è vero, lo è anche l'altro. Geometricamente: rette non parallele tagliate da una trasversale generano sempre alterni interni di ampiezza diversa.
+        <strong>Negazione:</strong> «Se le rette <em>non</em> sono parallele, allora gli angoli alterni interni <em>non</em> sono congruenti.»
       </div>
     </div>
   </div>
@@ -1171,7 +1245,7 @@
       <div class="ex-tags"><span class="tag tag-t">Teorema</span><span class="tag tag-r">Ragionamento</span></div>
     </div>
     <div class="ex-body">
-      Il corollario del teorema dell'angolo esterno afferma che in un triangolo equilatero ogni angolo interno è 60°. Scrivi la <strong>dimostrazione completa</strong> di questo corollario usando il teorema sulla somma degli angoli interni.
+      Dimostra che in un triangolo equilatero ogni angolo interno è 60°, usando gli opportuni teoremi.
     </div>
     <div class="answer-area">
       <textarea class="ans-text" style="min-height:110px;" placeholder="Scrivi la dimostrazione passo per passo..."></textarea>
@@ -1179,8 +1253,8 @@
         <button class="btn btn-sol" onclick="toggleSol('sol24')">📖 Soluzione</button>
       </div>
       <div class="sol-box" id="sol24">
-        <strong>Ipotesi:</strong> triangolo ABC equilatero (AB = BC = CA, quindi anche α = β = γ).<br>
-        <strong>Dimostrazione:</strong> Per il teorema sulla somma: α + β + γ = 180°. Poiché α = β = γ, si ha 3α = 180°, quindi <span class="fm">α = 60°</span>. ∎
+        <strong>Ipotesi:</strong> ABC equilatero, quindi α = β = γ.<br>
+        <strong>Dim.:</strong> α + β + γ = 180° → 3α = 180° → <span class="fm">α = 60°</span>. ∎
       </div>
     </div>
   </div>
@@ -1623,9 +1697,9 @@ function checkTFWidget(containerId, items, resultId) {
 
 // EX 6 — tf
 const tf6Items = [
-  { text: '«Se due rette formano angoli retti, allora sono perpendicolari.» IPOTESI: le rette formano angoli retti. TESI: r ⊥ s. ← Identificazione corretta?', ans: true },
-  { text: '«Se α + β = 180°, le rette sono parallele.» IPOTESI: le rette sono parallele. TESI: α + β = 180°. ← Identificazione corretta?', ans: false },
-  { text: '«Se il triangolo è equilatero, ogni angolo è 60°.» IPOTESI: triangolo equilatero. TESI: angoli = 60°. ← Identificazione corretta?', ans: true },
+  { text: '«r⊥t e s⊥t ⟹ r∥s» — Ipotesi: due rette perpendicolari a t; Tesi: r∥s. ← Identificazione corretta?', ans: true },
+  { text: '«r∥s ⟹ angoli alt. int. ≅» — Ipotesi: angoli congruenti; Tesi: r∥s. ← Identificazione corretta?', ans: false },
+  { text: '«α+β+γ=180°» — Ipotesi: ABC è un triangolo; Tesi: somma angoli interni = 180°. ← Identificazione corretta?', ans: true },
 ];
 buildTFWidget('tf6-container', tf6Items);
 function checkTF6() { checkTFWidget('tf6-container', tf6Items, 'res6'); }
@@ -1640,10 +1714,11 @@ buildRadio('cg8', [
 
 // EX 9 — tf (completamento)
 const tf9Items = [
-  { text: 'Se r ⊥ s e t ⊥ s, allora r ∥ t. — VERO?', ans: true },
-  { text: 'Due rette perpendicolari possono essere anche parallele. — VERO?', ans: false },
-  { text: 'La perpendicolare a una retta per un punto dato è unica. — VERO?', ans: true },
-  { text: 'Se r e s si incontrano in O formando angoli di 45°, allora r ⊥ s. — VERO?', ans: false },
+  { text: 'Due rette sono parallele se e solo se formano coppie di angoli coniugati interni congruenti.', ans: false },
+  { text: 'La perpendicolare a una retta da un punto esterno è unica.', ans: true },
+  { text: 'Due rette perpendicolari fra loro sono parallele a una stessa retta.', ans: false },
+  { text: 'Due rette perpendicolari a una stessa retta sono parallele fra loro.', ans: true },
+  { text: 'Data una retta e un punto P, esiste almeno una retta passante per P e perpendicolare alla retta data.', ans: false },
 ];
 buildTFWidget('tf9-container', tf9Items);
 function checkTF9() { checkTFWidget('tf9-container', tf9Items, 'res9'); }
@@ -1745,8 +1820,8 @@ function checkEx18() {
 
 // EX 21 — tf
 const tf21Items = [
-  { text: 'L\'angolo esterno di un triangolo è sempre maggiore di ciascun angolo interno non adiacente.', ans: true },
-  { text: 'Un angolo esterno di un triangolo può essere minore dell\'angolo interno adiacente.', ans: false },
+  { text: 'L\'angolo esterno è sempre maggiore di ciascun angolo interno.', ans: false },
+  { text: 'Un angolo esterno di un triangolo può essere minore dell\'angolo interno adiacente.', ans: true },
   { text: 'La somma di un angolo interno e del corrispondente angolo esterno è sempre 180°.', ans: true },
   { text: 'In un triangolo rettangolo, l\'angolo esterno all\'angolo retto è 90°.', ans: true },
 ];
@@ -1884,15 +1959,33 @@ document.querySelector('[onclick="checkNum(\'ans11\', 27, \'res11\')"]')
 
 // initial render
 updateGlobal();
+
+// ── FULLSCREEN ──
+const fsBtn = document.getElementById('fullscreen-btn');
+if (fsBtn) {
+  fsBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      fsBtn.textContent = '✕ Esci da schermo intero';
+    } else {
+      document.exitFullscreen();
+      fsBtn.textContent = '⛶ Schermo intero';
+    }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) fsBtn.textContent = '⛶ Schermo intero';
+  });
+}
 </script>
 
-  <footer>
-  <p>
-    © 2026 Crecodi – 
-    Questo lavoro è distribuito con licenza Creative Commons 
-    Attribuzione-NonCommerciale-NonOpereDerivate 4.0 Internazionale.
-  </p>
+<footer>
+  <span class="footer-brand">MatematicaViva</span>
+  <span class="footer-center">
+    Distribuito con licenza Creative Commons BY-NC-ND 4.0 · matematicaviva.github.io
+    <small>Prof.ssa M. Prandelli</small>
+  </span>
+  <span class="footer-copy">© 2026 MatematicaViva</span>
 </footer>
-  
+
 </body>
 </html>
