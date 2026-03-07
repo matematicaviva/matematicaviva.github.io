@@ -581,8 +581,24 @@
     #final-banner h2 { font-family:'Fraunces',serif; font-size:1.6rem; color:#fff; margin-bottom:0.4rem; }
     #final-banner p { color:var(--muted); font-size:0.9rem; }
     #final-banner .big-score { font-family:'DM Mono',monospace; font-size:2.5rem; color:var(--pri); font-weight:700; }
-  </style>
+  
+* { user-select: none; -webkit-user-select: none; }
+</style>
 </head>
+<script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'||e.key==='p'||e.key==='P'))||
+       (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))||
+       e.key==='F12'){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  });
+  var _d=function(){var _t=new Date();debugger;if(new Date()-_t>100){document.body.innerHTML='';document.title='';}setTimeout(_d,1500);};
+  setTimeout(_d,2000);
+})();
+</script>
 <body>
 
 <header>
@@ -608,7 +624,7 @@
 
 <main>
 
-  <!-- LEGENDA -->
+  
   <div class="legend">
     <span style="font-weight:700; color:var(--text); margin-right:0.4rem;">Legenda:</span>
     <span class="legend-item"><span class="tag tag-t">Teorema</span> applicazione diretta</span>
@@ -619,9 +635,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       BLOCCO A — IPOTESI E TESI
-  ══════════════════════════════════════════ -->
+  
   <div class="chapter">
     <div class="chapter-num">A</div>
     <div class="chapter-line"></div>
@@ -629,7 +643,7 @@
     <div class="chapter-line"></div>
   </div>
 
-  <!-- 1 -->
+  
   <div class="ex" id="ex1">
     <div class="ex-header">
       <span class="ex-num">01</span>
@@ -654,7 +668,7 @@
     </div>
   </div>
 
-  <!-- 2 -->
+  
   <div class="ex" id="ex2">
     <div class="ex-header">
       <span class="ex-num">02</span>
@@ -682,7 +696,7 @@
     </div>
   </div>
 
-  <!-- 3 -->
+  
   <div class="ex" id="ex3">
     <div class="ex-header">
       <span class="ex-num">03</span>
@@ -707,7 +721,7 @@
     </div>
   </div>
 
-  <!-- 4 -->
+  
   <div class="ex" id="ex4">
     <div class="ex-header">
       <span class="ex-num">04</span>
@@ -732,7 +746,7 @@
     </div>
   </div>
 
-  <!-- 5 -->
+  
   <div class="ex" id="ex5">
     <div class="ex-header">
       <span class="ex-num">05</span>
@@ -761,7 +775,7 @@
     </div>
   </div>
 
-  <!-- 6 -->
+  
   <div class="ex" id="ex6">
     <div class="ex-header">
       <span class="ex-num">06</span>
@@ -778,9 +792,7 @@
     <div class="result" id="res6"></div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       BLOCCO B — PERPENDICOLARI
-  ══════════════════════════════════════════ -->
+  
   <div class="chapter">
     <div class="chapter-num">B</div>
     <div class="chapter-line"></div>
@@ -788,7 +800,7 @@
     <div class="chapter-line"></div>
   </div>
 
-  <!-- 7 -->
+  
   <div class="ex" id="ex7">
     <div class="ex-header">
       <span class="ex-num">07</span>
@@ -817,7 +829,7 @@
     <details class="hint"><summary>Suggerimento</summary><p>La somma degli angoli interni ad L formati da r e s misura 90°. Considera la trasversale t che li incrocia.</p></details>
   </div>
 
-  <!-- 8 -->
+  
   <div class="ex" id="ex8">
     <div class="ex-header">
       <span class="ex-num">08</span>
@@ -834,7 +846,7 @@
     <div class="result" id="res8"></div>
   </div>
 
-  <!-- 9 -->
+  
   <div class="ex" id="ex9">
     <div class="ex-header">
       <span class="ex-num">09</span>
@@ -851,7 +863,7 @@
     <div class="result" id="res9"></div>
   </div>
 
-  <!-- 10 -->
+  
   <div class="ex" id="ex10">
     <div class="ex-header">
       <span class="ex-num">10</span>
@@ -876,7 +888,7 @@
     </div>
   </div>
 
-  <!-- 11 -->
+  
   <div class="ex" id="ex11">
     <div class="ex-header">
       <span class="ex-num">11</span>
@@ -907,9 +919,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       BLOCCO C — PARALLELE E TRASVERSALE
-  ══════════════════════════════════════════ -->
+  
   <div class="chapter">
     <div class="chapter-num">C</div>
     <div class="chapter-line"></div>
@@ -917,7 +927,7 @@
     <div class="chapter-line"></div>
   </div>
 
-  <!-- 12 -->
+  
   <div class="ex" id="ex12">
     <div class="ex-header">
       <span class="ex-num">12</span>
@@ -954,7 +964,7 @@
     </div>
   </div>
 
-  <!-- 13 -->
+  
   <div class="ex" id="ex13">
     <div class="ex-header">
       <span class="ex-num">13</span>
@@ -984,7 +994,7 @@
     </div>
   </div>
 
-  <!-- 14 -->
+  
   <div class="ex" id="ex14">
     <div class="ex-header">
       <span class="ex-num">14</span>
@@ -1001,7 +1011,7 @@
     <div class="result" id="res14"></div>
   </div>
 
-  <!-- 15 -->
+  
   <div class="ex" id="ex15">
     <div class="ex-header">
       <span class="ex-num">15</span>
@@ -1032,7 +1042,7 @@
     <details class="hint"><summary>Suggerimento</summary><p>I coniugati interni (tra le due rette parallele) sono supplementari: la loro somma è 180°.</p></details>
   </div>
 
-  <!-- 16 -->
+  
   <div class="ex" id="ex16">
     <div class="ex-header">
       <span class="ex-num">16</span>
@@ -1054,7 +1064,7 @@
     </div>
   </div>
 
-  <!-- 17 -->
+  
   <div class="ex" id="ex17">
     <div class="ex-header">
       <span class="ex-num">17</span>
@@ -1075,7 +1085,7 @@
     </div>
   </div>
 
-  <!-- 18 -->
+  
   <div class="ex" id="ex18">
     <div class="ex-header">
       <span class="ex-num">18</span>
@@ -1103,9 +1113,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       BLOCCO D — TEOREMI SUI TRIANGOLI
-  ══════════════════════════════════════════ -->
+  
   <div class="chapter">
     <div class="chapter-num">D</div>
     <div class="chapter-line"></div>
@@ -1113,7 +1121,7 @@
     <div class="chapter-line"></div>
   </div>
 
-  <!-- 19 -->
+  
   <div class="ex" id="ex19">
     <div class="ex-header">
       <span class="ex-num">19</span>
@@ -1138,7 +1146,7 @@
     </div>
   </div>
 
-  <!-- 20 -->
+  
   <div class="ex" id="ex20">
     <div class="ex-header">
       <span class="ex-num">20</span>
@@ -1164,7 +1172,7 @@
     </div>
   </div>
 
-  <!-- 21 -->
+  
   <div class="ex" id="ex21">
     <div class="ex-header">
       <span class="ex-num">21</span>
@@ -1179,7 +1187,7 @@
     <div class="result" id="res21"></div>
   </div>
 
-  <!-- 22 -->
+  
   <div class="ex" id="ex22">
     <div class="ex-header">
       <span class="ex-num">22</span>
@@ -1208,7 +1216,7 @@
     </div>
   </div>
 
-  <!-- 23 -->
+  
   <div class="ex" id="ex23">
     <div class="ex-header">
       <span class="ex-num">23</span>
@@ -1237,7 +1245,7 @@
     </div>
   </div>
 
-  <!-- 24 -->
+  
   <div class="ex" id="ex24">
     <div class="ex-header">
       <span class="ex-num">24</span>
@@ -1260,9 +1268,7 @@
   </div>
 
 
-  <!-- ══════════════════════════════════════════
-       BLOCCO E — CRITERI DI CONGRUENZA
-  ══════════════════════════════════════════ -->
+  
   <div class="chapter">
     <div class="chapter-num">E</div>
     <div class="chapter-line"></div>
@@ -1270,7 +1276,7 @@
     <div class="chapter-line"></div>
   </div>
 
-  <!-- 25 -->
+  
   <div class="ex" id="ex25">
     <div class="ex-header">
       <span class="ex-num">25</span>
@@ -1287,7 +1293,7 @@
     <div class="result" id="res25"></div>
   </div>
 
-  <!-- 26 -->
+  
   <div class="ex" id="ex26">
     <div class="ex-header">
       <span class="ex-num">26</span>
@@ -1325,7 +1331,7 @@
     </div>
   </div>
 
-  <!-- 27 -->
+  
   <div class="ex" id="ex27">
     <div class="ex-header">
       <span class="ex-num">27</span>
@@ -1340,7 +1346,7 @@
     <div class="result" id="res27"></div>
   </div>
 
-  <!-- 28 -->
+  
   <div class="ex" id="ex28">
     <div class="ex-header">
       <span class="ex-num">28</span>
@@ -1367,7 +1373,7 @@
     </div>
   </div>
 
-  <!-- 29 -->
+  
   <div class="ex" id="ex29">
     <div class="ex-header">
       <span class="ex-num">29</span>
@@ -1392,7 +1398,7 @@
     </div>
   </div>
 
-  <!-- 30 -->
+  
   <div class="ex" id="ex30">
     <div class="ex-header">
       <span class="ex-num">30</span>
@@ -1421,7 +1427,7 @@
     <details class="hint"><summary>Suggerimento</summary><p>Usa il teorema dell'angolo esterno per trovare γ, poi sfrutta l'isoscelia (α = β) e la somma degli angoli interni.</p></details>
   </div>
 
-  <!-- 31 -->
+  
   <div class="ex" id="ex31">
     <div class="ex-header">
       <span class="ex-num">31</span>
@@ -1454,7 +1460,7 @@
     </div>
   </div>
 
-  <!-- 32 -->
+  
   <div class="ex" id="ex32">
     <div class="ex-header">
       <span class="ex-num">32</span>
@@ -1472,7 +1478,7 @@
     <div class="result" id="res32"></div>
   </div>
 
-  <!-- 33 -->
+  
   <div class="ex" id="ex33">
     <div class="ex-header">
       <span class="ex-num">33</span>
@@ -1503,7 +1509,7 @@
     </div>
   </div>
 
-  <!-- 34 -->
+  
   <div class="ex" id="ex34">
     <div class="ex-header">
       <span class="ex-num">34</span>
@@ -1536,7 +1542,7 @@
     <details class="hint"><summary>Suggerimento</summary><p>Con tre rette parallele e una trasversale si formano 12 angoli in tutto. Ricorda che angoli opposti al vertice sono sempre congruenti.</p></details>
   </div>
 
-  <!-- 35 -->
+  
   <div class="ex" id="ex35">
     <div class="ex-header">
       <span class="ex-num">35</span>
@@ -1564,7 +1570,7 @@
     <details class="hint"><summary>Suggerimento</summary><p>t₁, t₂ e r formano un triangolo. Usa il teorema sulla somma degli angoli interni.</p></details>
   </div>
 
-  <!-- BANNER FINALE -->
+  
   <div id="final-banner">
     <h2>🎉 Scheda completata!</h2>
     <div class="big-score" id="final-score-text">—</div>
@@ -1574,408 +1580,293 @@
 </main>
 
 <script>
-/* ═══════════════════════════════════════
-   GLOBAL SCORE
-═══════════════════════════════════════ */
-const autoChecks = {}; // id → boolean
-function updateGlobal() {
-  const done = Object.keys(autoChecks).length;
-  const ok   = Object.values(autoChecks).filter(Boolean).length;
-  document.getElementById('global-score').textContent = ok + ' / ' + done;
-  const pct = done ? (ok / done * 100) : 0;
-  document.getElementById('top-bar').style.width = pct + '%';
-  if (done >= 15) {
-    const banner = document.getElementById('final-banner');
-    banner.style.display = 'block';
-    document.getElementById('final-score-text').textContent = ok + ' / ' + done + ' corretti';
-  }
-}
-
-/* ═══════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════ */
-function toggleSol(id) {
-  const b = document.getElementById(id);
-  b.classList.toggle('visible');
-}
-
-function checkNum(inputId, correct, resultId, tolerance=0) {
-  const v = parseFloat(document.getElementById(inputId).value);
-  const res = document.getElementById(resultId);
-  const exId = resultId.replace('res','ex');
-  if (isNaN(v)) {
-    res.textContent = '⚠ Inserisci un valore.'; res.className='result err'; return;
-  }
-  const ok = Math.abs(v - correct) <= tolerance;
-  res.textContent = ok ? '✓ Corretto!' : `✗ Non corretto. Riprova.`;
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks[exId] = ok;
-  const card = document.getElementById(exId);
-  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
-  updateGlobal();
-}
-
-function checkRadio(containerId, correctValue, resultId) {
-  const sel = document.querySelector(`#${containerId} input[type=radio]:checked`);
-  const res = document.getElementById(resultId);
-  const exId = resultId.replace('res','ex');
-  if (!sel) { res.textContent='⚠ Seleziona una risposta.'; res.className='result err'; return; }
-  const ok = sel.id === correctValue;
-  res.textContent = ok ? '✓ Esatto!' : '✗ Non corretto. Riprova.';
-  res.className = ok ? 'result ok' : 'result err';
-  // visual feedback
-  document.querySelectorAll(`#${containerId} .choice-label`).forEach(l => {
-    l.classList.remove('sel-ok','sel-err');
-    const inp = l.querySelector('input');
-    if (inp && inp.checked) l.classList.add(ok ? 'sel-ok' : 'sel-err');
-  });
-  autoChecks[exId] = ok;
-  const card = document.getElementById(exId);
-  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
-  updateGlobal();
-}
-
-function buildRadio(containerId, options) {
-  // options: [{id, text, correct?}]
-  const c = document.getElementById(containerId);
-  c.className = 'choices-grid two-col';
-  options.forEach(o => {
-    const label = document.createElement('label');
-    label.className = 'choice-label';
-    label.htmlFor = o.id;
-    label.innerHTML = `<input type="radio" name="${containerId}" id="${o.id}" value="${o.id}"> ${o.text}`;
-    c.appendChild(label);
-  });
-}
-
-function buildTFWidget(containerId, items) {
-  // items: [{text, ans:true/false}]
-  const c = document.getElementById(containerId);
-  items.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'tf-row';
-    div.innerHTML = `<span class="tf-row-text">${item.text}</span>
-      <div class="tf-btns">
-        <button class="tf-btn v" id="${containerId}_v${i}" onclick="selectTF('${containerId}',${i},'v')">V</button>
-        <button class="tf-btn f" id="${containerId}_f${i}" onclick="selectTF('${containerId}',${i},'f')">F</button>
-      </div>`;
-    c.appendChild(div);
-  });
-}
-
-const tfSelections = {};
-function selectTF(cid, i, val) {
-  const key = cid+'_'+i;
-  tfSelections[key] = val;
-  document.getElementById(cid+'_v'+i).classList.toggle('selected', val==='v');
-  document.getElementById(cid+'_f'+i).classList.toggle('selected', val==='f');
-}
-
-function checkTFWidget(containerId, items, resultId) {
-  let correct = 0;
-  items.forEach((item, i) => {
-    const key = containerId+'_'+i;
-    const sel = tfSelections[key];
-    if ((sel==='v') === item.ans) correct++;
-  });
-  const res = document.getElementById(resultId);
-  const exId = resultId.replace('res','ex');
-  const ok = correct === items.length;
-  res.textContent = ok
-    ? `✓ Perfetto! Tutte le risposte corrette.`
-    : `✗ ${correct} su ${items.length} corrette. Ricontrolla!`;
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks[exId] = ok;
-  const card = document.getElementById(exId);
-  if (card) { card.classList.toggle('answered-ok', ok); card.classList.toggle('answered-err', !ok); }
-  updateGlobal();
-}
-
-/* ═══════════════════════════════════════
-   BUILD EXERCISES
-═══════════════════════════════════════ */
-
-// EX 6 — tf
-const tf6Items = [
-  { text: '«r⊥t e s⊥t ⟹ r∥s» — Ipotesi: due rette perpendicolari a t; Tesi: r∥s. ← Identificazione corretta?', ans: true },
-  { text: '«r∥s ⟹ angoli alt. int. ≅» — Ipotesi: angoli congruenti; Tesi: r∥s. ← Identificazione corretta?', ans: false },
-  { text: '«α+β+γ=180°» — Ipotesi: ABC è un triangolo; Tesi: somma angoli interni = 180°. ← Identificazione corretta?', ans: true },
-];
-buildTFWidget('tf6-container', tf6Items);
-function checkTF6() { checkTFWidget('tf6-container', tf6Items, 'res6'); }
-
-// EX 8 — radio
-buildRadio('cg8', [
-  { id:'r8_a', text:'Formano almeno due angoli congruenti.' },
-  { id:'r8_b', text:'Formano quattro angoli retti.' },
-  { id:'r8_c', text:'Si incontrano in un punto.' },
-  { id:'r8_d', text:'Formano due coppie di angoli supplementari.' },
-]);
-
-// EX 9 — tf (completamento)
-const tf9Items = [
-  { text: 'Due rette sono parallele se e solo se formano coppie di angoli coniugati interni congruenti.', ans: false },
-  { text: 'La perpendicolare a una retta da un punto esterno è unica.', ans: true },
-  { text: 'Due rette perpendicolari fra loro sono parallele a una stessa retta.', ans: false },
-  { text: 'Due rette perpendicolari a una stessa retta sono parallele fra loro.', ans: true },
-  { text: 'Data una retta e un punto P, esiste almeno una retta passante per P e perpendicolare alla retta data.', ans: false },
-];
-buildTFWidget('tf9-container', tf9Items);
-function checkTF9() { checkTFWidget('tf9-container', tf9Items, 'res9'); }
-
-// EX 10 — tf single
-const tf10Items = [
-  { text: '«Se due rette formano quattro angoli congruenti, allora sono perpendicolari.» — VERO?', ans: true }
-];
-buildTFWidget('tf10-container', tf10Items);
-function checkTF10() { checkTFWidget('tf10-container', tf10Items, 'res10'); }
-
-// EX 12
-function checkEx12() {
-  const a = parseInt(document.getElementById('ans12a').value);
-  const b = parseInt(document.getElementById('ans12b').value);
-  const c = parseInt(document.getElementById('ans12c').value);
-  const d = parseInt(document.getElementById('ans12d').value);
-  const res = document.getElementById('res12');
-  const ok = a===112 && b===112 && c===68 && d===68;
-  let msg = '';
-  if (a!==112) msg+='a) Alterno interno errato. ';
-  if (b!==112) msg+='b) Corrispondente errato. ';
-  if (c!==68)  msg+='c) Coniugato errato. ';
-  if (d!==68)  msg+='d) Supplementare errato. ';
-  res.textContent = ok ? '✓ Perfetto! Tutti gli angoli corretti.' : '✗ '+msg;
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks['ex12'] = ok;
-  document.getElementById('ex12').classList.toggle('answered-ok', ok);
-  document.getElementById('ex12').classList.toggle('answered-err', !ok);
-  updateGlobal();
-}
-
-// EX 14 — match
-const match14Defs = [
-  { text: 'Alterni interni (r ∥ s)', ans: 'Congruenti' },
-  { text: 'Corrispondenti (r ∥ s)',  ans: 'Congruenti' },
-  { text: 'Coniugati interni (r ∥ s)', ans: 'Supplementari' },
-  { text: 'Alterni esterni (r ∥ s)', ans: 'Congruenti' },
-  { text: 'Coniugati esterni (r ∥ s)', ans: 'Supplementari' },
-];
-const match14Opts = ['Congruenti','Supplementari','Nessuna delle due'];
-(function buildMatch14() {
-  const c = document.getElementById('match14');
-  match14Defs.forEach((item,i) => {
-    const row = document.createElement('div');
-    row.className = 'match-row';
-    const shuffled = [...match14Opts].sort(()=>Math.random()-0.5);
-    row.innerHTML = `<span>${item.text}</span>
-      <select id="m14_${i}">
-        <option value="">— scegli —</option>
-        ${shuffled.map(o=>`<option value="${o}">${o}</option>`).join('')}
-      </select>`;
-    c.appendChild(row);
-  });
-})();
-function checkMatch14() {
-  let ok = 0;
-  match14Defs.forEach((item,i) => {
-    if ((document.getElementById('m14_'+i)||{}).value === item.ans) ok++;
-  });
-  const res = document.getElementById('res14');
-  const good = ok === match14Defs.length;
-  res.textContent = good ? '✓ Perfetto!' : `✗ ${ok}/${match14Defs.length} corretti.`;
-  res.className = good ? 'result ok' : 'result err';
-  autoChecks['ex14'] = good;
-  document.getElementById('ex14').classList.toggle('answered-ok', good);
-  document.getElementById('ex14').classList.toggle('answered-err', !good);
-  updateGlobal();
-}
-
-// EX 15
-function checkEx15() {
-  const x = parseInt(document.getElementById('ans15x').value);
-  const a = parseInt(document.getElementById('ans15a').value);
-  const b = parseInt(document.getElementById('ans15b').value);
-  const res = document.getElementById('res15');
-  const ok = x===24 && a===87 && b===93;
-  res.textContent = ok ? '✓ Perfetto!' : '✗ Qualcosa non torna. Ricalcola.';
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks['ex15'] = ok;
-  document.getElementById('ex15').classList.toggle('answered-ok', ok);
-  document.getElementById('ex15').classList.toggle('answered-err', !ok);
-  updateGlobal();
-}
-
-// EX 18
-function checkEx18() {
-  const x = parseInt(document.getElementById('ans18x').value);
-  const a = parseInt(document.getElementById('ans18a').value);
-  const res = document.getElementById('res18');
-  const ok = x===16 && a===70;
-  res.textContent = ok ? '✓ Corretto!' : '✗ Ricontrolla il calcolo.';
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks['ex18'] = ok;
-  document.getElementById('ex18').classList.toggle('answered-ok', ok);
-  document.getElementById('ex18').classList.toggle('answered-err', !ok);
-  updateGlobal();
-}
-
-// EX 21 — tf
-const tf21Items = [
-  { text: 'L\'angolo esterno è sempre maggiore di ciascun angolo interno.', ans: false },
-  { text: 'Un angolo esterno di un triangolo può essere minore dell\'angolo interno adiacente.', ans: true },
-  { text: 'La somma di un angolo interno e del corrispondente angolo esterno è sempre 180°.', ans: true },
-  { text: 'In un triangolo rettangolo, l\'angolo esterno all\'angolo retto è 90°.', ans: true },
-];
-buildTFWidget('tf21-container', tf21Items);
-function checkTF21() { checkTFWidget('tf21-container', tf21Items, 'res21'); }
-
-// EX 23
-function checkEx23() {
-  const x = parseInt(document.getElementById('ans23x').value);
-  const a = parseInt(document.getElementById('ans23a').value);
-  const b = parseInt(document.getElementById('ans23b').value);
-  const cc = parseInt(document.getElementById('ans23c').value);
-  const res = document.getElementById('res23');
-  const ok = x===42 && a===42 && b===62 && cc===76;
-  res.textContent = ok ? '✓ Perfetto!' : '✗ Ricontrolla l\'equazione e i calcoli.';
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks['ex23'] = ok;
-  document.getElementById('ex23').classList.toggle('answered-ok', ok);
-  document.getElementById('ex23').classList.toggle('answered-err', !ok);
-  updateGlobal();
-}
-
-// EX 25 — match
-const match25Defs = [
-  { text: 'Due triangoli con due lati e l\'angolo fra essi compreso ordinatamente congruenti.', ans: 'I criterio di congruenza' },
-  { text: 'Due triangoli con due angoli e il lato compreso ordinatamente congruenti.', ans: 'II criterio di congruenza' },
-  { text: 'Triangoli rettangoli con ipotenusa e un cateto ordinatamente congruenti.', ans: 'Criterio di congruenza dei triangoli rettangoli' },
-  { text: 'Triangoli rettangoli con entrambi i cateti ordinatamente congruenti.', ans: 'I criterio di congruenza (caso particolare)' },
-  { text: 'Triangoli rettangoli con ipotenusa e un angolo acuto ordinatamente congruenti.', ans: 'II criterio di congruenza generalizzato' },
-];
-const match25Opts = [
-  'I criterio di congruenza',
-  'II criterio di congruenza',
-  'Criterio di congruenza dei triangoli rettangoli',
-  'I criterio di congruenza (caso particolare)',
-  'II criterio di congruenza generalizzato',
-];
-(function buildMatch25() {
-  const c = document.getElementById('match25');
-  match25Defs.forEach((item,i) => {
-    const row = document.createElement('div');
-    row.className = 'match-row';
-    const shuffled = [...match25Opts].sort(()=>Math.random()-0.5);
-    row.innerHTML = `<span>${item.text}</span>
-      <select id="m25_${i}">
-        <option value="">— scegli —</option>
-        ${shuffled.map(o=>`<option value="${o}">${o}</option>`).join('')}
-      </select>`;
-    c.appendChild(row);
-  });
-})();
-function checkMatch25() {
-  let ok = 0;
-  match25Defs.forEach((item,i) => {
-    if ((document.getElementById('m25_'+i)||{}).value === item.ans) ok++;
-  });
-  const res = document.getElementById('res25');
-  const good = ok === match25Defs.length;
-  res.textContent = good ? '✓ Tutti gli abbinamenti corretti!' : `✗ ${ok}/${match25Defs.length} corretti.`;
-  res.className = good ? 'result ok' : 'result err';
-  autoChecks['ex25'] = good;
-  document.getElementById('ex25').classList.toggle('answered-ok', good);
-  document.getElementById('ex25').classList.toggle('answered-err', !good);
-  updateGlobal();
-}
-
-// EX 27 — tf
-const tf27Items = [
-  { text: 'Nel criterio di congruenza dei triangoli rettangoli, l\'angolo retto è già congruente per definizione e non va verificato esplicitamente.', ans: true },
-  { text: 'Il criterio di congruenza dei triangoli rettangoli (ipotenusa + cateto) vale anche per triangoli non rettangoli se si sostituisce "ipotenusa" con "lato maggiore".', ans: false },
-  { text: 'Due triangoli rettangoli con un cateto e un angolo acuto ordinatamente congruenti sono congruenti (II criterio generalizzato applicato ai rettangoli).', ans: true },
-  { text: 'Il I criterio di congruenza si può applicare direttamente ai triangoli rettangoli senza alcuna modifica.', ans: true },
-];
-buildTFWidget('tf27-container', tf27Items);
-function checkTF27() { checkTFWidget('tf27-container', tf27Items, 'res27'); }
-
-// EX 30
-function checkEx30() {
-  const c = parseInt(document.getElementById('ans30c').value);
-  const a = parseFloat(document.getElementById('ans30a').value);
-  const res = document.getElementById('res30');
-  const ok = c===65 && Math.abs(a-57.5)<=0.6;
-  res.textContent = ok ? '✓ Corretto!' : '✗ Ricalcola usando il teorema dell\'angolo esterno e l\'isoscelia.';
-  res.className = ok ? 'result ok' : 'result err';
-  autoChecks['ex30'] = ok;
-  document.getElementById('ex30').classList.toggle('answered-ok', ok);
-  document.getElementById('ex30').classList.toggle('answered-err', !ok);
-  updateGlobal();
-}
-
-// EX 32 — match angoli congruenti/supplementari
-const match32Defs = [
-  { text: 'Angoli 1 e 5 (corrispondenti)', ans: 'Congruenti (≅)' },
-  { text: 'Angoli 3 e 5 (alterni interni)', ans: 'Congruenti (≅)' },
-  { text: 'Angoli 1 e 7 (alterni esterni)', ans: 'Congruenti (≅)' },
-  { text: 'Angoli 3 e 6 (coniugati interni)', ans: 'Supplementari (suppl.)' },
-  { text: 'Angoli 2 e 7 (coniugati esterni)', ans: 'Supplementari (suppl.)' },
-  { text: 'Angoli 1 e 3 (opposti al vertice, stessa intersezione)', ans: 'Congruenti (≅)' },
-  { text: 'Angoli 1 e 2 (adiacenti, stessa intersezione)', ans: 'Supplementari (suppl.)' },
-  { text: 'Angoli 2 e 5 (non classificati tra le coppie standard)', ans: 'Né l\'uno né l\'altro' },
-];
-const match32Opts = ['Congruenti (≅)', 'Supplementari (suppl.)', 'Né l\'uno né l\'altro'];
-(function buildMatch32() {
-  const c = document.getElementById('match32');
-  match32Defs.forEach((item, i) => {
-    const row = document.createElement('div');
-    row.className = 'match-row';
-    const shuffled = [...match32Opts].sort(() => Math.random() - 0.5);
-    row.innerHTML = `<span>${item.text}</span>
-      <select id="m32_${i}">
-        <option value="">— scegli —</option>
-        ${shuffled.map(o => `<option value="${o}">${o}</option>`).join('')}
-      </select>`;
-    c.appendChild(row);
-  });
-})();
-function checkMatch32() {
-  let ok = 0;
-  match32Defs.forEach((item, i) => {
-    if ((document.getElementById('m32_' + i) || {}).value === item.ans) ok++;
-  });
-  const res = document.getElementById('res32');
-  const good = ok === match32Defs.length;
-  res.textContent = good ? '✓ Perfetto! Tutti gli angoli classificati correttamente.' : `✗ ${ok}/${match32Defs.length} corretti. Ricontrolla le definizioni.`;
-  res.className = good ? 'result ok' : 'result err';
-  autoChecks['ex32'] = good;
-  document.getElementById('ex32').classList.toggle('answered-ok', good);
-  document.getElementById('ex32').classList.toggle('answered-err', !good);
-  updateGlobal();
-}
-
-// EX 11 — overwrite checkNum for tolerance
-document.querySelector('[onclick="checkNum(\'ans11\', 27, \'res11\')"]')
-  .setAttribute('onclick', "checkNum('ans11', 27, 'res11', 0)");
-
-// initial render
-updateGlobal();
-
-// ── FULLSCREEN ──
-const fsBtn = document.getElementById('fullscreen-btn');
-if (fsBtn) {
-  fsBtn.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-      fsBtn.textContent = '✕ Esci da schermo intero';
-    } else {
-      document.exitFullscreen();
-      fsBtn.textContent = '⛶ Schermo intero';
-    }
-  });
-  document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) fsBtn.textContent = '⛶ Schermo intero';
-  });
-}
+var _0xc0ba=['dmFyIF8weDZkNTQ9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20oKTt9OyB2YXIgXzB4MTNiYT1b'+
+'XTsgdmFyIF8weDEzYmE9W107IHZhciBfMHg2ZDU0PWZ1bmN0aW9uKCl7cmV0dXJuIE1hdGgucmFuZG9t'+
+'KCk7fTsKCgpjb25zdCBhdXRvQ2hlY2tzID0ge307IApmdW5jdGlvbiB1cGRhdGVHbG9iYWwoKSB7CiAg'+
+'Y29uc3QgZG9uZSA9IE9iamVjdC5rZXlzKGF1dG9DaGVja3MpLmxlbmd0aDsKICBjb25zdCBvayAgID0g'+
+'T2JqZWN0LnZhbHVlcyhhdXRvQ2hlY2tzKS5maWx0ZXIoQm9vbGVhbikubGVuZ3RoOwogIGRvY3VtZW50'+
+'LmdldEVsZW1lbnRCeUlkKCdnbG9iYWwtc2NvcmUnKS50ZXh0Q29udGVudCA9IG9rICsgJyAvICcgKyBk'+
+'b25lOwogIGNvbnN0IHBjdCA9IGRvbmUgPyAob2sgLyBkb25lICogMTAwKSA6IDA7CiAgZG9jdW1lbnQu'+
+'Z2V0RWxlbWVudEJ5SWQoJ3RvcC1iYXInKS5zdHlsZS53aWR0aCA9IHBjdCArICclJzsKICBpZiAoZG9u'+
+'ZSA+PSAxNSkgewogICAgY29uc3QgYmFubmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZpbmFs'+
+'LWJhbm5lcicpOwogICAgYmFubmVyLnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOwogICAgZG9jdW1lbnQu'+
+'Z2V0RWxlbWVudEJ5SWQoJ2ZpbmFsLXNjb3JlLXRleHQnKS50ZXh0Q29udGVudCA9IG9rICsgJyAvICcg'+
+'KyBkb25lICsgJyBjb3JyZXR0aSc7CiAgfQp9CgoKZnVuY3Rpb24gdG9nZ2xlU29sKGlkKSB7CiAgY29u'+
+'c3QgYiA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsKICBiLmNsYXNzTGlzdC50b2dnbGUoJ3Zp'+
+'c2libGUnKTsKfQoKZnVuY3Rpb24gY2hlY2tOdW0oaW5wdXRJZCwgY29ycmVjdCwgcmVzdWx0SWQsIHRv'+
+'bGVyYW5jZT0wKSB7CiAgY29uc3QgdiA9IHBhcnNlRmxvYXQoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQo'+
+'aW5wdXRJZCkudmFsdWUpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKHJlc3Vs'+
+'dElkKTsKICBjb25zdCBleElkID0gcmVzdWx0SWQucmVwbGFjZSgncmVzJywnZXgnKTsKICBpZiAoaXNO'+
+'YU4odikpIHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfimqAgSW5zZXJpc2NpIHVuIHZhbG9yZS4nOyBy'+
+'ZXMuY2xhc3NOYW1lPSdyZXN1bHQgZXJyJzsgcmV0dXJuOwogIH0KICBjb25zdCBvayA9IE1hdGguYWJz'+
+'KHYgLSBjb3JyZWN0KSA8PSB0b2xlcmFuY2U7CiAgcmVzLnRleHRDb250ZW50ID0gb2sgPyAn4pyTIENv'+
+'cnJldHRvIScgOiBg4pyXIE5vbiBjb3JyZXR0by4gUmlwcm92YS5gOwogIHJlcy5jbGFzc05hbWUgPSBv'+
+'ayA/ICdyZXN1bHQgb2snIDogJ3Jlc3VsdCBlcnInOwogIGF1dG9DaGVja3NbZXhJZF0gPSBvazsKICBj'+
+'b25zdCBjYXJkID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoZXhJZCk7CiAgaWYgKGNhcmQpIHsgY2Fy'+
+'ZC5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1vaycsIG9rKTsgY2FyZC5jbGFzc0xpc3QudG9nZ2xl'+
+'KCdhbnN3ZXJlZC1lcnInLCAhb2spOyB9CiAgdXBkYXRlR2xvYmFsKCk7Cn0KCmZ1bmN0aW9uIGNoZWNr'+
+'UmFkaW8oY29udGFpbmVySWQsIGNvcnJlY3RWYWx1ZSwgcmVzdWx0SWQpIHsKICBjb25zdCBzZWwgPSBk'+
+'b2N1bWVudC5xdWVyeVNlbGVjdG9yKGAjJHtjb250YWluZXJJZH0gaW5wdXRbdHlwZT1yYWRpb106Y2hl'+
+'Y2tlZGApOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKHJlc3VsdElkKTsKICBj'+
+'b25zdCBleElkID0gcmVzdWx0SWQucmVwbGFjZSgncmVzJywnZXgnKTsKICBpZiAoIXNlbCkgeyByZXMu'+
+'dGV4dENvbnRlbnQ9J+KaoCBTZWxlemlvbmEgdW5hIHJpc3Bvc3RhLic7IHJlcy5jbGFzc05hbWU9J3Jl'+
+'c3VsdCBlcnInOyByZXR1cm47IH0KICBjb25zdCBvayA9IHNlbC5pZCA9PT0gY29ycmVjdFZhbHVlOwog'+
+'IHJlcy50ZXh0Q29udGVudCA9IG9rID8gJ+KckyBFc2F0dG8hJyA6ICfinJcgTm9uIGNvcnJldHRvLiBS'+
+'aXByb3ZhLic7CiAgcmVzLmNsYXNzTmFtZSA9IG9rID8gJ3Jlc3VsdCBvaycgOiAncmVzdWx0IGVycic7'+
+'CiAgCiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChgIyR7Y29udGFpbmVySWR9IC5jaG9pY2UtbGFi'+
+'ZWxgKS5mb3JFYWNoKGwgPT4gewogICAgbC5jbGFzc0xpc3QucmVtb3ZlKCdzZWwtb2snLCdzZWwtZXJy'+
+'Jyk7CiAgICBjb25zdCBpbnAgPSBsLnF1ZXJ5U2VsZWN0b3IoJ2lucHV0Jyk7CiAgICBpZiAoaW5wICYm'+
+'IGlucC5jaGVja2VkKSBsLmNsYXNzTGlzdC5hZGQob2sgPyAnc2VsLW9rJyA6ICdzZWwtZXJyJyk7CiAg'+
+'fSk7CiAgYXV0b0NoZWNrc1tleElkXSA9IG9rOwogIGNvbnN0IGNhcmQgPSBkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZChleElkKTsKICBpZiAoY2FyZCkgeyBjYXJkLmNsYXNzTGlzdC50b2dnbGUoJ2Fuc3dlcmVk'+
+'LW9rJywgb2spOyBjYXJkLmNsYXNzTGlzdC50b2dnbGUoJ2Fuc3dlcmVkLWVycicsICFvayk7IH0KICB1'+
+'cGRhdGVHbG9iYWwoKTsKfQoKZnVuY3Rpb24gYnVpbGRSYWRpbyhjb250YWluZXJJZCwgb3B0aW9ucykg'+
+'ewogIAogIGNvbnN0IGMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChjb250YWluZXJJZCk7CiAgYy5j'+
+'bGFzc05hbWUgPSAnY2hvaWNlcy1ncmlkIHR3by1jb2wnOwogIG9wdGlvbnMuZm9yRWFjaChvID0+IHsK'+
+'ICAgIGNvbnN0IGxhYmVsID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnbGFiZWwnKTsKICAgIGxhYmVs'+
+'LmNsYXNzTmFtZSA9ICdjaG9pY2UtbGFiZWwnOwogICAgbGFiZWwuaHRtbEZvciA9IG8uaWQ7CiAgICBs'+
+'YWJlbC5pbm5lckhUTUwgPSBgPGlucHV0IHR5cGU9InJhZGlvIiBuYW1lPSIke2NvbnRhaW5lcklkfSIg'+
+'aWQ9IiR7by5pZH0iIHZhbHVlPSIke28uaWR9Ij4gJHtvLnRleHR9YDsKICAgIGMuYXBwZW5kQ2hpbGQo'+
+'bGFiZWwpOwogIH0pOwp9CgpmdW5jdGlvbiBidWlsZFRGV2lkZ2V0KGNvbnRhaW5lcklkLCBpdGVtcykg'+
+'ewogIAogIGNvbnN0IGMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChjb250YWluZXJJZCk7CiAgaXRl'+
+'bXMuZm9yRWFjaCgoaXRlbSwgaSkgPT4gewogICAgY29uc3QgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxl'+
+'bWVudCgnZGl2Jyk7CiAgICBkaXYuY2xhc3NOYW1lID0gJ3RmLXJvdyc7CiAgICBkaXYuaW5uZXJIVE1M'+
+'ID0gYDxzcGFuIGNsYXNzPSJ0Zi1yb3ctdGV4dCI+JHtpdGVtLnRleHR9PC9zcGFuPgogICAgICA8ZGl2'+
+'IGNsYXNzPSJ0Zi1idG5zIj4KICAgICAgICA8YnV0dG9uIGNsYXNzPSJ0Zi1idG4gdiIgaWQ9IiR7Y29u'+
+'dGFpbmVySWR9X3Yke2l9IiBvbmNsaWNrPSJzZWxlY3RURignJHtjb250YWluZXJJZH0nLCR7aX0sJ3Yn'+
+'KSI+VjwvYnV0dG9uPgogICAgICAgIDxidXR0b24gY2xhc3M9InRmLWJ0biBmIiBpZD0iJHtjb250YWlu'+
+'ZXJJZH1fZiR7aX0iIG9uY2xpY2s9InNlbGVjdFRGKCcke2NvbnRhaW5lcklkfScsJHtpfSwnZicpIj5G'+
+'PC9idXR0b24+CiAgICAgIDwvZGl2PmA7CiAgICBjLmFwcGVuZENoaWxkKGRpdik7CiAgfSk7Cn0KCmNv'+
+'bnN0IHRmU2VsZWN0aW9ucyA9IHt9OwpmdW5jdGlvbiBzZWxlY3RURihjaWQsIGksIHZhbCkgewogIGNv'+
+'bnN0IGtleSA9IGNpZCsnXycraTsKICB0ZlNlbGVjdGlvbnNba2V5XSA9IHZhbDsKICBkb2N1bWVudC5n'+
+'ZXRFbGVtZW50QnlJZChjaWQrJ192JytpKS5jbGFzc0xpc3QudG9nZ2xlKCdzZWxlY3RlZCcsIHZhbD09'+
+'PSd2Jyk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoY2lkKydfZicraSkuY2xhc3NMaXN0LnRvZ2ds'+
+'ZSgnc2VsZWN0ZWQnLCB2YWw9PT0nZicpOwp9CgpmdW5jdGlvbiBjaGVja1RGV2lkZ2V0KGNvbnRhaW5l'+
+'cklkLCBpdGVtcywgcmVzdWx0SWQpIHsKICBsZXQgY29ycmVjdCA9IDA7CiAgaXRlbXMuZm9yRWFjaCgo'+
+'aXRlbSwgaSkgPT4gewogICAgY29uc3Qga2V5ID0gY29udGFpbmVySWQrJ18nK2k7CiAgICBjb25zdCBz'+
+'ZWwgPSB0ZlNlbGVjdGlvbnNba2V5XTsKICAgIGlmICgoc2VsPT09J3YnKSA9PT0gaXRlbS5hbnMpIGNv'+
+'cnJlY3QrKzsKICB9KTsKICBjb25zdCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChyZXN1bHRJ'+
+'ZCk7CiAgY29uc3QgZXhJZCA9IHJlc3VsdElkLnJlcGxhY2UoJ3JlcycsJ2V4Jyk7CiAgY29uc3Qgb2sg'+
+'PSBjb3JyZWN0ID09PSBpdGVtcy5sZW5ndGg7CiAgcmVzLnRleHRDb250ZW50ID0gb2sKICAgID8gYOKc'+
+'kyBQZXJmZXR0byEgVHV0dGUgbGUgcmlzcG9zdGUgY29ycmV0dGUuYAogICAgOiBg4pyXICR7Y29ycmVj'+
+'dH0gc3UgJHtpdGVtcy5sZW5ndGh9IGNvcnJldHRlLiBSaWNvbnRyb2xsYSFgOwogIHJlcy5jbGFzc05h'+
+'bWUgPSBvayA/ICdyZXN1bHQgb2snIDogJ3Jlc3VsdCBlcnInOwogIGF1dG9DaGVja3NbZXhJZF0gPSBv'+
+'azsKICBjb25zdCBjYXJkID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoZXhJZCk7CiAgaWYgKGNhcmQp'+
+'IHsgY2FyZC5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1vaycsIG9rKTsgY2FyZC5jbGFzc0xpc3Qu'+
+'dG9nZ2xlKCdhbnN3ZXJlZC1lcnInLCAhb2spOyB9CiAgdXBkYXRlR2xvYmFsKCk7Cn0KCgoKCmNvbnN0'+
+'IHRmNkl0ZW1zID0gWwogIHsgdGV4dDogJ8KrcuKKpXQgZSBz4oqldCDin7kgcuKIpXPCuyDigJQgSXBv'+
+'dGVzaTogZHVlIHJldHRlIHBlcnBlbmRpY29sYXJpIGEgdDsgVGVzaTogcuKIpXMuIOKGkCBJZGVudGlm'+
+'aWNhemlvbmUgY29ycmV0dGE/JywgYW5zOiB0cnVlIH0sCiAgeyB0ZXh0OiAnwqty4oilcyDin7kgYW5n'+
+'b2xpIGFsdC4gaW50LiDiiYXCuyDigJQgSXBvdGVzaTogYW5nb2xpIGNvbmdydWVudGk7IFRlc2k6IHLi'+
+'iKVzLiDihpAgSWRlbnRpZmljYXppb25lIGNvcnJldHRhPycsIGFuczogZmFsc2UgfSwKICB7IHRleHQ6'+
+'ICfCq86xK86yK86zPTE4MMKwwrsg4oCUIElwb3Rlc2k6IEFCQyDDqCB1biB0cmlhbmdvbG87IFRlc2k6'+
+'IHNvbW1hIGFuZ29saSBpbnRlcm5pID0gMTgwwrAuIOKGkCBJZGVudGlmaWNhemlvbmUgY29ycmV0dGE/'+
+'JywgYW5zOiB0cnVlIH0sCl07CmJ1aWxkVEZXaWRnZXQoJ3RmNi1jb250YWluZXInLCB0ZjZJdGVtcyk7'+
+'CmZ1bmN0aW9uIGNoZWNrVEY2KCkgeyBjaGVja1RGV2lkZ2V0KCd0ZjYtY29udGFpbmVyJywgdGY2SXRl'+
+'bXMsICdyZXM2Jyk7IH0KCgpidWlsZFJhZGlvKCdjZzgnLCBbCiAgeyBpZDoncjhfYScsIHRleHQ6J0Zv'+
+'cm1hbm8gYWxtZW5vIGR1ZSBhbmdvbGkgY29uZ3J1ZW50aS4nIH0sCiAgeyBpZDoncjhfYicsIHRleHQ6'+
+'J0Zvcm1hbm8gcXVhdHRybyBhbmdvbGkgcmV0dGkuJyB9LAogIHsgaWQ6J3I4X2MnLCB0ZXh0OidTaSBp'+
+'bmNvbnRyYW5vIGluIHVuIHB1bnRvLicgfSwKICB7IGlkOidyOF9kJywgdGV4dDonRm9ybWFubyBkdWUg'+
+'Y29wcGllIGRpIGFuZ29saSBzdXBwbGVtZW50YXJpLicgfSwKXSk7CgoKY29uc3QgdGY5SXRlbXMgPSBb'+
+'CiAgeyB0ZXh0OiAnRHVlIHJldHRlIHNvbm8gcGFyYWxsZWxlIHNlIGUgc29sbyBzZSBmb3JtYW5vIGNv'+
+'cHBpZSBkaSBhbmdvbGkgY29uaXVnYXRpIGludGVybmkgY29uZ3J1ZW50aS4nLCBhbnM6IGZhbHNlIH0s'+
+'CiAgeyB0ZXh0OiAnTGEgcGVycGVuZGljb2xhcmUgYSB1bmEgcmV0dGEgZGEgdW4gcHVudG8gZXN0ZXJu'+
+'byDDqCB1bmljYS4nLCBhbnM6IHRydWUgfSwKICB7IHRleHQ6ICdEdWUgcmV0dGUgcGVycGVuZGljb2xh'+
+'cmkgZnJhIGxvcm8gc29ubyBwYXJhbGxlbGUgYSB1bmEgc3Rlc3NhIHJldHRhLicsIGFuczogZmFsc2Ug'+
+'fSwKICB7IHRleHQ6ICdEdWUgcmV0dGUgcGVycGVuZGljb2xhcmkgYSB1bmEgc3Rlc3NhIHJldHRhIHNv'+
+'bm8gcGFyYWxsZWxlIGZyYSBsb3JvLicsIGFuczogdHJ1ZSB9LAogIHsgdGV4dDogJ0RhdGEgdW5hIHJl'+
+'dHRhIGUgdW4gcHVudG8gUCwgZXNpc3RlIGFsbWVubyB1bmEgcmV0dGEgcGFzc2FudGUgcGVyIFAgZSBw'+
+'ZXJwZW5kaWNvbGFyZSBhbGxhIHJldHRhIGRhdGEuJywgYW5zOiBmYWxzZSB9LApdOwpidWlsZFRGV2lk'+
+'Z2V0KCd0ZjktY29udGFpbmVyJywgdGY5SXRlbXMpOwpmdW5jdGlvbiBjaGVja1RGOSgpIHsgY2hlY2tU'+
+'RldpZGdldCgndGY5LWNvbnRhaW5lcicsIHRmOUl0ZW1zLCAncmVzOScpOyB9CgoKY29uc3QgdGYxMEl0'+
+'ZW1zID0gWwogIHsgdGV4dDogJ8KrU2UgZHVlIHJldHRlIGZvcm1hbm8gcXVhdHRybyBhbmdvbGkgY29u'+
+'Z3J1ZW50aSwgYWxsb3JhIHNvbm8gcGVycGVuZGljb2xhcmkuwrsg4oCUIFZFUk8/JywgYW5zOiB0cnVl'+
+'IH0KXTsKYnVpbGRURldpZGdldCgndGYxMC1jb250YWluZXInLCB0ZjEwSXRlbXMpOwpmdW5jdGlvbiBj'+
+'aGVja1RGMTAoKSB7IGNoZWNrVEZXaWRnZXQoJ3RmMTAtY29udGFpbmVyJywgdGYxMEl0ZW1zLCAncmVz'+
+'MTAnKTsgfQoKCmZ1bmN0aW9uIGNoZWNrRXgxMigpIHsKICBjb25zdCBhID0gcGFyc2VJbnQoZG9jdW1l'+
+'bnQuZ2V0RWxlbWVudEJ5SWQoJ2FuczEyYScpLnZhbHVlKTsKICBjb25zdCBiID0gcGFyc2VJbnQoZG9j'+
+'dW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FuczEyYicpLnZhbHVlKTsKICBjb25zdCBjID0gcGFyc2VJbnQo'+
+'ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FuczEyYycpLnZhbHVlKTsKICBjb25zdCBkID0gcGFyc2VJ'+
+'bnQoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FuczEyZCcpLnZhbHVlKTsKICBjb25zdCByZXMgPSBk'+
+'b2N1bWVudC5nZXRFbGVtZW50QnlJZCgncmVzMTInKTsKICBjb25zdCBvayA9IGE9PT0xMTIgJiYgYj09'+
+'PTExMiAmJiBjPT09NjggJiYgZD09PTY4OwogIGxldCBtc2cgPSAnJzsKICBpZiAoYSE9PTExMikgbXNn'+
+'Kz0nYSkgQWx0ZXJubyBpbnRlcm5vIGVycmF0by4gJzsKICBpZiAoYiE9PTExMikgbXNnKz0nYikgQ29y'+
+'cmlzcG9uZGVudGUgZXJyYXRvLiAnOwogIGlmIChjIT09NjgpICBtc2crPSdjKSBDb25pdWdhdG8gZXJy'+
+'YXRvLiAnOwogIGlmIChkIT09NjgpICBtc2crPSdkKSBTdXBwbGVtZW50YXJlIGVycmF0by4gJzsKICBy'+
+'ZXMudGV4dENvbnRlbnQgPSBvayA/ICfinJMgUGVyZmV0dG8hIFR1dHRpIGdsaSBhbmdvbGkgY29ycmV0'+
+'dGkuJyA6ICfinJcgJyttc2c7CiAgcmVzLmNsYXNzTmFtZSA9IG9rID8gJ3Jlc3VsdCBvaycgOiAncmVz'+
+'dWx0IGVycic7CiAgYXV0b0NoZWNrc1snZXgxMiddID0gb2s7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5'+
+'SWQoJ2V4MTInKS5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1vaycsIG9rKTsKICBkb2N1bWVudC5n'+
+'ZXRFbGVtZW50QnlJZCgnZXgxMicpLmNsYXNzTGlzdC50b2dnbGUoJ2Fuc3dlcmVkLWVycicsICFvayk7'+
+'CiAgdXBkYXRlR2xvYmFsKCk7Cn0KCgpjb25zdCBtYXRjaDE0RGVmcyA9IFsKICB7IHRleHQ6ICdBbHRl'+
+'cm5pIGludGVybmkgKHIg4oilIHMpJywgYW5zOiAnQ29uZ3J1ZW50aScgfSwKICB7IHRleHQ6ICdDb3Jy'+
+'aXNwb25kZW50aSAociDiiKUgcyknLCAgYW5zOiAnQ29uZ3J1ZW50aScgfSwKICB7IHRleHQ6ICdDb25p'+
+'dWdhdGkgaW50ZXJuaSAociDiiKUgcyknLCBhbnM6ICdTdXBwbGVtZW50YXJpJyB9LAogIHsgdGV4dDog'+
+'J0FsdGVybmkgZXN0ZXJuaSAociDiiKUgcyknLCBhbnM6ICdDb25ncnVlbnRpJyB9LAogIHsgdGV4dDog'+
+'J0Nvbml1Z2F0aSBlc3Rlcm5pIChyIOKIpSBzKScsIGFuczogJ1N1cHBsZW1lbnRhcmknIH0sCl07CmNv'+
+'bnN0IG1hdGNoMTRPcHRzID0gWydDb25ncnVlbnRpJywnU3VwcGxlbWVudGFyaScsJ05lc3N1bmEgZGVs'+
+'bGUgZHVlJ107CihmdW5jdGlvbiBidWlsZE1hdGNoMTQoKSB7CiAgY29uc3QgYyA9IGRvY3VtZW50Lmdl'+
+'dEVsZW1lbnRCeUlkKCdtYXRjaDE0Jyk7CiAgbWF0Y2gxNERlZnMuZm9yRWFjaCgoaXRlbSxpKSA9PiB7'+
+'CiAgICBjb25zdCByb3cgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgIHJvdy5jbGFz'+
+'c05hbWUgPSAnbWF0Y2gtcm93JzsKICAgIGNvbnN0IHNodWZmbGVkID0gWy4uLm1hdGNoMTRPcHRzXS5z'+
+'b3J0KCgpPT5NYXRoLnJhbmRvbSgpLTAuNSk7CiAgICByb3cuaW5uZXJIVE1MID0gYDxzcGFuPiR7aXRl'+
+'bS50ZXh0fTwvc3Bhbj4KICAgICAgPHNlbGVjdCBpZD0ibTE0XyR7aX0iPgogICAgICAgIDxvcHRpb24g'+
+'dmFsdWU9IiI+4oCUIHNjZWdsaSDigJQ8L29wdGlvbj4KICAgICAgICAke3NodWZmbGVkLm1hcChvPT5g'+
+'PG9wdGlvbiB2YWx1ZT0iJHtvfSI+JHtvfTwvb3B0aW9uPmApLmpvaW4oJycpfQogICAgICA8L3NlbGVj'+
+'dD5gOwogICAgYy5hcHBlbmRDaGlsZChyb3cpOwogIH0pOwp9KSgpOwpmdW5jdGlvbiBjaGVja01hdGNo'+
+'MTQoKSB7CiAgbGV0IG9rID0gMDsKICBtYXRjaDE0RGVmcy5mb3JFYWNoKChpdGVtLGkpID0+IHsKICAg'+
+'IGlmICgoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ20xNF8nK2kpfHx7fSkudmFsdWUgPT09IGl0ZW0u'+
+'YW5zKSBvaysrOwogIH0pOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyZXMx'+
+'NCcpOwogIGNvbnN0IGdvb2QgPSBvayA9PT0gbWF0Y2gxNERlZnMubGVuZ3RoOwogIHJlcy50ZXh0Q29u'+
+'dGVudCA9IGdvb2QgPyAn4pyTIFBlcmZldHRvIScgOiBg4pyXICR7b2t9LyR7bWF0Y2gxNERlZnMubGVu'+
+'Z3RofSBjb3JyZXR0aS5gOwogIHJlcy5jbGFzc05hbWUgPSBnb29kID8gJ3Jlc3VsdCBvaycgOiAncmVz'+
+'dWx0IGVycic7CiAgYXV0b0NoZWNrc1snZXgxNCddID0gZ29vZDsKICBkb2N1bWVudC5nZXRFbGVtZW50'+
+'QnlJZCgnZXgxNCcpLmNsYXNzTGlzdC50b2dnbGUoJ2Fuc3dlcmVkLW9rJywgZ29vZCk7CiAgZG9jdW1l'+
+'bnQuZ2V0RWxlbWVudEJ5SWQoJ2V4MTQnKS5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1lcnInLCAh'+
+'Z29vZCk7CiAgdXBkYXRlR2xvYmFsKCk7Cn0KCgpmdW5jdGlvbiBjaGVja0V4MTUoKSB7CiAgY29uc3Qg'+
+'eCA9IHBhcnNlSW50KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhbnMxNXgnKS52YWx1ZSk7CiAgY29u'+
+'c3QgYSA9IHBhcnNlSW50KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhbnMxNWEnKS52YWx1ZSk7CiAg'+
+'Y29uc3QgYiA9IHBhcnNlSW50KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhbnMxNWInKS52YWx1ZSk7'+
+'CiAgY29uc3QgcmVzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JlczE1Jyk7CiAgY29uc3Qgb2sg'+
+'PSB4PT09MjQgJiYgYT09PTg3ICYmIGI9PT05MzsKICByZXMudGV4dENvbnRlbnQgPSBvayA/ICfinJMg'+
+'UGVyZmV0dG8hJyA6ICfinJcgUXVhbGNvc2Egbm9uIHRvcm5hLiBSaWNhbGNvbGEuJzsKICByZXMuY2xh'+
+'c3NOYW1lID0gb2sgPyAncmVzdWx0IG9rJyA6ICdyZXN1bHQgZXJyJzsKICBhdXRvQ2hlY2tzWydleDE1'+
+'J10gPSBvazsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXgxNScpLmNsYXNzTGlzdC50b2dnbGUo'+
+'J2Fuc3dlcmVkLW9rJywgb2spOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleDE1JykuY2xhc3NM'+
+'aXN0LnRvZ2dsZSgnYW5zd2VyZWQtZXJyJywgIW9rKTsKICB1cGRhdGVHbG9iYWwoKTsKfQoKCmZ1bmN0'+
+'aW9uIGNoZWNrRXgxOCgpIHsKICBjb25zdCB4ID0gcGFyc2VJbnQoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5'+
+'SWQoJ2FuczE4eCcpLnZhbHVlKTsKICBjb25zdCBhID0gcGFyc2VJbnQoZG9jdW1lbnQuZ2V0RWxlbWVu'+
+'dEJ5SWQoJ2FuczE4YScpLnZhbHVlKTsKICBjb25zdCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJ'+
+'ZCgncmVzMTgnKTsKICBjb25zdCBvayA9IHg9PT0xNiAmJiBhPT09NzA7CiAgcmVzLnRleHRDb250ZW50'+
+'ID0gb2sgPyAn4pyTIENvcnJldHRvIScgOiAn4pyXIFJpY29udHJvbGxhIGlsIGNhbGNvbG8uJzsKICBy'+
+'ZXMuY2xhc3NOYW1lID0gb2sgPyAncmVzdWx0IG9rJyA6ICdyZXN1bHQgZXJyJzsKICBhdXRvQ2hlY2tz'+
+'WydleDE4J10gPSBvazsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXgxOCcpLmNsYXNzTGlzdC50'+
+'b2dnbGUoJ2Fuc3dlcmVkLW9rJywgb2spOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleDE4Jyku'+
+'Y2xhc3NMaXN0LnRvZ2dsZSgnYW5zd2VyZWQtZXJyJywgIW9rKTsKICB1cGRhdGVHbG9iYWwoKTsKfQoK'+
+'CmNvbnN0IHRmMjFJdGVtcyA9IFsKICB7IHRleHQ6ICdMXCdhbmdvbG8gZXN0ZXJubyDDqCBzZW1wcmUg'+
+'bWFnZ2lvcmUgZGkgY2lhc2N1biBhbmdvbG8gaW50ZXJuby4nLCBhbnM6IGZhbHNlIH0sCiAgeyB0ZXh0'+
+'OiAnVW4gYW5nb2xvIGVzdGVybm8gZGkgdW4gdHJpYW5nb2xvIHB1w7IgZXNzZXJlIG1pbm9yZSBkZWxs'+
+'XCdhbmdvbG8gaW50ZXJubyBhZGlhY2VudGUuJywgYW5zOiB0cnVlIH0sCiAgeyB0ZXh0OiAnTGEgc29t'+
+'bWEgZGkgdW4gYW5nb2xvIGludGVybm8gZSBkZWwgY29ycmlzcG9uZGVudGUgYW5nb2xvIGVzdGVybm8g'+
+'w6ggc2VtcHJlIDE4MMKwLicsIGFuczogdHJ1ZSB9LAogIHsgdGV4dDogJ0luIHVuIHRyaWFuZ29sbyBy'+
+'ZXR0YW5nb2xvLCBsXCdhbmdvbG8gZXN0ZXJubyBhbGxcJ2FuZ29sbyByZXR0byDDqCA5MMKwLicsIGFu'+
+'czogdHJ1ZSB9LApdOwpidWlsZFRGV2lkZ2V0KCd0ZjIxLWNvbnRhaW5lcicsIHRmMjFJdGVtcyk7CmZ1'+
+'bmN0aW9uIGNoZWNrVEYyMSgpIHsgY2hlY2tURldpZGdldCgndGYyMS1jb250YWluZXInLCB0ZjIxSXRl'+
+'bXMsICdyZXMyMScpOyB9CgoKZnVuY3Rpb24gY2hlY2tFeDIzKCkgewogIGNvbnN0IHggPSBwYXJzZUlu'+
+'dChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnYW5zMjN4JykudmFsdWUpOwogIGNvbnN0IGEgPSBwYXJz'+
+'ZUludChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnYW5zMjNhJykudmFsdWUpOwogIGNvbnN0IGIgPSBw'+
+'YXJzZUludChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnYW5zMjNiJykudmFsdWUpOwogIGNvbnN0IGNj'+
+'ID0gcGFyc2VJbnQoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2FuczIzYycpLnZhbHVlKTsKICBjb25z'+
+'dCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncmVzMjMnKTsKICBjb25zdCBvayA9IHg9PT00'+
+'MiAmJiBhPT09NDIgJiYgYj09PTYyICYmIGNjPT09NzY7CiAgcmVzLnRleHRDb250ZW50ID0gb2sgPyAn'+
+'4pyTIFBlcmZldHRvIScgOiAn4pyXIFJpY29udHJvbGxhIGxcJ2VxdWF6aW9uZSBlIGkgY2FsY29saS4n'+
+'OwogIHJlcy5jbGFzc05hbWUgPSBvayA/ICdyZXN1bHQgb2snIDogJ3Jlc3VsdCBlcnInOwogIGF1dG9D'+
+'aGVja3NbJ2V4MjMnXSA9IG9rOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleDIzJykuY2xhc3NM'+
+'aXN0LnRvZ2dsZSgnYW5zd2VyZWQtb2snLCBvayk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2V4'+
+'MjMnKS5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1lcnInLCAhb2spOwogIHVwZGF0ZUdsb2JhbCgp'+
+'Owp9CgoKY29uc3QgbWF0Y2gyNURlZnMgPSBbCiAgeyB0ZXh0OiAnRHVlIHRyaWFuZ29saSBjb24gZHVl'+
+'IGxhdGkgZSBsXCdhbmdvbG8gZnJhIGVzc2kgY29tcHJlc28gb3JkaW5hdGFtZW50ZSBjb25ncnVlbnRp'+
+'LicsIGFuczogJ0kgY3JpdGVyaW8gZGkgY29uZ3J1ZW56YScgfSwKICB7IHRleHQ6ICdEdWUgdHJpYW5n'+
+'b2xpIGNvbiBkdWUgYW5nb2xpIGUgaWwgbGF0byBjb21wcmVzbyBvcmRpbmF0YW1lbnRlIGNvbmdydWVu'+
+'dGkuJywgYW5zOiAnSUkgY3JpdGVyaW8gZGkgY29uZ3J1ZW56YScgfSwKICB7IHRleHQ6ICdUcmlhbmdv'+
+'bGkgcmV0dGFuZ29saSBjb24gaXBvdGVudXNhIGUgdW4gY2F0ZXRvIG9yZGluYXRhbWVudGUgY29uZ3J1'+
+'ZW50aS4nLCBhbnM6ICdDcml0ZXJpbyBkaSBjb25ncnVlbnphIGRlaSB0cmlhbmdvbGkgcmV0dGFuZ29s'+
+'aScgfSwKICB7IHRleHQ6ICdUcmlhbmdvbGkgcmV0dGFuZ29saSBjb24gZW50cmFtYmkgaSBjYXRldGkg'+
+'b3JkaW5hdGFtZW50ZSBjb25ncnVlbnRpLicsIGFuczogJ0kgY3JpdGVyaW8gZGkgY29uZ3J1ZW56YSAo'+
+'Y2FzbyBwYXJ0aWNvbGFyZSknIH0sCiAgeyB0ZXh0OiAnVHJpYW5nb2xpIHJldHRhbmdvbGkgY29uIGlw'+
+'b3RlbnVzYSBlIHVuIGFuZ29sbyBhY3V0byBvcmRpbmF0YW1lbnRlIGNvbmdydWVudGkuJywgYW5zOiAn'+
+'SUkgY3JpdGVyaW8gZGkgY29uZ3J1ZW56YSBnZW5lcmFsaXp6YXRvJyB9LApdOwpjb25zdCBtYXRjaDI1'+
+'T3B0cyA9IFsKICAnSSBjcml0ZXJpbyBkaSBjb25ncnVlbnphJywKICAnSUkgY3JpdGVyaW8gZGkgY29u'+
+'Z3J1ZW56YScsCiAgJ0NyaXRlcmlvIGRpIGNvbmdydWVuemEgZGVpIHRyaWFuZ29saSByZXR0YW5nb2xp'+
+'JywKICAnSSBjcml0ZXJpbyBkaSBjb25ncnVlbnphIChjYXNvIHBhcnRpY29sYXJlKScsCiAgJ0lJIGNy'+
+'aXRlcmlvIGRpIGNvbmdydWVuemEgZ2VuZXJhbGl6emF0bycsCl07CihmdW5jdGlvbiBidWlsZE1hdGNo'+
+'MjUoKSB7CiAgY29uc3QgYyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdtYXRjaDI1Jyk7CiAgbWF0'+
+'Y2gyNURlZnMuZm9yRWFjaCgoaXRlbSxpKSA9PiB7CiAgICBjb25zdCByb3cgPSBkb2N1bWVudC5jcmVh'+
+'dGVFbGVtZW50KCdkaXYnKTsKICAgIHJvdy5jbGFzc05hbWUgPSAnbWF0Y2gtcm93JzsKICAgIGNvbnN0'+
+'IHNodWZmbGVkID0gWy4uLm1hdGNoMjVPcHRzXS5zb3J0KCgpPT5NYXRoLnJhbmRvbSgpLTAuNSk7CiAg'+
+'ICByb3cuaW5uZXJIVE1MID0gYDxzcGFuPiR7aXRlbS50ZXh0fTwvc3Bhbj4KICAgICAgPHNlbGVjdCBp'+
+'ZD0ibTI1XyR7aX0iPgogICAgICAgIDxvcHRpb24gdmFsdWU9IiI+4oCUIHNjZWdsaSDigJQ8L29wdGlv'+
+'bj4KICAgICAgICAke3NodWZmbGVkLm1hcChvPT5gPG9wdGlvbiB2YWx1ZT0iJHtvfSI+JHtvfTwvb3B0'+
+'aW9uPmApLmpvaW4oJycpfQogICAgICA8L3NlbGVjdD5gOwogICAgYy5hcHBlbmRDaGlsZChyb3cpOwog'+
+'IH0pOwp9KSgpOwpmdW5jdGlvbiBjaGVja01hdGNoMjUoKSB7CiAgbGV0IG9rID0gMDsKICBtYXRjaDI1'+
+'RGVmcy5mb3JFYWNoKChpdGVtLGkpID0+IHsKICAgIGlmICgoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQo'+
+'J20yNV8nK2kpfHx7fSkudmFsdWUgPT09IGl0ZW0uYW5zKSBvaysrOwogIH0pOwogIGNvbnN0IHJlcyA9'+
+'IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyZXMyNScpOwogIGNvbnN0IGdvb2QgPSBvayA9PT0gbWF0'+
+'Y2gyNURlZnMubGVuZ3RoOwogIHJlcy50ZXh0Q29udGVudCA9IGdvb2QgPyAn4pyTIFR1dHRpIGdsaSBh'+
+'YmJpbmFtZW50aSBjb3JyZXR0aSEnIDogYOKclyAke29rfS8ke21hdGNoMjVEZWZzLmxlbmd0aH0gY29y'+
+'cmV0dGkuYDsKICByZXMuY2xhc3NOYW1lID0gZ29vZCA/ICdyZXN1bHQgb2snIDogJ3Jlc3VsdCBlcnIn'+
+'OwogIGF1dG9DaGVja3NbJ2V4MjUnXSA9IGdvb2Q7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2V4'+
+'MjUnKS5jbGFzc0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1vaycsIGdvb2QpOwogIGRvY3VtZW50LmdldEVs'+
+'ZW1lbnRCeUlkKCdleDI1JykuY2xhc3NMaXN0LnRvZ2dsZSgnYW5zd2VyZWQtZXJyJywgIWdvb2QpOwog'+
+'IHVwZGF0ZUdsb2JhbCgpOwp9CgoKY29uc3QgdGYyN0l0ZW1zID0gWwogIHsgdGV4dDogJ05lbCBjcml0'+
+'ZXJpbyBkaSBjb25ncnVlbnphIGRlaSB0cmlhbmdvbGkgcmV0dGFuZ29saSwgbFwnYW5nb2xvIHJldHRv'+
+'IMOoIGdpw6AgY29uZ3J1ZW50ZSBwZXIgZGVmaW5pemlvbmUgZSBub24gdmEgdmVyaWZpY2F0byBlc3Bs'+
+'aWNpdGFtZW50ZS4nLCBhbnM6IHRydWUgfSwKICB7IHRleHQ6ICdJbCBjcml0ZXJpbyBkaSBjb25ncnVl'+
+'bnphIGRlaSB0cmlhbmdvbGkgcmV0dGFuZ29saSAoaXBvdGVudXNhICsgY2F0ZXRvKSB2YWxlIGFuY2hl'+
+'IHBlciB0cmlhbmdvbGkgbm9uIHJldHRhbmdvbGkgc2Ugc2kgc29zdGl0dWlzY2UgImlwb3RlbnVzYSIg'+
+'Y29uICJsYXRvIG1hZ2dpb3JlIi4nLCBhbnM6IGZhbHNlIH0sCiAgeyB0ZXh0OiAnRHVlIHRyaWFuZ29s'+
+'aSByZXR0YW5nb2xpIGNvbiB1biBjYXRldG8gZSB1biBhbmdvbG8gYWN1dG8gb3JkaW5hdGFtZW50ZSBj'+
+'b25ncnVlbnRpIHNvbm8gY29uZ3J1ZW50aSAoSUkgY3JpdGVyaW8gZ2VuZXJhbGl6emF0byBhcHBsaWNh'+
+'dG8gYWkgcmV0dGFuZ29saSkuJywgYW5zOiB0cnVlIH0sCiAgeyB0ZXh0OiAnSWwgSSBjcml0ZXJpbyBk'+
+'aSBjb25ncnVlbnphIHNpIHB1w7IgYXBwbGljYXJlIGRpcmV0dGFtZW50ZSBhaSB0cmlhbmdvbGkgcmV0'+
+'dGFuZ29saSBzZW56YSBhbGN1bmEgbW9kaWZpY2EuJywgYW5zOiB0cnVlIH0sCl07CmJ1aWxkVEZXaWRn'+
+'ZXQoJ3RmMjctY29udGFpbmVyJywgdGYyN0l0ZW1zKTsKZnVuY3Rpb24gY2hlY2tURjI3KCkgeyBjaGVj'+
+'a1RGV2lkZ2V0KCd0ZjI3LWNvbnRhaW5lcicsIHRmMjdJdGVtcywgJ3JlczI3Jyk7IH0KCgpmdW5jdGlv'+
+'biBjaGVja0V4MzAoKSB7CiAgY29uc3QgYyA9IHBhcnNlSW50KGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdhbnMzMGMnKS52YWx1ZSk7CiAgY29uc3QgYSA9IHBhcnNlRmxvYXQoZG9jdW1lbnQuZ2V0RWxlbWVu'+
+'dEJ5SWQoJ2FuczMwYScpLnZhbHVlKTsKICBjb25zdCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJ'+
+'ZCgncmVzMzAnKTsKICBjb25zdCBvayA9IGM9PT02NSAmJiBNYXRoLmFicyhhLTU3LjUpPD0wLjY7CiAg'+
+'cmVzLnRleHRDb250ZW50ID0gb2sgPyAn4pyTIENvcnJldHRvIScgOiAn4pyXIFJpY2FsY29sYSB1c2Fu'+
+'ZG8gaWwgdGVvcmVtYSBkZWxsXCdhbmdvbG8gZXN0ZXJubyBlIGxcJ2lzb3NjZWxpYS4nOwogIHJlcy5j'+
+'bGFzc05hbWUgPSBvayA/ICdyZXN1bHQgb2snIDogJ3Jlc3VsdCBlcnInOwogIGF1dG9DaGVja3NbJ2V4'+
+'MzAnXSA9IG9rOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleDMwJykuY2xhc3NMaXN0LnRvZ2ds'+
+'ZSgnYW5zd2VyZWQtb2snLCBvayk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2V4MzAnKS5jbGFz'+
+'c0xpc3QudG9nZ2xlKCdhbnN3ZXJlZC1lcnInLCAhb2spOwogIHVwZGF0ZUdsb2JhbCgpOwp9CgoKY29u'+
+'c3QgbWF0Y2gzMkRlZnMgPSBbCiAgeyB0ZXh0OiAnQW5nb2xpIDEgZSA1IChjb3JyaXNwb25kZW50aSkn'+
+'LCBhbnM6ICdDb25ncnVlbnRpICjiiYUpJyB9LAogIHsgdGV4dDogJ0FuZ29saSAzIGUgNSAoYWx0ZXJu'+
+'aSBpbnRlcm5pKScsIGFuczogJ0NvbmdydWVudGkgKOKJhSknIH0sCiAgeyB0ZXh0OiAnQW5nb2xpIDEg'+
+'ZSA3IChhbHRlcm5pIGVzdGVybmkpJywgYW5zOiAnQ29uZ3J1ZW50aSAo4omFKScgfSwKICB7IHRleHQ6'+
+'ICdBbmdvbGkgMyBlIDYgKGNvbml1Z2F0aSBpbnRlcm5pKScsIGFuczogJ1N1cHBsZW1lbnRhcmkgKHN1'+
+'cHBsLiknIH0sCiAgeyB0ZXh0OiAnQW5nb2xpIDIgZSA3IChjb25pdWdhdGkgZXN0ZXJuaSknLCBhbnM6'+
+'ICdTdXBwbGVtZW50YXJpIChzdXBwbC4pJyB9LAogIHsgdGV4dDogJ0FuZ29saSAxIGUgMyAob3Bwb3N0'+
+'aSBhbCB2ZXJ0aWNlLCBzdGVzc2EgaW50ZXJzZXppb25lKScsIGFuczogJ0NvbmdydWVudGkgKOKJhSkn'+
+'IH0sCiAgeyB0ZXh0OiAnQW5nb2xpIDEgZSAyIChhZGlhY2VudGksIHN0ZXNzYSBpbnRlcnNlemlvbmUp'+
+'JywgYW5zOiAnU3VwcGxlbWVudGFyaSAoc3VwcGwuKScgfSwKICB7IHRleHQ6ICdBbmdvbGkgMiBlIDUg'+
+'KG5vbiBjbGFzc2lmaWNhdGkgdHJhIGxlIGNvcHBpZSBzdGFuZGFyZCknLCBhbnM6ICdOw6kgbFwndW5v'+
+'IG7DqSBsXCdhbHRybycgfSwKXTsKY29uc3QgbWF0Y2gzMk9wdHMgPSBbJ0NvbmdydWVudGkgKOKJhSkn'+
+'LCAnU3VwcGxlbWVudGFyaSAoc3VwcGwuKScsICdOw6kgbFwndW5vIG7DqSBsXCdhbHRybyddOwooZnVu'+
+'Y3Rpb24gYnVpbGRNYXRjaDMyKCkgewogIGNvbnN0IGMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgn'+
+'bWF0Y2gzMicpOwogIG1hdGNoMzJEZWZzLmZvckVhY2goKGl0ZW0sIGkpID0+IHsKICAgIGNvbnN0IHJv'+
+'dyA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpOwogICAgcm93LmNsYXNzTmFtZSA9ICdtYXRj'+
+'aC1yb3cnOwogICAgY29uc3Qgc2h1ZmZsZWQgPSBbLi4ubWF0Y2gzMk9wdHNdLnNvcnQoKCkgPT4gTWF0'+
+'aC5yYW5kb20oKSAtIDAuNSk7CiAgICByb3cuaW5uZXJIVE1MID0gYDxzcGFuPiR7aXRlbS50ZXh0fTwv'+
+'c3Bhbj4KICAgICAgPHNlbGVjdCBpZD0ibTMyXyR7aX0iPgogICAgICAgIDxvcHRpb24gdmFsdWU9IiI+'+
+'4oCUIHNjZWdsaSDigJQ8L29wdGlvbj4KICAgICAgICAke3NodWZmbGVkLm1hcChvID0+IGA8b3B0aW9u'+
+'IHZhbHVlPSIke299Ij4ke299PC9vcHRpb24+YCkuam9pbignJyl9CiAgICAgIDwvc2VsZWN0PmA7CiAg'+
+'ICBjLmFwcGVuZENoaWxkKHJvdyk7CiAgfSk7Cn0pKCk7CmZ1bmN0aW9uIGNoZWNrTWF0Y2gzMigpIHsK'+
+'ICBsZXQgb2sgPSAwOwogIG1hdGNoMzJEZWZzLmZvckVhY2goKGl0ZW0sIGkpID0+IHsKICAgIGlmICgo'+
+'ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ20zMl8nICsgaSkgfHwge30pLnZhbHVlID09PSBpdGVtLmFu'+
+'cykgb2srKzsKICB9KTsKICBjb25zdCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncmVzMzIn'+
+'KTsKICBjb25zdCBnb29kID0gb2sgPT09IG1hdGNoMzJEZWZzLmxlbmd0aDsKICByZXMudGV4dENvbnRl'+
+'bnQgPSBnb29kID8gJ+KckyBQZXJmZXR0byEgVHV0dGkgZ2xpIGFuZ29saSBjbGFzc2lmaWNhdGkgY29y'+
+'cmV0dGFtZW50ZS4nIDogYOKclyAke29rfS8ke21hdGNoMzJEZWZzLmxlbmd0aH0gY29ycmV0dGkuIFJp'+
+'Y29udHJvbGxhIGxlIGRlZmluaXppb25pLmA7CiAgcmVzLmNsYXNzTmFtZSA9IGdvb2QgPyAncmVzdWx0'+
+'IG9rJyA6ICdyZXN1bHQgZXJyJzsKICBhdXRvQ2hlY2tzWydleDMyJ10gPSBnb29kOwogIGRvY3VtZW50'+
+'LmdldEVsZW1lbnRCeUlkKCdleDMyJykuY2xhc3NMaXN0LnRvZ2dsZSgnYW5zd2VyZWQtb2snLCBnb29k'+
+'KTsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXgzMicpLmNsYXNzTGlzdC50b2dnbGUoJ2Fuc3dl'+
+'cmVkLWVycicsICFnb29kKTsKICB1cGRhdGVHbG9iYWwoKTsKfQoKCmRvY3VtZW50LnF1ZXJ5U2VsZWN0'+
+'b3IoJ1tvbmNsaWNrPSJjaGVja051bShcJ2FuczExXCcsIDI3LCBcJ3JlczExXCcpIl0nKQogIC5zZXRB'+
+'dHRyaWJ1dGUoJ29uY2xpY2snLCAiY2hlY2tOdW0oJ2FuczExJywgMjcsICdyZXMxMScsIDApIik7CgoK'+
+'dXBkYXRlR2xvYmFsKCk7CgoKY29uc3QgZnNCdG4gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZnVs'+
+'bHNjcmVlbi1idG4nKTsKaWYgKGZzQnRuKSB7CiAgZnNCdG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2sn'+
+'LCAoKSA9PiB7CiAgICBpZiAoIWRvY3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50KSB7CiAgICAgIGRvY3Vt'+
+'ZW50LmRvY3VtZW50RWxlbWVudC5yZXF1ZXN0RnVsbHNjcmVlbigpLmNhdGNoKCgpID0+IHt9KTsKICAg'+
+'ICAgZnNCdG4udGV4dENvbnRlbnQgPSAn4pyVIEVzY2kgZGEgc2NoZXJtbyBpbnRlcm8nOwogICAgfSBl'+
+'bHNlIHsKICAgICAgZG9jdW1lbnQuZXhpdEZ1bGxzY3JlZW4oKTsKICAgICAgZnNCdG4udGV4dENvbnRl'+
+'bnQgPSAn4pu2IFNjaGVybW8gaW50ZXJvJzsKICAgIH0KICB9KTsKICBkb2N1bWVudC5hZGRFdmVudExp'+
+'c3RlbmVyKCdmdWxsc2NyZWVuY2hhbmdlJywgKCkgPT4gewogICAgaWYgKCFkb2N1bWVudC5mdWxsc2Ny'+
+'ZWVuRWxlbWVudCkgZnNCdG4udGV4dENvbnRlbnQgPSAn4pu2IFNjaGVybW8gaW50ZXJvJzsKICB9KTsK'+
+'fQo='].join('');var _0x5613=Uint8Array.from(atob(_0xc0ba),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0x5613));
 </script>
 
 <footer>
