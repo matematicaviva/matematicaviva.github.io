@@ -301,13 +301,29 @@ canvas.viz-canvas {
     padding-bottom: 5rem;
   }
 }
+
+* { user-select: none; -webkit-user-select: none; }
 </style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full">
-  <main class="slide-container" id="app"><!-- SLIDE 1: Introduzione -->
+ <script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'||e.key==='p'||e.key==='P'))||
+       (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))||
+       e.key==='F12'){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  });
+  var _d=function(){var _t=new Date();debugger;if(new Date()-_t>100){document.body.innerHTML='';document.title='';}setTimeout(_d,1500);};
+  setTimeout(_d,2000);
+})();
+</script>
+<body class="h-full">
+  <main class="slide-container" id="app">
    <section class="slide active" id="slide-0" aria-label="Introduzione">
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding-bottom:3rem;">
      <p class="anim-in" style="font-size:clamp(0.9rem,1.5vw,1.1rem); color:var(--primary-color); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.5rem; font-weight:600;">Presentazione Interattiva</p>
@@ -334,11 +350,11 @@ canvas.viz-canvas {
       </div>
      </div>
     </div>
-   </section><!-- SLIDE 2: Cosa sono -->
+   </section>
    <section class="slide" id="slide-1" aria-label="Definizione">
     <h1 class="slide-title">Cosa sono le Coordinate Sferiche?</h1>
     <p style="color:#94a3b8; font-size:clamp(0.85rem,1.3vw,1rem); margin-bottom:1rem; max-width:700px;">Un sistema alternativo per localizzare un punto nello spazio 3D usando una <strong style="color:var(--text-color);">distanza</strong> e <strong style="color:var(--text-color);">due angoli</strong>.</p>
-    <div class="flex-responsive" style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;"><!-- Left: 3 component cards -->
+    <div class="flex-responsive" style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
      <div style="flex:1; min-width:260px; display:flex; flex-direction:column; gap:0.8rem;">
       <div class="surface-card" style="border-left:3px solid #ff6b6b;">
        <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;"><span class="tag-pill" style="background:rgba(255,107,107,0.2); color:#ff6b6b;">r</span> <strong>Distanza radiale</strong>
@@ -355,13 +371,13 @@ canvas.viz-canvas {
        </div>
        <p style="font-size:0.85rem; color:#94a3b8; line-height:1.5;">Angolo rispetto all'asse z positivo. Intervallo: [0, π].</p>
       </div>
-     </div><!-- Right: 3D interactive canvas -->
+     </div>
      <div style="flex:1; min-width:300px; display:flex; flex-direction:column; align-items:center;">
       <canvas id="canvas3d" class="viz-canvas" width="420" height="340" style="width:100%; max-width:420px;"></canvas>
       <p style="font-size:0.75rem; color:#64748b; margin-top:0.4rem;">🖱️ Trascina per ruotare — asse z verso l'alto</p>
      </div>
     </div>
-   </section><!-- SLIDE 3: Formule di conversione -->
+   </section>
    <section class="slide" id="slide-2" aria-label="Formule di conversione">
     <h1 class="slide-title">Relazione con le Coordinate Cartesiane</h1>
     <div class="flex-responsive" style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:0.5rem;">
@@ -416,7 +432,7 @@ canvas.viz-canvas {
       💡 <strong style="color:#94a3b8;">Procedura:</strong> calcola ρ = r sin φ, poi ricava cos θ = x/ρ e sin θ = y/ρ. I segni di entrambi determinano univocamente il quadrante, e quindi il valore esatto di θ ∈ [0, 2π).
      </p>
     </div>
-   </section><!-- SLIDE 4: Applicazioni -->
+   </section>
    <section class="slide" id="slide-3" aria-label="Applicazioni">
     <h1 class="slide-title">Applicazioni Pratiche</h1>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:1rem; margin-top:0.5rem;">
@@ -445,21 +461,21 @@ canvas.viz-canvas {
       </div>
      </div>
     </div>
-   </section><!-- SLIDE 6: Quiz -->
+   </section>
    <section class="slide" id="slide-4" aria-label="Quiz interattivo">
-    <h1 class="slide-title">Momento Interattivo 🧠</h1><!-- Quiz 1 -->
+    <h1 class="slide-title">Momento Interattivo 🧠</h1>
     <div id="quiz1" style="margin-bottom:1.2rem;">
      <h2 class="section-title" style="font-size:1rem;">Domanda 1: Un punto ha coordinate cartesiane P = (0, 0, 3). Quanto vale φ?</h2>
      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.5rem;" id="quiz1Options"><button class="quiz-option" data-q="1" data-a="a">A) φ = π/2</button> <button class="quiz-option" data-q="1" data-a="b">B) φ = π</button> <button class="quiz-option" data-q="1" data-a="c">C) φ = 0</button> <button class="quiz-option" data-q="1" data-a="d">D) φ = π/4</button>
      </div>
      <p id="quiz1Feedback" style="margin-top:0.4rem; font-size:0.85rem; min-height:1.2rem;"></p>
-    </div><!-- Quiz 2 -->
+    </div>
     <div id="quiz2" style="margin-bottom:1.2rem;">
      <h2 class="section-title" style="font-size:1rem;">Domanda 2: Se P = (1, 1, √2), quanto vale r?</h2>
      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.5rem;" id="quiz2Options"><button class="quiz-option" data-q="2" data-a="a">A) √2</button> <button class="quiz-option" data-q="2" data-a="b">B) 2</button> <button class="quiz-option" data-q="2" data-a="c">C) √6</button> <button class="quiz-option" data-q="2" data-a="d">D) 4</button>
      </div>
      <p id="quiz2Feedback" style="margin-top:0.4rem; font-size:0.85rem; min-height:1.2rem;"></p>
-    </div><!-- Esercizio guidato -->
+    </div>
     <div class="surface-card" style="border:1px solid rgba(79,140,255,0.25);">
      <h2 class="section-title" style="font-size:1rem;">Esercizio Guidato: Converti P = (1, √3, 2) in sferiche</h2>
      <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-top:0.5rem;">
@@ -476,9 +492,9 @@ canvas.viz-canvas {
       </div>
      </details>
     </div>
-   </section><!-- SLIDE 7: Riepilogo -->
+   </section>
    <section class="slide" id="slide-5" aria-label="Riepilogo finale">
-    <h1 class="slide-title">Riepilogo Finale</h1><!-- Concept map -->
+    <h1 class="slide-title">Riepilogo Finale</h1>
     <div style="display:flex; flex-wrap:wrap; gap:0.8rem; justify-content:center; margin:0.8rem 0;">
      <div class="concept-node" style="border-color:#ff6b6b;"><span class="r-color">r</span> — Distanza
      </div>
@@ -510,7 +526,7 @@ canvas.viz-canvas {
      <div class="concept-node">
       Cilindriche (ρ, θ, z)
      </div>
-    </div><!-- Comparison table -->
+    </div>
     <h2 class="section-title" style="margin-top:1rem;">Confronto dei Sistemi di Coordinate</h2>
     <div style="overflow-x:auto;">
      <table class="comparison-table">
@@ -553,7 +569,7 @@ canvas.viz-canvas {
     <div style="text-align:center; margin-top:1.5rem; color:#64748b; font-size:0.9rem;">
      <p>🎓 <em>«Le coordinate sferiche trasformano la complessità in simmetria.»</em></p>
     </div>
-   </section><!-- NAVIGATION BAR -->
+   </section>
    <nav class="nav-bar" aria-label="Navigazione slide"><button class="nav-btn" id="prevBtn" disabled aria-label="Slide precedente">◀ Indietro</button>
     <div class="progress-track" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="7">
      <div class="progress-fill" id="progressFill" style="width:16.66%"></div>
@@ -561,375 +577,221 @@ canvas.viz-canvas {
    </nav>
   </main>
   <script>
-let currentSlide = 0;
-const totalSlides = 6;
-const slides = document.querySelectorAll('.slide');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-const pauseRotateBtn = document.getElementById('pauseRotateBtn');
-const progressFill = document.getElementById('progressFill');
-const slideCounter = document.getElementById('slideCounter');
-const appContainer = document.getElementById('app');
-let isFullscreen = false;
-let isRotationPaused = false;
-
-function toggleFullscreen() {
-  try {
-    if (!document.fullscreenElement) {
-      appContainer.requestFullscreen().catch(err => {
-        console.warn('Fullscreen non disponibile:', err.message);
-        isFullscreen = true;
-        fullscreenBtn.innerHTML = '✖️';
-        fullscreenBtn.setAttribute('aria-label', 'Esci da schermo intero');
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  } catch (err) {
-    console.warn('Errore fullscreen:', err.message);
-  }
-}
-
-function toggleRotationPause() {
-  isRotationPaused = !isRotationPaused;
-  if (isRotationPaused) {
-    pauseRotateBtn.innerHTML = '▶️';
-    pauseRotateBtn.setAttribute('aria-label', 'Riprendi rotazione');
-  } else {
-    pauseRotateBtn.innerHTML = '⏸️';
-    pauseRotateBtn.setAttribute('aria-label', 'Pausa rotazione');
-  }
-}
-
-fullscreenBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  toggleFullscreen();
-});
-
-pauseRotateBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  toggleRotationPause();
-});
-
-document.addEventListener('fullscreenchange', () => {
-  if (document.fullscreenElement) {
-    isFullscreen = true;
-    fullscreenBtn.innerHTML = '✖️';
-    fullscreenBtn.setAttribute('aria-label', 'Esci da schermo intero');
-  } else {
-    isFullscreen = false;
-    fullscreenBtn.innerHTML = '🖥️';
-    fullscreenBtn.setAttribute('aria-label', 'Modalità schermo intero');
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && isFullscreen) {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    }
-  }
-});
-
-function goToSlide(idx) {
-  if (idx < 0 || idx >= totalSlides) return;
-  
-  const oldSlide = currentSlide;
-  slides[oldSlide].classList.remove('active');
-  slides[oldSlide].classList.add('exit-left');
-  
-  setTimeout(() => {
-    slides[oldSlide].classList.remove('exit-left');
-  }, 600);
-
-  currentSlide = idx;
-  slides[currentSlide].classList.add('active');
-  slides[currentSlide].scrollTop = 0;
-
-  prevBtn.disabled = currentSlide === 0;
-  nextBtn.disabled = currentSlide === totalSlides - 1;
-  progressFill.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
-  slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
-
-  // Mostra o nascondi il pulsante pausa in base alla slide
-  if (currentSlide === 1) {
-    pauseRotateBtn.style.display = 'block';
-    isRotationPaused = false;
-    pauseRotateBtn.innerHTML = '⏸️';
-    pauseRotateBtn.setAttribute('aria-label', 'Pausa rotazione');
-    setTimeout(() => draw3DScene(), 100);
-  } else {
-    pauseRotateBtn.style.display = 'none';
-  }
-
-}
-
-prevBtn.addEventListener('click', () => {
-  goToSlide(currentSlide - 1);
-});
-
-nextBtn.addEventListener('click', () => {
-  goToSlide(currentSlide + 1);
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') {
-    e.preventDefault();
-    goToSlide(currentSlide + 1);
-  }
-  if (e.key === 'ArrowLeft') {
-    e.preventDefault();
-    goToSlide(currentSlide - 1);
-  }
-});
-
-// ─── 3D Coordinate Visualization ───
-const canvas3d = document.getElementById('canvas3d');
-const ctx3d = canvas3d.getContext('2d');
-let rotX = -0.5, rotZ = 0.4;
-let dragging = false, lastMX = 0, lastMY = 0;
-
-canvas3d.addEventListener('mousedown', (e) => {
-  dragging = true;
-  lastMX = e.clientX;
-  lastMY = e.clientY;
-});
-
-canvas3d.addEventListener('touchstart', (e) => {
-  dragging = true;
-  lastMX = e.touches[0].clientX;
-  lastMY = e.touches[0].clientY;
-}, { passive: true });
-
-window.addEventListener('mouseup', () => {
-  dragging = false;
-});
-
-window.addEventListener('touchend', () => {
-  dragging = false;
-});
-
-window.addEventListener('mousemove', (e) => {
-  if (!dragging) return;
-  rotZ += (e.clientX - lastMX) * 0.008;
-  rotX += (e.clientY - lastMY) * 0.008;
-  rotX = Math.max(-1.2, Math.min(-0.1, rotX));
-  lastMX = e.clientX;
-  lastMY = e.clientY;
-  draw3DScene();
-});
-
-window.addEventListener('touchmove', (e) => {
-  if (!dragging) return;
-  rotZ += (e.touches[0].clientX - lastMX) * 0.008;
-  rotX += (e.touches[0].clientY - lastMY) * 0.008;
-  rotX = Math.max(-1.2, Math.min(-0.1, rotX));
-  lastMX = e.touches[0].clientX;
-  lastMY = e.touches[0].clientY;
-  draw3DScene();
-}, { passive: true });
-
-function project(x3, y3, z3) {
-  let x1 = x3 * Math.cos(rotZ) - y3 * Math.sin(rotZ);
-  let y1 = x3 * Math.sin(rotZ) + y3 * Math.cos(rotZ);
-  let z1 = z3;
-  let y2 = y1 * Math.cos(rotX) - z1 * Math.sin(rotX);
-  let z2 = y1 * Math.sin(rotX) + z1 * Math.cos(rotX);
-  let x2 = x1;
-  const scale = 90;
-  const cx = canvas3d.width / 2;
-  const cy = canvas3d.height / 2;
-  return [cx + x2 * scale, cy - z2 * scale, y2];
-}
-
-function drawLine3D(ctx, x1, y1, z1, x2, y2, z2, color, width = 1.5) {
-  const [px1, py1] = project(x1, y1, z1);
-  const [px2, py2] = project(x2, y2, z2);
-  ctx.beginPath();
-  ctx.moveTo(px1, py1);
-  ctx.lineTo(px2, py2);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = width;
-  ctx.stroke();
-}
-
-function drawArrow3D(ctx, x1, y1, z1, x2, y2, z2, color, width = 1.5) {
-  drawLine3D(ctx, x1, y1, z1, x2, y2, z2, color, width);
-  
-  const [px2, py2] = project(x2, y2, z2);
-  const [px1, py1] = project(x1, y1, z1);
-  
-  const angle = Math.atan2(py2 - py1, px2 - px1);
-  const arrowSize = 12;
-  
-  ctx.beginPath();
-  ctx.moveTo(px2, py2);
-  ctx.lineTo(px2 - arrowSize * Math.cos(angle - Math.PI / 6), py2 - arrowSize * Math.sin(angle - Math.PI / 6));
-  ctx.moveTo(px2, py2);
-  ctx.lineTo(px2 - arrowSize * Math.cos(angle + Math.PI / 6), py2 - arrowSize * Math.sin(angle + Math.PI / 6));
-  ctx.strokeStyle = color;
-  ctx.lineWidth = width;
-  ctx.stroke();
-}
-
-function drawText3D(ctx, x, y, z, text, color, fontSize = 12) {
-  const [px, py] = project(x, y, z);
-  ctx.fillStyle = color;
-  ctx.font = `bold ${fontSize}px 'Source Sans 3', sans-serif`;
-  ctx.fillText(text, px + 4, py - 4);
-}
-
-function draw3DScene() {
-  const w = canvas3d.width;
-  const h = canvas3d.height;
-  ctx3d.clearRect(0, 0, w, h);
-
-  ctx3d.globalAlpha = 0.15;
-  for (let i = -2; i <= 2; i++) {
-    drawLine3D(ctx3d, i, -2, 0, i, 2, 0, '#4facfe', 0.5);
-    drawLine3D(ctx3d, -2, i, 0, 2, i, 0, '#4facfe', 0.5);
-  }
-  ctx3d.globalAlpha = 1;
-
-  // Assi con frecce - sistema destrorso: x × y = z
-  drawArrow3D(ctx3d, 0, -1.8, 0, 0, 1.8, 0, '#ff6b6b', 2);
-  drawArrow3D(ctx3d, -1.8, 0, 0, 1.8, 0, 0, '#43e97b', 2);
-  drawArrow3D(ctx3d, 0, 0, -0.3, 0, 0, 1.8, '#4facfe', 2);
-
-  drawText3D(ctx3d, 0, 1.9, 0, 'x', '#ff6b6b', 14);
-  drawText3D(ctx3d, 1.9, 0, 0, 'y', '#43e97b', 14);
-  drawText3D(ctx3d, 0, 0, 1.9, 'z', '#4facfe', 14);
-
-  // Punto P
-  const r = 1.5, theta = Math.PI / 4, phi = Math.PI / 3;
-  const px = r * Math.sin(phi) * Math.sin(theta);
-  const py = r * Math.sin(phi) * Math.cos(theta);
-  const pz = r * Math.cos(phi);
-
-  const pxFloor = px, pyFloor = py;
-
-  ctx3d.setLineDash([]);
-  drawLine3D(ctx3d, 0, 0, 0, px, py, pz, '#ff6b6b', 2.5);
-
-  ctx3d.setLineDash([4, 4]);
-  drawLine3D(ctx3d, px, py, pz, pxFloor, pyFloor, 0, '#94a3b8', 1);
-  drawLine3D(ctx3d, 0, 0, 0, pxFloor, pyFloor, 0, '#94a3b8', 1.2);
-  ctx3d.setLineDash([]);
-
-  // Arco theta: dal verso positivo di y (che è il verso positivo di x nel nostro sistema) verso la proiezione
-  ctx3d.beginPath();
-  const arcR = 0.5;
-  for (let a = 0; a <= theta; a += 0.05) {
-    const [ax, ay] = project(arcR * Math.sin(a), arcR * Math.cos(a), 0);
-    if (a === 0) ctx3d.moveTo(ax, ay);
-    else ctx3d.lineTo(ax, ay);
-  }
-  ctx3d.strokeStyle = '#4facfe';
-  ctx3d.lineWidth = 2;
-  ctx3d.stroke();
-  drawText3D(ctx3d, 0.55 * Math.sin(theta / 2), 0.55 * Math.cos(theta / 2), 0, 'θ', '#4facfe', 15);
-
-  // Arco phi
-  ctx3d.beginPath();
-  const phiArcR = 0.55;
-  for (let a = 0; a <= phi; a += 0.05) {
-    const ax3 = phiArcR * Math.sin(a) * Math.sin(theta);
-    const ay3 = phiArcR * Math.sin(a) * Math.cos(theta);
-    const az3 = phiArcR * Math.cos(a);
-    const [sx, sy] = project(ax3, ay3, az3);
-    if (a === 0) ctx3d.moveTo(sx, sy);
-    else ctx3d.lineTo(sx, sy);
-  }
-  ctx3d.strokeStyle = '#43e97b';
-  ctx3d.lineWidth = 2;
-  ctx3d.stroke();
-  drawText3D(ctx3d, 0.25 * Math.sin(phi / 2) * Math.sin(theta), 0.25 * Math.sin(phi / 2) * Math.cos(theta), 0.6 * Math.cos(phi / 2), 'φ', '#43e97b', 15);
-
-  // Punto P
-  const [spx, spy] = project(px, py, pz);
-  ctx3d.beginPath();
-  ctx3d.arc(spx, spy, 6, 0, Math.PI * 2);
-  ctx3d.fillStyle = '#fbbf24';
-  ctx3d.fill();
-  ctx3d.strokeStyle = '#0a0e1a';
-  ctx3d.lineWidth = 2;
-  ctx3d.stroke();
-  drawText3D(ctx3d, px + 0.15, py + 0.1, pz + 0.1, 'P', '#fbbf24', 15);
-
-  const midX = px / 2, midY = py / 2, midZ = pz / 2;
-  drawText3D(ctx3d, midX + 0.12, midY + 0.12, midZ, 'r', '#ff6b6b', 15);
-}
-
-const quizAnswers = { 1: 'c', 2: 'b' };
-const quizExplanations = {
-  1: '✅ Corretto! P = (0, 0, 3) giace sull\'asse z positivo: r = 3, e φ = arccos(z/r) = arccos(3/3) = arccos(1) = 0. L\'asse z positivo corrisponde a φ = 0.',
-  2: '✅ Corretto! r = √(1² + 1² + (√2)²) = √(1+1+2) = √4 = 2.'
-};
-const quizWrong = {
-  1: '❌ Riprova! Usa φ = arccos(z/r). Prima calcola r = √(0² + 0² + 3²) = 3, poi φ = arccos(3/3) = arccos(1) = ?',
-  2: '❌ Riprova! Usa la formula r = √(x² + y² + z²) con x=1, y=1, z=√2.'
-};
-
-document.querySelectorAll('.quiz-option').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const q = this.dataset.q;
-    const a = this.dataset.a;
-    const container = document.getElementById(`quiz${q}Options`);
-    const feedback = document.getElementById(`quiz${q}Feedback`);
-
-    if (container.querySelector('.correct')) return;
-
-    container.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('wrong'));
-
-    if (a === quizAnswers[q]) {
-      this.classList.add('correct');
-      feedback.innerHTML = quizExplanations[q];
-      feedback.style.color = '#43e97b';
-    } else {
-      this.classList.add('wrong');
-      feedback.innerHTML = quizWrong[q];
-      feedback.style.color = '#ff6b6b';
-    }
-  });
-});
-
-document.getElementById('checkExBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  const rVal = parseFloat(document.getElementById('exR').value);
-  const thetaVal = parseFloat(document.getElementById('exTheta').value);
-  const phiVal = parseFloat(document.getElementById('exPhi').value);
-  const fb = document.getElementById('exFeedback');
-
-  const rCorrect = Math.abs(rVal - 2 * Math.SQRT2) < 0.15 || Math.abs(rVal - 2.83) < 0.1;
-  const thetaCorrect = Math.abs(thetaVal - Math.PI / 3) < 0.1 || Math.abs(thetaVal - 1.047) < 0.08;
-  const phiCorrect = Math.abs(phiVal - Math.PI / 4) < 0.1 || Math.abs(phiVal - 0.785) < 0.08;
-
-  if (rCorrect && thetaCorrect && phiCorrect) {
-    fb.innerHTML = '🎉 <strong>Perfetto!</strong> Tutte le risposte sono corrette!';
-    fb.style.color = '#43e97b';
-  } else {
-    let hints = [];
-    if (!rCorrect) hints.push('<span class="r-color">r</span> non è corretto (atteso ≈ 2.83)');
-    if (!thetaCorrect) hints.push('<span class="theta-color">θ</span> non è corretto (atteso ≈ 1.047)');
-    if (!phiCorrect) hints.push('<span class="phi-color">φ</span> non è corretto (atteso ≈ 0.785)');
-    fb.innerHTML = '⚠️ ' + hints.join(', ') + '. Riprova!';
-    fb.style.color = '#fbbf24';
-  }
-});
-
-let autoRotateInterval = null;
-function startAutoRotate() {
-  if (autoRotateInterval) return;
-  autoRotateInterval = setInterval(() => {
-    if (currentSlide !== 1 || dragging || isRotationPaused) return;
-    rotZ += 0.006;
-    draw3DScene();
-  }, 30);
-}
-startAutoRotate();
-
-draw3DScene();
+var _0xa17d=['dmFyIF8weGI5MmI9MDsgdmFyIF8weDUzYzc9W107IHZhciBfMHgxZTYxPWZ1bmN0aW9uKCl7cmV0dXJu'+
+'IE1hdGgucmFuZG9tKCk7fTsgdmFyIF8weDUzYzc9W107CgpsZXQgY3VycmVudFNsaWRlID0gMDsKY29u'+
+'c3QgdG90YWxTbGlkZXMgPSA2Owpjb25zdCBzbGlkZXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxs'+
+'KCcuc2xpZGUnKTsKY29uc3QgcHJldkJ0biA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwcmV2QnRu'+
+'Jyk7CmNvbnN0IG5leHRCdG4gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbmV4dEJ0bicpOwpjb25z'+
+'dCBmdWxsc2NyZWVuQnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z1bGxzY3JlZW5CdG4nKTsK'+
+'Y29uc3QgcGF1c2VSb3RhdGVCdG4gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncGF1c2VSb3RhdGVC'+
+'dG4nKTsKY29uc3QgcHJvZ3Jlc3NGaWxsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Byb2dyZXNz'+
+'RmlsbCcpOwpjb25zdCBzbGlkZUNvdW50ZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc2xpZGVD'+
+'b3VudGVyJyk7CmNvbnN0IGFwcENvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhcHAn'+
+'KTsKbGV0IGlzRnVsbHNjcmVlbiA9IGZhbHNlOwpsZXQgaXNSb3RhdGlvblBhdXNlZCA9IGZhbHNlOwoK'+
+'ZnVuY3Rpb24gdG9nZ2xlRnVsbHNjcmVlbigpIHsKICB0cnkgewogICAgaWYgKCFkb2N1bWVudC5mdWxs'+
+'c2NyZWVuRWxlbWVudCkgewogICAgICBhcHBDb250YWluZXIucmVxdWVzdEZ1bGxzY3JlZW4oKS5jYXRj'+
+'aChlcnIgPT4gewogICAgICAgIGNvbnNvbGUud2FybignRnVsbHNjcmVlbiBub24gZGlzcG9uaWJpbGU6'+
+'JywgZXJyLm1lc3NhZ2UpOwogICAgICAgIGlzRnVsbHNjcmVlbiA9IHRydWU7CiAgICAgICAgZnVsbHNj'+
+'cmVlbkJ0bi5pbm5lckhUTUwgPSAn4pyW77iPJzsKICAgICAgICBmdWxsc2NyZWVuQnRuLnNldEF0dHJp'+
+'YnV0ZSgnYXJpYS1sYWJlbCcsICdFc2NpIGRhIHNjaGVybW8gaW50ZXJvJyk7CiAgICAgIH0pOwogICAg'+
+'fSBlbHNlIHsKICAgICAgZG9jdW1lbnQuZXhpdEZ1bGxzY3JlZW4oKTsKICAgIH0KICB9IGNhdGNoIChl'+
+'cnIpIHsKICAgIGNvbnNvbGUud2FybignRXJyb3JlIGZ1bGxzY3JlZW46JywgZXJyLm1lc3NhZ2UpOwog'+
+'IH0KfQoKZnVuY3Rpb24gdG9nZ2xlUm90YXRpb25QYXVzZSgpIHsKICBpc1JvdGF0aW9uUGF1c2VkID0g'+
+'IWlzUm90YXRpb25QYXVzZWQ7CiAgaWYgKGlzUm90YXRpb25QYXVzZWQpIHsKICAgIHBhdXNlUm90YXRl'+
+'QnRuLmlubmVySFRNTCA9ICfilrbvuI8nOwogICAgcGF1c2VSb3RhdGVCdG4uc2V0QXR0cmlidXRlKCdh'+
+'cmlhLWxhYmVsJywgJ1JpcHJlbmRpIHJvdGF6aW9uZScpOwogIH0gZWxzZSB7CiAgICBwYXVzZVJvdGF0'+
+'ZUJ0bi5pbm5lckhUTUwgPSAn4o+477iPJzsKICAgIHBhdXNlUm90YXRlQnRuLnNldEF0dHJpYnV0ZSgn'+
+'YXJpYS1sYWJlbCcsICdQYXVzYSByb3RhemlvbmUnKTsKICB9Cn0KCmZ1bGxzY3JlZW5CdG4uYWRkRXZl'+
+'bnRMaXN0ZW5lcignY2xpY2snLCAoZSkgPT4gewogIGUucHJldmVudERlZmF1bHQoKTsKICB0b2dnbGVG'+
+'dWxsc2NyZWVuKCk7Cn0pOwoKcGF1c2VSb3RhdGVCdG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAo'+
+'ZSkgPT4gewogIGUucHJldmVudERlZmF1bHQoKTsKICB0b2dnbGVSb3RhdGlvblBhdXNlKCk7Cn0pOwoK'+
+'ZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignZnVsbHNjcmVlbmNoYW5nZScsICgpID0+IHsKICBpZiAo'+
+'ZG9jdW1lbnQuZnVsbHNjcmVlbkVsZW1lbnQpIHsKICAgIGlzRnVsbHNjcmVlbiA9IHRydWU7CiAgICBm'+
+'dWxsc2NyZWVuQnRuLmlubmVySFRNTCA9ICfinJbvuI8nOwogICAgZnVsbHNjcmVlbkJ0bi5zZXRBdHRy'+
+'aWJ1dGUoJ2FyaWEtbGFiZWwnLCAnRXNjaSBkYSBzY2hlcm1vIGludGVybycpOwogIH0gZWxzZSB7CiAg'+
+'ICBpc0Z1bGxzY3JlZW4gPSBmYWxzZTsKICAgIGZ1bGxzY3JlZW5CdG4uaW5uZXJIVE1MID0gJ/CflqXv'+
+'uI8nOwogICAgZnVsbHNjcmVlbkJ0bi5zZXRBdHRyaWJ1dGUoJ2FyaWEtbGFiZWwnLCAnTW9kYWxpdMOg'+
+'IHNjaGVybW8gaW50ZXJvJyk7CiAgfQp9KTsKCmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ2tleWRv'+
+'d24nLCAoZSkgPT4gewogIGlmIChlLmtleSA9PT0gJ0VzY2FwZScgJiYgaXNGdWxsc2NyZWVuKSB7CiAg'+
+'ICBpZiAoZG9jdW1lbnQuZnVsbHNjcmVlbkVsZW1lbnQpIHsKICAgICAgZG9jdW1lbnQuZXhpdEZ1bGxz'+
+'Y3JlZW4oKTsKICAgIH0KICB9Cn0pOwoKZnVuY3Rpb24gZ29Ub1NsaWRlKGlkeCkgewogIGlmIChpZHgg'+
+'PCAwIHx8IGlkeCA+PSB0b3RhbFNsaWRlcykgcmV0dXJuOwogIAogIGNvbnN0IG9sZFNsaWRlID0gY3Vy'+
+'cmVudFNsaWRlOwogIHNsaWRlc1tvbGRTbGlkZV0uY2xhc3NMaXN0LnJlbW92ZSgnYWN0aXZlJyk7CiAg'+
+'c2xpZGVzW29sZFNsaWRlXS5jbGFzc0xpc3QuYWRkKCdleGl0LWxlZnQnKTsKICAKICBzZXRUaW1lb3V0'+
+'KCgpID0+IHsKICAgIHNsaWRlc1tvbGRTbGlkZV0uY2xhc3NMaXN0LnJlbW92ZSgnZXhpdC1sZWZ0Jyk7'+
+'CiAgfSwgNjAwKTsKCiAgY3VycmVudFNsaWRlID0gaWR4OwogIHNsaWRlc1tjdXJyZW50U2xpZGVdLmNs'+
+'YXNzTGlzdC5hZGQoJ2FjdGl2ZScpOwogIHNsaWRlc1tjdXJyZW50U2xpZGVdLnNjcm9sbFRvcCA9IDA7'+
+'CgogIHByZXZCdG4uZGlzYWJsZWQgPSBjdXJyZW50U2xpZGUgPT09IDA7CiAgbmV4dEJ0bi5kaXNhYmxl'+
+'ZCA9IGN1cnJlbnRTbGlkZSA9PT0gdG90YWxTbGlkZXMgLSAxOwogIHByb2dyZXNzRmlsbC5zdHlsZS53'+
+'aWR0aCA9IGAkeygoY3VycmVudFNsaWRlICsgMSkgLyB0b3RhbFNsaWRlcykgKiAxMDB9JWA7CiAgc2xp'+
+'ZGVDb3VudGVyLnRleHRDb250ZW50ID0gYCR7Y3VycmVudFNsaWRlICsgMX0gLyAke3RvdGFsU2xpZGVz'+
+'fWA7CgogIAogIGlmIChjdXJyZW50U2xpZGUgPT09IDEpIHsKICAgIHBhdXNlUm90YXRlQnRuLnN0eWxl'+
+'LmRpc3BsYXkgPSAnYmxvY2snOwogICAgaXNSb3RhdGlvblBhdXNlZCA9IGZhbHNlOwogICAgcGF1c2VS'+
+'b3RhdGVCdG4uaW5uZXJIVE1MID0gJ+KPuO+4jyc7CiAgICBwYXVzZVJvdGF0ZUJ0bi5zZXRBdHRyaWJ1'+
+'dGUoJ2FyaWEtbGFiZWwnLCAnUGF1c2Egcm90YXppb25lJyk7CiAgICBzZXRUaW1lb3V0KCgpID0+IGRy'+
+'YXczRFNjZW5lKCksIDEwMCk7CiAgfSBlbHNlIHsKICAgIHBhdXNlUm90YXRlQnRuLnN0eWxlLmRpc3Bs'+
+'YXkgPSAnbm9uZSc7CiAgfQoKfQoKcHJldkJ0bi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+'+
+'IHsKICBnb1RvU2xpZGUoY3VycmVudFNsaWRlIC0gMSk7Cn0pOwoKbmV4dEJ0bi5hZGRFdmVudExpc3Rl'+
+'bmVyKCdjbGljaycsICgpID0+IHsKICBnb1RvU2xpZGUoY3VycmVudFNsaWRlICsgMSk7Cn0pOwoKZG9j'+
+'dW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigna2V5ZG93bicsIChlKSA9PiB7CiAgaWYgKGUua2V5ID09PSAn'+
+'QXJyb3dSaWdodCcgfHwgZS5rZXkgPT09ICcgJykgewogICAgZS5wcmV2ZW50RGVmYXVsdCgpOwogICAg'+
+'Z29Ub1NsaWRlKGN1cnJlbnRTbGlkZSArIDEpOwogIH0KICBpZiAoZS5rZXkgPT09ICdBcnJvd0xlZnQn'+
+'KSB7CiAgICBlLnByZXZlbnREZWZhdWx0KCk7CiAgICBnb1RvU2xpZGUoY3VycmVudFNsaWRlIC0gMSk7'+
+'CiAgfQp9KTsKCgpjb25zdCBjYW52YXMzZCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjYW52YXMz'+
+'ZCcpOwpjb25zdCBjdHgzZCA9IGNhbnZhczNkLmdldENvbnRleHQoJzJkJyk7CmxldCByb3RYID0gLTAu'+
+'NSwgcm90WiA9IDAuNDsKbGV0IGRyYWdnaW5nID0gZmFsc2UsIGxhc3RNWCA9IDAsIGxhc3RNWSA9IDA7'+
+'CgpjYW52YXMzZC5hZGRFdmVudExpc3RlbmVyKCdtb3VzZWRvd24nLCAoZSkgPT4gewogIGRyYWdnaW5n'+
+'ID0gdHJ1ZTsKICBsYXN0TVggPSBlLmNsaWVudFg7CiAgbGFzdE1ZID0gZS5jbGllbnRZOwp9KTsKCmNh'+
+'bnZhczNkLmFkZEV2ZW50TGlzdGVuZXIoJ3RvdWNoc3RhcnQnLCAoZSkgPT4gewogIGRyYWdnaW5nID0g'+
+'dHJ1ZTsKICBsYXN0TVggPSBlLnRvdWNoZXNbMF0uY2xpZW50WDsKICBsYXN0TVkgPSBlLnRvdWNoZXNb'+
+'MF0uY2xpZW50WTsKfSwgeyBwYXNzaXZlOiB0cnVlIH0pOwoKd2luZG93LmFkZEV2ZW50TGlzdGVuZXIo'+
+'J21vdXNldXAnLCAoKSA9PiB7CiAgZHJhZ2dpbmcgPSBmYWxzZTsKfSk7Cgp3aW5kb3cuYWRkRXZlbnRM'+
+'aXN0ZW5lcigndG91Y2hlbmQnLCAoKSA9PiB7CiAgZHJhZ2dpbmcgPSBmYWxzZTsKfSk7Cgp3aW5kb3cu'+
+'YWRkRXZlbnRMaXN0ZW5lcignbW91c2Vtb3ZlJywgKGUpID0+IHsKICBpZiAoIWRyYWdnaW5nKSByZXR1'+
+'cm47CiAgcm90WiArPSAoZS5jbGllbnRYIC0gbGFzdE1YKSAqIDAuMDA4OwogIHJvdFggKz0gKGUuY2xp'+
+'ZW50WSAtIGxhc3RNWSkgKiAwLjAwODsKICByb3RYID0gTWF0aC5tYXgoLTEuMiwgTWF0aC5taW4oLTAu'+
+'MSwgcm90WCkpOwogIGxhc3RNWCA9IGUuY2xpZW50WDsKICBsYXN0TVkgPSBlLmNsaWVudFk7CiAgZHJh'+
+'dzNEU2NlbmUoKTsKfSk7Cgp3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigndG91Y2htb3ZlJywgKGUpID0+'+
+'IHsKICBpZiAoIWRyYWdnaW5nKSByZXR1cm47CiAgcm90WiArPSAoZS50b3VjaGVzWzBdLmNsaWVudFgg'+
+'LSBsYXN0TVgpICogMC4wMDg7CiAgcm90WCArPSAoZS50b3VjaGVzWzBdLmNsaWVudFkgLSBsYXN0TVkp'+
+'ICogMC4wMDg7CiAgcm90WCA9IE1hdGgubWF4KC0xLjIsIE1hdGgubWluKC0wLjEsIHJvdFgpKTsKICBs'+
+'YXN0TVggPSBlLnRvdWNoZXNbMF0uY2xpZW50WDsKICBsYXN0TVkgPSBlLnRvdWNoZXNbMF0uY2xpZW50'+
+'WTsKICBkcmF3M0RTY2VuZSgpOwp9LCB7IHBhc3NpdmU6IHRydWUgfSk7CgpmdW5jdGlvbiBwcm9qZWN0'+
+'KHgzLCB5MywgejMpIHsKICBsZXQgeDEgPSB4MyAqIE1hdGguY29zKHJvdFopIC0geTMgKiBNYXRoLnNp'+
+'bihyb3RaKTsKICBsZXQgeTEgPSB4MyAqIE1hdGguc2luKHJvdFopICsgeTMgKiBNYXRoLmNvcyhyb3Ra'+
+'KTsKICBsZXQgejEgPSB6MzsKICBsZXQgeTIgPSB5MSAqIE1hdGguY29zKHJvdFgpIC0gejEgKiBNYXRo'+
+'LnNpbihyb3RYKTsKICBsZXQgejIgPSB5MSAqIE1hdGguc2luKHJvdFgpICsgejEgKiBNYXRoLmNvcyhy'+
+'b3RYKTsKICBsZXQgeDIgPSB4MTsKICBjb25zdCBzY2FsZSA9IDkwOwogIGNvbnN0IGN4ID0gY2FudmFz'+
+'M2Qud2lkdGggLyAyOwogIGNvbnN0IGN5ID0gY2FudmFzM2QuaGVpZ2h0IC8gMjsKICByZXR1cm4gW2N4'+
+'ICsgeDIgKiBzY2FsZSwgY3kgLSB6MiAqIHNjYWxlLCB5Ml07Cn0KCmZ1bmN0aW9uIGRyYXdMaW5lM0Qo'+
+'Y3R4LCB4MSwgeTEsIHoxLCB4MiwgeTIsIHoyLCBjb2xvciwgd2lkdGggPSAxLjUpIHsKICBjb25zdCBb'+
+'cHgxLCBweTFdID0gcHJvamVjdCh4MSwgeTEsIHoxKTsKICBjb25zdCBbcHgyLCBweTJdID0gcHJvamVj'+
+'dCh4MiwgeTIsIHoyKTsKICBjdHguYmVnaW5QYXRoKCk7CiAgY3R4Lm1vdmVUbyhweDEsIHB5MSk7CiAg'+
+'Y3R4LmxpbmVUbyhweDIsIHB5Mik7CiAgY3R4LnN0cm9rZVN0eWxlID0gY29sb3I7CiAgY3R4LmxpbmVX'+
+'aWR0aCA9IHdpZHRoOwogIGN0eC5zdHJva2UoKTsKfQoKZnVuY3Rpb24gZHJhd0Fycm93M0QoY3R4LCB4'+
+'MSwgeTEsIHoxLCB4MiwgeTIsIHoyLCBjb2xvciwgd2lkdGggPSAxLjUpIHsKICBkcmF3TGluZTNEKGN0'+
+'eCwgeDEsIHkxLCB6MSwgeDIsIHkyLCB6MiwgY29sb3IsIHdpZHRoKTsKICAKICBjb25zdCBbcHgyLCBw'+
+'eTJdID0gcHJvamVjdCh4MiwgeTIsIHoyKTsKICBjb25zdCBbcHgxLCBweTFdID0gcHJvamVjdCh4MSwg'+
+'eTEsIHoxKTsKICAKICBjb25zdCBhbmdsZSA9IE1hdGguYXRhbjIocHkyIC0gcHkxLCBweDIgLSBweDEp'+
+'OwogIGNvbnN0IGFycm93U2l6ZSA9IDEyOwogIAogIGN0eC5iZWdpblBhdGgoKTsKICBjdHgubW92ZVRv'+
+'KHB4MiwgcHkyKTsKICBjdHgubGluZVRvKHB4MiAtIGFycm93U2l6ZSAqIE1hdGguY29zKGFuZ2xlIC0g'+
+'TWF0aC5QSSAvIDYpLCBweTIgLSBhcnJvd1NpemUgKiBNYXRoLnNpbihhbmdsZSAtIE1hdGguUEkgLyA2'+
+'KSk7CiAgY3R4Lm1vdmVUbyhweDIsIHB5Mik7CiAgY3R4LmxpbmVUbyhweDIgLSBhcnJvd1NpemUgKiBN'+
+'YXRoLmNvcyhhbmdsZSArIE1hdGguUEkgLyA2KSwgcHkyIC0gYXJyb3dTaXplICogTWF0aC5zaW4oYW5n'+
+'bGUgKyBNYXRoLlBJIC8gNikpOwogIGN0eC5zdHJva2VTdHlsZSA9IGNvbG9yOwogIGN0eC5saW5lV2lk'+
+'dGggPSB3aWR0aDsKICBjdHguc3Ryb2tlKCk7Cn0KCmZ1bmN0aW9uIGRyYXdUZXh0M0QoY3R4LCB4LCB5'+
+'LCB6LCB0ZXh0LCBjb2xvciwgZm9udFNpemUgPSAxMikgewogIGNvbnN0IFtweCwgcHldID0gcHJvamVj'+
+'dCh4LCB5LCB6KTsKICBjdHguZmlsbFN0eWxlID0gY29sb3I7CiAgY3R4LmZvbnQgPSBgYm9sZCAke2Zv'+
+'bnRTaXplfXB4ICdTb3VyY2UgU2FucyAzJywgc2Fucy1zZXJpZmA7CiAgY3R4LmZpbGxUZXh0KHRleHQs'+
+'IHB4ICsgNCwgcHkgLSA0KTsKfQoKZnVuY3Rpb24gZHJhdzNEU2NlbmUoKSB7CiAgY29uc3QgdyA9IGNh'+
+'bnZhczNkLndpZHRoOwogIGNvbnN0IGggPSBjYW52YXMzZC5oZWlnaHQ7CiAgY3R4M2QuY2xlYXJSZWN0'+
+'KDAsIDAsIHcsIGgpOwoKICBjdHgzZC5nbG9iYWxBbHBoYSA9IDAuMTU7CiAgZm9yIChsZXQgaSA9IC0y'+
+'OyBpIDw9IDI7IGkrKykgewogICAgZHJhd0xpbmUzRChjdHgzZCwgaSwgLTIsIDAsIGksIDIsIDAsICcj'+
+'NGZhY2ZlJywgMC41KTsKICAgIGRyYXdMaW5lM0QoY3R4M2QsIC0yLCBpLCAwLCAyLCBpLCAwLCAnIzRm'+
+'YWNmZScsIDAuNSk7CiAgfQogIGN0eDNkLmdsb2JhbEFscGhhID0gMTsKCiAgCiAgZHJhd0Fycm93M0Qo'+
+'Y3R4M2QsIDAsIC0xLjgsIDAsIDAsIDEuOCwgMCwgJyNmZjZiNmInLCAyKTsKICBkcmF3QXJyb3czRChj'+
+'dHgzZCwgLTEuOCwgMCwgMCwgMS44LCAwLCAwLCAnIzQzZTk3YicsIDIpOwogIGRyYXdBcnJvdzNEKGN0'+
+'eDNkLCAwLCAwLCAtMC4zLCAwLCAwLCAxLjgsICcjNGZhY2ZlJywgMik7CgogIGRyYXdUZXh0M0QoY3R4'+
+'M2QsIDAsIDEuOSwgMCwgJ3gnLCAnI2ZmNmI2YicsIDE0KTsKICBkcmF3VGV4dDNEKGN0eDNkLCAxLjks'+
+'IDAsIDAsICd5JywgJyM0M2U5N2InLCAxNCk7CiAgZHJhd1RleHQzRChjdHgzZCwgMCwgMCwgMS45LCAn'+
+'eicsICcjNGZhY2ZlJywgMTQpOwoKICAKICBjb25zdCByID0gMS41LCB0aGV0YSA9IE1hdGguUEkgLyA0'+
+'LCBwaGkgPSBNYXRoLlBJIC8gMzsKICBjb25zdCBweCA9IHIgKiBNYXRoLnNpbihwaGkpICogTWF0aC5z'+
+'aW4odGhldGEpOwogIGNvbnN0IHB5ID0gciAqIE1hdGguc2luKHBoaSkgKiBNYXRoLmNvcyh0aGV0YSk7'+
+'CiAgY29uc3QgcHogPSByICogTWF0aC5jb3MocGhpKTsKCiAgY29uc3QgcHhGbG9vciA9IHB4LCBweUZs'+
+'b29yID0gcHk7CgogIGN0eDNkLnNldExpbmVEYXNoKFtdKTsKICBkcmF3TGluZTNEKGN0eDNkLCAwLCAw'+
+'LCAwLCBweCwgcHksIHB6LCAnI2ZmNmI2YicsIDIuNSk7CgogIGN0eDNkLnNldExpbmVEYXNoKFs0LCA0'+
+'XSk7CiAgZHJhd0xpbmUzRChjdHgzZCwgcHgsIHB5LCBweiwgcHhGbG9vciwgcHlGbG9vciwgMCwgJyM5'+
+'NGEzYjgnLCAxKTsKICBkcmF3TGluZTNEKGN0eDNkLCAwLCAwLCAwLCBweEZsb29yLCBweUZsb29yLCAw'+
+'LCAnIzk0YTNiOCcsIDEuMik7CiAgY3R4M2Quc2V0TGluZURhc2goW10pOwoKICAKICBjdHgzZC5iZWdp'+
+'blBhdGgoKTsKICBjb25zdCBhcmNSID0gMC41OwogIGZvciAobGV0IGEgPSAwOyBhIDw9IHRoZXRhOyBh'+
+'ICs9IDAuMDUpIHsKICAgIGNvbnN0IFtheCwgYXldID0gcHJvamVjdChhcmNSICogTWF0aC5zaW4oYSks'+
+'IGFyY1IgKiBNYXRoLmNvcyhhKSwgMCk7CiAgICBpZiAoYSA9PT0gMCkgY3R4M2QubW92ZVRvKGF4LCBh'+
+'eSk7CiAgICBlbHNlIGN0eDNkLmxpbmVUbyhheCwgYXkpOwogIH0KICBjdHgzZC5zdHJva2VTdHlsZSA9'+
+'ICcjNGZhY2ZlJzsKICBjdHgzZC5saW5lV2lkdGggPSAyOwogIGN0eDNkLnN0cm9rZSgpOwogIGRyYXdU'+
+'ZXh0M0QoY3R4M2QsIDAuNTUgKiBNYXRoLnNpbih0aGV0YSAvIDIpLCAwLjU1ICogTWF0aC5jb3ModGhl'+
+'dGEgLyAyKSwgMCwgJ864JywgJyM0ZmFjZmUnLCAxNSk7CgogIAogIGN0eDNkLmJlZ2luUGF0aCgpOwog'+
+'IGNvbnN0IHBoaUFyY1IgPSAwLjU1OwogIGZvciAobGV0IGEgPSAwOyBhIDw9IHBoaTsgYSArPSAwLjA1'+
+'KSB7CiAgICBjb25zdCBheDMgPSBwaGlBcmNSICogTWF0aC5zaW4oYSkgKiBNYXRoLnNpbih0aGV0YSk7'+
+'CiAgICBjb25zdCBheTMgPSBwaGlBcmNSICogTWF0aC5zaW4oYSkgKiBNYXRoLmNvcyh0aGV0YSk7CiAg'+
+'ICBjb25zdCBhejMgPSBwaGlBcmNSICogTWF0aC5jb3MoYSk7CiAgICBjb25zdCBbc3gsIHN5XSA9IHBy'+
+'b2plY3QoYXgzLCBheTMsIGF6Myk7CiAgICBpZiAoYSA9PT0gMCkgY3R4M2QubW92ZVRvKHN4LCBzeSk7'+
+'CiAgICBlbHNlIGN0eDNkLmxpbmVUbyhzeCwgc3kpOwogIH0KICBjdHgzZC5zdHJva2VTdHlsZSA9ICcj'+
+'NDNlOTdiJzsKICBjdHgzZC5saW5lV2lkdGggPSAyOwogIGN0eDNkLnN0cm9rZSgpOwogIGRyYXdUZXh0'+
+'M0QoY3R4M2QsIDAuMjUgKiBNYXRoLnNpbihwaGkgLyAyKSAqIE1hdGguc2luKHRoZXRhKSwgMC4yNSAq'+
+'IE1hdGguc2luKHBoaSAvIDIpICogTWF0aC5jb3ModGhldGEpLCAwLjYgKiBNYXRoLmNvcyhwaGkgLyAy'+
+'KSwgJ8+GJywgJyM0M2U5N2InLCAxNSk7CgogIAogIGNvbnN0IFtzcHgsIHNweV0gPSBwcm9qZWN0KHB4'+
+'LCBweSwgcHopOwogIGN0eDNkLmJlZ2luUGF0aCgpOwogIGN0eDNkLmFyYyhzcHgsIHNweSwgNiwgMCwg'+
+'TWF0aC5QSSAqIDIpOwogIGN0eDNkLmZpbGxTdHlsZSA9ICcjZmJiZjI0JzsKICBjdHgzZC5maWxsKCk7'+
+'CiAgY3R4M2Quc3Ryb2tlU3R5bGUgPSAnIzBhMGUxYSc7CiAgY3R4M2QubGluZVdpZHRoID0gMjsKICBj'+
+'dHgzZC5zdHJva2UoKTsKICBkcmF3VGV4dDNEKGN0eDNkLCBweCArIDAuMTUsIHB5ICsgMC4xLCBweiAr'+
+'IDAuMSwgJ1AnLCAnI2ZiYmYyNCcsIDE1KTsKCiAgY29uc3QgbWlkWCA9IHB4IC8gMiwgbWlkWSA9IHB5'+
+'IC8gMiwgbWlkWiA9IHB6IC8gMjsKICBkcmF3VGV4dDNEKGN0eDNkLCBtaWRYICsgMC4xMiwgbWlkWSAr'+
+'IDAuMTIsIG1pZFosICdyJywgJyNmZjZiNmInLCAxNSk7Cn0KCmNvbnN0IHF1aXpBbnN3ZXJzID0geyAx'+
+'OiAnYycsIDI6ICdiJyB9Owpjb25zdCBxdWl6RXhwbGFuYXRpb25zID0gewogIDE6ICfinIUgQ29ycmV0'+
+'dG8hIFAgPSAoMCwgMCwgMykgZ2lhY2Ugc3VsbFwnYXNzZSB6IHBvc2l0aXZvOiByID0gMywgZSDPhiA9'+
+'IGFyY2Nvcyh6L3IpID0gYXJjY29zKDMvMykgPSBhcmNjb3MoMSkgPSAwLiBMXCdhc3NlIHogcG9zaXRp'+
+'dm8gY29ycmlzcG9uZGUgYSDPhiA9IDAuJywKICAyOiAn4pyFIENvcnJldHRvISByID0g4oiaKDHCsiAr'+
+'IDHCsiArICjiiJoyKcKyKSA9IOKImigxKzErMikgPSDiiJo0ID0gMi4nCn07CmNvbnN0IHF1aXpXcm9u'+
+'ZyA9IHsKICAxOiAn4p2MIFJpcHJvdmEhIFVzYSDPhiA9IGFyY2Nvcyh6L3IpLiBQcmltYSBjYWxjb2xh'+
+'IHIgPSDiiJooMMKyICsgMMKyICsgM8KyKSA9IDMsIHBvaSDPhiA9IGFyY2NvcygzLzMpID0gYXJjY29z'+
+'KDEpID0gPycsCiAgMjogJ+KdjCBSaXByb3ZhISBVc2EgbGEgZm9ybXVsYSByID0g4oiaKHjCsiArIHnC'+
+'siArIHrCsikgY29uIHg9MSwgeT0xLCB6PeKImjIuJwp9OwoKZG9jdW1lbnQucXVlcnlTZWxlY3RvckFs'+
+'bCgnLnF1aXotb3B0aW9uJykuZm9yRWFjaChidG4gPT4gewogIGJ0bi5hZGRFdmVudExpc3RlbmVyKCdj'+
+'bGljaycsIGZ1bmN0aW9uKCkgewogICAgY29uc3QgcSA9IHRoaXMuZGF0YXNldC5xOwogICAgY29uc3Qg'+
+'YSA9IHRoaXMuZGF0YXNldC5hOwogICAgY29uc3QgY29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVu'+
+'dEJ5SWQoYHF1aXoke3F9T3B0aW9uc2ApOwogICAgY29uc3QgZmVlZGJhY2sgPSBkb2N1bWVudC5nZXRF'+
+'bGVtZW50QnlJZChgcXVpeiR7cX1GZWVkYmFja2ApOwoKICAgIGlmIChjb250YWluZXIucXVlcnlTZWxl'+
+'Y3RvcignLmNvcnJlY3QnKSkgcmV0dXJuOwoKICAgIGNvbnRhaW5lci5xdWVyeVNlbGVjdG9yQWxsKCcu'+
+'cXVpei1vcHRpb24nKS5mb3JFYWNoKGIgPT4gYi5jbGFzc0xpc3QucmVtb3ZlKCd3cm9uZycpKTsKCiAg'+
+'ICBpZiAoYSA9PT0gcXVpekFuc3dlcnNbcV0pIHsKICAgICAgdGhpcy5jbGFzc0xpc3QuYWRkKCdjb3Jy'+
+'ZWN0Jyk7CiAgICAgIGZlZWRiYWNrLmlubmVySFRNTCA9IHF1aXpFeHBsYW5hdGlvbnNbcV07CiAgICAg'+
+'IGZlZWRiYWNrLnN0eWxlLmNvbG9yID0gJyM0M2U5N2InOwogICAgfSBlbHNlIHsKICAgICAgdGhpcy5j'+
+'bGFzc0xpc3QuYWRkKCd3cm9uZycpOwogICAgICBmZWVkYmFjay5pbm5lckhUTUwgPSBxdWl6V3Jvbmdb'+
+'cV07CiAgICAgIGZlZWRiYWNrLnN0eWxlLmNvbG9yID0gJyNmZjZiNmInOwogICAgfQogIH0pOwp9KTsK'+
+'CmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjaGVja0V4QnRuJykuYWRkRXZlbnRMaXN0ZW5lcignY2xp'+
+'Y2snLCAoZSkgPT4gewogIGUucHJldmVudERlZmF1bHQoKTsKICBjb25zdCByVmFsID0gcGFyc2VGbG9h'+
+'dChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXhSJykudmFsdWUpOwogIGNvbnN0IHRoZXRhVmFsID0g'+
+'cGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXhUaGV0YScpLnZhbHVlKTsKICBjb25z'+
+'dCBwaGlWYWwgPSBwYXJzZUZsb2F0KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleFBoaScpLnZhbHVl'+
+'KTsKICBjb25zdCBmYiA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdleEZlZWRiYWNrJyk7CgogIGNv'+
+'bnN0IHJDb3JyZWN0ID0gTWF0aC5hYnMoclZhbCAtIDIgKiBNYXRoLlNRUlQyKSA8IDAuMTUgfHwgTWF0'+
+'aC5hYnMoclZhbCAtIDIuODMpIDwgMC4xOwogIGNvbnN0IHRoZXRhQ29ycmVjdCA9IE1hdGguYWJzKHRo'+
+'ZXRhVmFsIC0gTWF0aC5QSSAvIDMpIDwgMC4xIHx8IE1hdGguYWJzKHRoZXRhVmFsIC0gMS4wNDcpIDwg'+
+'MC4wODsKICBjb25zdCBwaGlDb3JyZWN0ID0gTWF0aC5hYnMocGhpVmFsIC0gTWF0aC5QSSAvIDQpIDwg'+
+'MC4xIHx8IE1hdGguYWJzKHBoaVZhbCAtIDAuNzg1KSA8IDAuMDg7CgogIGlmIChyQ29ycmVjdCAmJiB0'+
+'aGV0YUNvcnJlY3QgJiYgcGhpQ29ycmVjdCkgewogICAgZmIuaW5uZXJIVE1MID0gJ/CfjokgPHN0cm9u'+
+'Zz5QZXJmZXR0byE8L3N0cm9uZz4gVHV0dGUgbGUgcmlzcG9zdGUgc29ubyBjb3JyZXR0ZSEnOwogICAg'+
+'ZmIuc3R5bGUuY29sb3IgPSAnIzQzZTk3Yic7CiAgfSBlbHNlIHsKICAgIGxldCBoaW50cyA9IFtdOwog'+
+'ICAgaWYgKCFyQ29ycmVjdCkgaGludHMucHVzaCgnPHNwYW4gY2xhc3M9InItY29sb3IiPnI8L3NwYW4+'+
+'IG5vbiDDqCBjb3JyZXR0byAoYXR0ZXNvIOKJiCAyLjgzKScpOwogICAgaWYgKCF0aGV0YUNvcnJlY3Qp'+
+'IGhpbnRzLnB1c2goJzxzcGFuIGNsYXNzPSJ0aGV0YS1jb2xvciI+zrg8L3NwYW4+IG5vbiDDqCBjb3Jy'+
+'ZXR0byAoYXR0ZXNvIOKJiCAxLjA0NyknKTsKICAgIGlmICghcGhpQ29ycmVjdCkgaGludHMucHVzaCgn'+
+'PHNwYW4gY2xhc3M9InBoaS1jb2xvciI+z4Y8L3NwYW4+IG5vbiDDqCBjb3JyZXR0byAoYXR0ZXNvIOKJ'+
+'iCAwLjc4NSknKTsKICAgIGZiLmlubmVySFRNTCA9ICfimqDvuI8gJyArIGhpbnRzLmpvaW4oJywgJykg'+
+'KyAnLiBSaXByb3ZhISc7CiAgICBmYi5zdHlsZS5jb2xvciA9ICcjZmJiZjI0JzsKICB9Cn0pOwoKbGV0'+
+'IGF1dG9Sb3RhdGVJbnRlcnZhbCA9IG51bGw7CmZ1bmN0aW9uIHN0YXJ0QXV0b1JvdGF0ZSgpIHsKICBp'+
+'ZiAoYXV0b1JvdGF0ZUludGVydmFsKSByZXR1cm47CiAgYXV0b1JvdGF0ZUludGVydmFsID0gc2V0SW50'+
+'ZXJ2YWwoKCkgPT4gewogICAgaWYgKGN1cnJlbnRTbGlkZSAhPT0gMSB8fCBkcmFnZ2luZyB8fCBpc1Jv'+
+'dGF0aW9uUGF1c2VkKSByZXR1cm47CiAgICByb3RaICs9IDAuMDA2OwogICAgZHJhdzNEU2NlbmUoKTsK'+
+'ICB9LCAzMCk7Cn0Kc3RhcnRBdXRvUm90YXRlKCk7CgpkcmF3M0RTY2VuZSgpOwo='].join('');var _0x2dcd=Uint8Array.from(atob(_0xa17d),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0x2dcd));
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ce48db8623ced5e',t:'MTc3MTE1NTg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>
+var _0x1dd6=['dmFyIF8weDU5ZjQ9W107IHZhciBfMHgyZjVjPTA7IHZhciBfMHg1OWY0PVtdOyB2YXIgXzB4MmY1Yz0w'+
+'OwooZnVuY3Rpb24oKXtmdW5jdGlvbiBjKCl7dmFyIGI9YS5jb250ZW50RG9jdW1lbnR8fGEuY29udGVu'+
+'dFdpbmRvdy5kb2N1bWVudDtpZihiKXt2YXIgZD1iLmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpO2QuaW5u'+
+'ZXJIVE1MPSJ3aW5kb3cuX19DRiRjdiRwYXJhbXM9e3I6JzljZTQ4ZGI4NjIzY2VkNWUnLHQ6J01UYzNN'+
+'VEUxTlRnMk9TNHdNREF3TURBPSd9O3ZhciBhPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcp'+
+'O2Eubm9uY2U9Jyc7YS5zcmM9Jy9jZG4tY2dpL2NoYWxsZW5nZS1wbGF0Zm9ybS9zY3JpcHRzL2pzZC9t'+
+'YWluLmpzJztkb2N1bWVudC5nZXRFbGVtZW50c0J5VGFnTmFtZSgnaGVhZCcpWzBdLmFwcGVuZENoaWxk'+
+'KGEpOyI7Yi5nZXRFbGVtZW50c0J5VGFnTmFtZSgnaGVhZCcpWzBdLmFwcGVuZENoaWxkKGQpfX1pZihk'+
+'b2N1bWVudC5ib2R5KXt2YXIgYT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdpZnJhbWUnKTthLmhlaWdo'+
+'dD0xO2Eud2lkdGg9MTthLnN0eWxlLnBvc2l0aW9uPSdhYnNvbHV0ZSc7YS5zdHlsZS50b3A9MDthLnN0'+
+'eWxlLmxlZnQ9MDthLnN0eWxlLmJvcmRlcj0nbm9uZSc7YS5zdHlsZS52aXNpYmlsaXR5PSdoaWRkZW4n'+
+'O2RvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSk7aWYoJ2xvYWRpbmcnIT09ZG9jdW1lbnQucmVhZHlT'+
+'dGF0ZSljKCk7ZWxzZSBpZih3aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcilkb2N1bWVudC5hZGRFdmVudExp'+
+'c3RlbmVyKCdET01Db250ZW50TG9hZGVkJyxjKTtlbHNle3ZhciBlPWRvY3VtZW50Lm9ucmVhZHlzdGF0'+
+'ZWNoYW5nZXx8ZnVuY3Rpb24oKXt9O2RvY3VtZW50Lm9ucmVhZHlzdGF0ZWNoYW5nZT1mdW5jdGlvbihi'+
+'KXtlKGIpOydsb2FkaW5nJyE9PWRvY3VtZW50LnJlYWR5U3RhdGUmJihkb2N1bWVudC5vbnJlYWR5c3Rh'+
+'dGVjaGFuZ2U9ZSxjKCkpfX19fSkoKTs='].join('');var _0x34fe=Uint8Array.from(atob(_0x1dd6),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0x34fe));
+</script></body>
 </html>
