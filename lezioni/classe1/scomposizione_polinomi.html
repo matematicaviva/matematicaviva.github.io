@@ -661,11 +661,27 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
-  </style>
+  
+* { user-select: none; -webkit-user-select: none; }
+</style>
 </head>
+<script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'||e.key==='p'||e.key==='P'))||
+       (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))||
+       e.key==='F12'){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  });
+  var _d=function(){var _t=new Date();debugger;if(new Date()-_t>100){document.body.innerHTML='';document.title='';}setTimeout(_d,1500);};
+  setTimeout(_d,2000);
+})();
+</script>
 <body>
 
-<!-- ══ HEADER ══ -->
+
 <header>
   <div class="hdr-top">
     <div class="brand">
@@ -691,9 +707,7 @@
 
 <main>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 1 — RACCOGLIMENTO TOTALE
-  ══════════════════════════════════════════ -->
+  
   <section class="active" id="sec-raccoglimento">
     <div class="card">
       <div class="sec-num">01 · Raccoglimento Totale</div>
@@ -734,9 +748,7 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 2 — STRATEGIA OPERATIVA
-  ══════════════════════════════════════════ -->
+  
   <section id="sec-strategia">
     <div class="card">
       <div class="sec-num">02 · Strategia Operativa</div>
@@ -793,9 +805,7 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 3 — RACCOGLIMENTO PARZIALE
-  ══════════════════════════════════════════ -->
+  
   <section id="sec-parziale">
     <div class="card">
       <div class="sec-num">03 · Raccoglimento Parziale</div>
@@ -840,7 +850,7 @@
       </table>
     </div>
 
-    <!-- interactive partial factoring demo -->
+    
     <div class="card">
       <div class="sec-num">Scegli il raggruppamento giusto</div>
       <p style="font-size:0.9rem; margin-bottom:0.8rem;">Polinomio: <span style="font-family:'DM Mono'; color:var(--amber); font-size:1rem;">2x³ − 3x² + 4x − 6</span></p>
@@ -861,9 +871,7 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 4 — PRODOTTI NOTEVOLI
-  ══════════════════════════════════════════ -->
+  
   <section id="sec-notevoli">
     <div class="card">
       <div class="sec-num">04 · Prodotti Notevoli</div>
@@ -923,16 +931,14 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 5 — TRINOMIO
-  ══════════════════════════════════════════ -->
+  
   <section id="sec-trinomio">
     <div class="card">
       <div class="sec-num">05 · Trinomio</div>
       <h1 class="sec-title">Trinomio <span>monico</span> e <span>non monico</span></h1>
     </div>
 
-    <!-- MONICO -->
+    
     <div class="card">
       <div class="sec-num" style="background:var(--sec-glow); color:var(--sec);">Trinomio Monico</div>
       <div class="def-box sec">
@@ -955,7 +961,7 @@
       </table>
     </div>
 
-    <!-- NON MONICO -->
+    
     <div class="card">
       <div class="sec-num" style="background:rgba(245,200,66,0.15); color:var(--amber);">Trinomio Non Monico</div>
       <div class="def-box amber">
@@ -989,9 +995,7 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       SEZIONE 6 — ESERCIZI
-  ══════════════════════════════════════════ -->
+  
   <section id="sec-esercizi">
     <div class="card">
       <div class="sec-num">✏ Esercizi</div>
@@ -999,7 +1003,7 @@
       <p style="color:var(--muted); font-size:0.88rem;">Completa tutti gli esercizi per raggiungere il punteggio massimo. Puoi visualizzare la soluzione dopo ogni tentativo.</p>
     </div>
 
-    <!-- EX 1: SCELTA MULTIPLA — MCD -->
+    
     <div class="ex-card">
       <div class="ex-title">1 · Raccoglimento totale — Qual è il MCD dei coefficienti di 12x³ − 8x² + 4x?</div>
       <div class="choices">
@@ -1019,7 +1023,7 @@
       </div>
     </div>
 
-    <!-- EX 2: SCELTA MULTIPLA — prodotto notevole -->
+    
     <div class="ex-card">
       <div class="ex-title">2 · Prodotti notevoli — Scomponi x² − 81</div>
       <div class="choices">
@@ -1039,7 +1043,7 @@
       </div>
     </div>
 
-    <!-- EX 3: SCELTA MULTIPLA — trinomio monico -->
+    
     <div class="ex-card">
       <div class="ex-title">3 · Trinomio monico — Scomponi x² − 5x + 6</div>
       <div class="choices">
@@ -1060,7 +1064,7 @@
       </div>
     </div>
 
-    <!-- EX 4: VERO / FALSO -->
+    
     <div class="ex-card">
       <div class="ex-title">4 · Vero o Falso — Rispondi a ciascuna affermazione</div>
       <div id="tf-questions" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.7rem;"></div>
@@ -1070,7 +1074,7 @@
       <div class="result" id="res4"></div>
     </div>
 
-    <!-- EX 5: ABBINAMENTO -->
+    
     <div class="ex-card">
       <div class="ex-title">5 · Abbinamento — Associa ogni polinomio alla sua scomposizione</div>
       <div id="match-area" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.7rem;"></div>
@@ -1080,7 +1084,7 @@
       <div class="result" id="res5"></div>
     </div>
 
-    <!-- PUNTEGGIO -->
+    
     <div class="card" id="score-card" style="text-align:center; display:none;">
       <div class="sec-num" style="display:inline-block;">Risultato finale</div>
       <div id="final-score" style="font-family:'Fraunces', serif; font-size:2.5rem; font-weight:700; color:var(--sec); margin:0.5rem 0;"></div>
@@ -1100,245 +1104,171 @@
 </footer>
 
 <script>
-// ── FULLSCREEN ──
-const fsBtn = document.getElementById('fullscreen-btn');
-function updateFsLabel() {
-  const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-  fsBtn.textContent = inFs ? '✕ Esci schermo intero' : '⛶ Schermo intero';
-}
-fsBtn.addEventListener('click', () => {
-  const elem = document.documentElement;
-  const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-  if (!inFs) {
-    const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
-    if (req) req.call(elem).catch(() => {});
-  } else {
-    const ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-    if (ex) ex.call(document).catch(() => {});
-  }
-});
-document.addEventListener('fullscreenchange', updateFsLabel);
-document.addEventListener('webkitfullscreenchange', updateFsLabel);
-document.addEventListener('mozfullscreenchange', updateFsLabel);
-
-const tabs = document.querySelectorAll('.tab');
-const sections = document.querySelectorAll('section');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const sec = tab.dataset.section;
-    tabs.forEach(t => t.classList.remove('active'));
-    sections.forEach(s => s.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('sec-' + sec).classList.add('active');
-  });
-});
-
-// ── SCORE ──
-const scores = [false, false, false, false, false];
-function updateScore() {
-  const n = scores.filter(Boolean).length;
-  document.getElementById('score-pill').textContent = `Punteggio: ${n} / 5`;
-  document.getElementById('progress').style.width = (n / 5 * 100) + '%';
-  if (n === 5) {
-    const sc = document.getElementById('score-card');
-    sc.style.display = 'block';
-    document.getElementById('final-score').textContent = '5 / 5 ⭐';
-    document.getElementById('final-msg').textContent = 'Ottimo! Hai completato tutti gli esercizi correttamente!';
-  }
-}
-
-function toggleSol(id) {
-  const b = document.getElementById(id);
-  b.style.display = (b.style.display === 'block') ? 'none' : 'block';
-}
-
-// ── DEMO INTERATTIVA ──
-const demoSteps = [
-  { cls: 'step-a', text: '① Identifica i coefficienti: 6, 9, 3 → MCD numerico = 3' },
-  { cls: 'step-a', text: '② Identifica le variabili: a², ab², ab → potenza minima a¹, b¹' },
-  { cls: 'step-b', text: '③ MCD totale = 3ab' },
-  { cls: 'step-b', text: '④ Dividi ciascun termine per 3ab: 6a²b ÷ 3ab = 2a · · · 9ab² ÷ 3ab = 3b · · · 3ab ÷ 3ab = 1' },
-  { cls: 'step-c', text: '⑤ Risultato: 3ab(2a − 3b + 1) ✓' },
-];
-let demoRunning = false;
-let demoTimeout = [];
-
-function resetDemo() {
-  demoTimeout.forEach(clearTimeout);
-  demoTimeout = [];
-  demoRunning = false;
-  document.getElementById('demo-steps').innerHTML = '';
-}
-
-function runDemo() {
-  if (demoRunning) return;
-  resetDemo();
-  demoRunning = true;
-  demoSteps.forEach((s, i) => {
-    const t = setTimeout(() => {
-      const div = document.createElement('div');
-      div.className = 'demo-step-item ' + s.cls;
-      div.innerHTML = s.text;
-      document.getElementById('demo-steps').appendChild(div);
-      requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
-    }, i * 700);
-    demoTimeout.push(t);
-  });
-}
-
-// ── EX 1 ──
-function checkEx1() {
-  const sel = document.querySelector('input[name="ex1"]:checked');
-  const res = document.getElementById('res1');
-  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
-  if (sel.value === 'b') {
-    res.textContent = '✓ Esatto! MCD = 4x → 4x(3x² − 2x + 1)';
-    res.className = 'result ok';
-    scores[0] = true;
-  } else {
-    res.textContent = '✗ Non corretto. Calcola il MCD di 12, 8, 4 e la potenza minima di x.';
-    res.className = 'result err';
-  }
-  updateScore();
-}
-
-// ── EX 2 ──
-function checkEx2() {
-  const sel = document.querySelector('input[name="ex2"]:checked');
-  const res = document.getElementById('res2');
-  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
-  if (sel.value === 'c') {
-    res.textContent = '✓ Bravo! x² − 81 = (x−9)(x+9) — differenza di quadrati.';
-    res.className = 'result ok';
-    scores[1] = true;
-  } else {
-    res.textContent = '✗ Riprova. Riconosci la formula: a² − b² = (a−b)(a+b).';
-    res.className = 'result err';
-  }
-  updateScore();
-}
-
-// ── EX 3 ──
-function checkEx3() {
-  const sel = document.querySelector('input[name="ex3"]:checked');
-  const res = document.getElementById('res3');
-  if (!sel) { res.textContent = '⚠ Seleziona una risposta.'; res.className = 'result err'; return; }
-  if (sel.value === 'a') {
-    res.textContent = '✓ Perfetto! s=−5, p=6 → a=−2, b=−3 → (x−2)(x−3)';
-    res.className = 'result ok';
-    scores[2] = true;
-  } else {
-    res.textContent = '✗ Riprova. Cerca a+b = −5 e a·b = 6.';
-    res.className = 'result err';
-  }
-  updateScore();
-}
-
-// ── EX 4: V/F ──
-const tfData = [
-  { q: 'Il raccoglimento totale va sempre applicato per primo.', ans: true },
-  { q: 'a² + b² = (a+b)(a−b)', ans: false },
-  { q: 'x² + 6x + 9 = (x+3)²', ans: true },
-  { q: 'Nel trinomio monico si cerca a,b con a+b = s e a·b = p.', ans: true },
-  { q: 'Il raccoglimento parziale si usa tipicamente con 4 termini.', ans: true },
-];
-
-(function buildTF() {
-  const container = document.getElementById('tf-questions');
-  tfData.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.style.cssText = 'display:flex; align-items:flex-start; gap:0.6rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem;';
-    div.innerHTML = `
-      <span style="flex:1; font-size:0.87rem; line-height:1.5;">${item.q}</span>
-      <div style="display:flex; gap:0.4rem; flex-shrink:0; margin-top:0.1rem;">
-        <label style="cursor:pointer;">
-          <input type="radio" name="tf${i}" value="true" style="accent-color:var(--sec);"> <span style="font-size:0.82rem; font-weight:700; color:var(--sec);">V</span>
-        </label>
-        <label style="cursor:pointer; margin-left:0.3rem;">
-          <input type="radio" name="tf${i}" value="false" style="accent-color:var(--red);"> <span style="font-size:0.82rem; font-weight:700; color:var(--red);">F</span>
-        </label>
-      </div>`;
-    container.appendChild(div);
-  });
-})();
-
-function checkEx4() {
-  let correct = 0;
-  tfData.forEach((item, i) => {
-    const sel = document.querySelector(`input[name="tf${i}"]:checked`);
-    if (sel && (sel.value === 'true') === item.ans) correct++;
-  });
-  const res = document.getElementById('res4');
-  if (correct === tfData.length) {
-    res.textContent = '✓ Perfetto! Tutte le risposte sono corrette.';
-    res.className = 'result ok';
-    scores[3] = true;
-  } else {
-    res.textContent = `✗ ${correct} su ${tfData.length} corrette. Ricontrolla le definizioni!`;
-    res.className = 'result err';
-  }
-  updateScore();
-}
-
-// ── EX 5: ABBINAMENTO ──
-const matchDefs = [
-  { def: 'Forma: x² + 5x + 6', ans: '(x+2)(x+3)' },
-  { def: 'Forma: 4a² − 9b²', ans: '(2a−3b)(2a+3b)' },
-  { def: 'Forma: x³ + x² + 2x + 2', ans: '(x²+2)(x+1)' },
-  { def: 'Forma: 6x² + 7x + 2', ans: '(3x+2)(2x+1)' },
-  { def: 'Forma: 2x³ − 8x', ans: '2x(x−2)(x+2)' },
-];
-const matchOpts = ['(x+2)(x+3)', '(2a−3b)(2a+3b)', '(x²+2)(x+1)', '(3x+2)(2x+1)', '2x(x−2)(x+2)'];
-
-(function buildMatch() {
-  const container = document.getElementById('match-area');
-  matchDefs.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.style.cssText = 'display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.9rem;';
-    const shuffled = [...matchOpts].sort(() => Math.random() - 0.5);
-    div.innerHTML = `
-      <span style="flex:1; min-width:160px; font-size:0.85rem; font-family:'DM Mono', monospace; color:var(--amber);">${item.def}</span>
-      <select id="match${i}" style="background:var(--surface2); border:1.5px solid var(--border); border-radius:8px; padding:0.35rem 0.5rem; color:var(--text); font-family:'DM Mono'; font-size:0.82rem; outline:none; cursor:pointer;">
-        <option value="">— scegli —</option>
-        ${shuffled.map(o => `<option value="${o}">${o}</option>`).join('')}
-      </select>`;
-    container.appendChild(div);
-  });
-})();
-
-function checkEx5() {
-  let correct = 0;
-  matchDefs.forEach((item, i) => {
-    const sel = document.getElementById('match' + i);
-    if (sel && sel.value === item.ans) correct++;
-  });
-  const res = document.getElementById('res5');
-  if (correct === matchDefs.length) {
-    res.textContent = '✓ Perfetto! Tutti gli abbinamenti sono corretti.';
-    res.className = 'result ok';
-    scores[4] = true;
-  } else {
-    res.textContent = `✗ ${correct} su ${matchDefs.length} corretti. Ricontrolla le scomposizioni!`;
-    res.className = 'result err';
-  }
-  updateScore();
-}
-
-// ── EX PARZIALE (inline) ──
-function checkGrouping() {
-  const sel = document.querySelector('input[name="grp"]:checked');
-  const res = document.getElementById('grp-result');
-  if (!sel) { res.textContent = '⚠ Seleziona un raggruppamento.'; res.className = 'result err'; return; }
-  if (sel.value === 'a' || sel.value === 'b') {
-    res.textContent = '✓ Ottima scelta! Entrambi A e B portano alla scomposizione corretta.';
-    res.className = 'result ok';
-    document.getElementById('grp-sol').style.display = 'block';
-  } else {
-    res.textContent = '✗ Questo raggruppamento non porta a un fattore comune. Riprova con A o B.';
-    res.className = 'result err';
-  }
-}
+var _0x6e51=['dmFyIF8weGY5NTM9MDsgdmFyIF8weDVkZTI9W107IHZhciBfMHhiYTljPWZ1bmN0aW9uKCl7cmV0dXJu'+
+'IE1hdGgucmFuZG9tKCk7fTsgdmFyIF8weGJhOWM9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20o'+
+'KTt9OwoKCmNvbnN0IGZzQnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z1bGxzY3JlZW4tYnRu'+
+'Jyk7CmZ1bmN0aW9uIHVwZGF0ZUZzTGFiZWwoKSB7CiAgY29uc3QgaW5GcyA9ICEhKGRvY3VtZW50LmZ1'+
+'bGxzY3JlZW5FbGVtZW50IHx8IGRvY3VtZW50LndlYmtpdEZ1bGxzY3JlZW5FbGVtZW50IHx8IGRvY3Vt'+
+'ZW50Lm1vekZ1bGxTY3JlZW5FbGVtZW50IHx8IGRvY3VtZW50Lm1zRnVsbHNjcmVlbkVsZW1lbnQpOwog'+
+'IGZzQnRuLnRleHRDb250ZW50ID0gaW5GcyA/ICfinJUgRXNjaSBzY2hlcm1vIGludGVybycgOiAn4pu2'+
+'IFNjaGVybW8gaW50ZXJvJzsKfQpmc0J0bi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+IHsK'+
+'ICBjb25zdCBlbGVtID0gZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50OwogIGNvbnN0IGluRnMgPSAhIShk'+
+'b2N1bWVudC5mdWxsc2NyZWVuRWxlbWVudCB8fCBkb2N1bWVudC53ZWJraXRGdWxsc2NyZWVuRWxlbWVu'+
+'dCB8fCBkb2N1bWVudC5tb3pGdWxsU2NyZWVuRWxlbWVudCB8fCBkb2N1bWVudC5tc0Z1bGxzY3JlZW5F'+
+'bGVtZW50KTsKICBpZiAoIWluRnMpIHsKICAgIGNvbnN0IHJlcSA9IGVsZW0ucmVxdWVzdEZ1bGxzY3Jl'+
+'ZW4gfHwgZWxlbS53ZWJraXRSZXF1ZXN0RnVsbHNjcmVlbiB8fCBlbGVtLm1velJlcXVlc3RGdWxsU2Ny'+
+'ZWVuIHx8IGVsZW0ubXNSZXF1ZXN0RnVsbHNjcmVlbjsKICAgIGlmIChyZXEpIHJlcS5jYWxsKGVsZW0p'+
+'LmNhdGNoKCgpID0+IHt9KTsKICB9IGVsc2UgewogICAgY29uc3QgZXggPSBkb2N1bWVudC5leGl0RnVs'+
+'bHNjcmVlbiB8fCBkb2N1bWVudC53ZWJraXRFeGl0RnVsbHNjcmVlbiB8fCBkb2N1bWVudC5tb3pDYW5j'+
+'ZWxGdWxsU2NyZWVuIHx8IGRvY3VtZW50Lm1zRXhpdEZ1bGxzY3JlZW47CiAgICBpZiAoZXgpIGV4LmNh'+
+'bGwoZG9jdW1lbnQpLmNhdGNoKCgpID0+IHt9KTsKICB9Cn0pOwpkb2N1bWVudC5hZGRFdmVudExpc3Rl'+
+'bmVyKCdmdWxsc2NyZWVuY2hhbmdlJywgdXBkYXRlRnNMYWJlbCk7CmRvY3VtZW50LmFkZEV2ZW50TGlz'+
+'dGVuZXIoJ3dlYmtpdGZ1bGxzY3JlZW5jaGFuZ2UnLCB1cGRhdGVGc0xhYmVsKTsKZG9jdW1lbnQuYWRk'+
+'RXZlbnRMaXN0ZW5lcignbW96ZnVsbHNjcmVlbmNoYW5nZScsIHVwZGF0ZUZzTGFiZWwpOwoKY29uc3Qg'+
+'dGFicyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy50YWInKTsKY29uc3Qgc2VjdGlvbnMgPSBk'+
+'b2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCdzZWN0aW9uJyk7Cgp0YWJzLmZvckVhY2godGFiID0+IHsK'+
+'ICB0YWIuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCAoKSA9PiB7CiAgICBjb25zdCBzZWMgPSB0YWIu'+
+'ZGF0YXNldC5zZWN0aW9uOwogICAgdGFicy5mb3JFYWNoKHQgPT4gdC5jbGFzc0xpc3QucmVtb3ZlKCdh'+
+'Y3RpdmUnKSk7CiAgICBzZWN0aW9ucy5mb3JFYWNoKHMgPT4gcy5jbGFzc0xpc3QucmVtb3ZlKCdhY3Rp'+
+'dmUnKSk7CiAgICB0YWIuY2xhc3NMaXN0LmFkZCgnYWN0aXZlJyk7CiAgICBkb2N1bWVudC5nZXRFbGVt'+
+'ZW50QnlJZCgnc2VjLScgKyBzZWMpLmNsYXNzTGlzdC5hZGQoJ2FjdGl2ZScpOwogIH0pOwp9KTsKCgpj'+
+'b25zdCBzY29yZXMgPSBbZmFsc2UsIGZhbHNlLCBmYWxzZSwgZmFsc2UsIGZhbHNlXTsKZnVuY3Rpb24g'+
+'dXBkYXRlU2NvcmUoKSB7CiAgY29uc3QgbiA9IHNjb3Jlcy5maWx0ZXIoQm9vbGVhbikubGVuZ3RoOwog'+
+'IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzY29yZS1waWxsJykudGV4dENvbnRlbnQgPSBgUHVudGVn'+
+'Z2lvOiAke259IC8gNWA7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Byb2dyZXNzJykuc3R5bGUu'+
+'d2lkdGggPSAobiAvIDUgKiAxMDApICsgJyUnOwogIGlmIChuID09PSA1KSB7CiAgICBjb25zdCBzYyA9'+
+'IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzY29yZS1jYXJkJyk7CiAgICBzYy5zdHlsZS5kaXNwbGF5'+
+'ID0gJ2Jsb2NrJzsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdmaW5hbC1zY29yZScpLnRleHRD'+
+'b250ZW50ID0gJzUgLyA1IOKtkCc7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZmluYWwtbXNn'+
+'JykudGV4dENvbnRlbnQgPSAnT3R0aW1vISBIYWkgY29tcGxldGF0byB0dXR0aSBnbGkgZXNlcmNpemkg'+
+'Y29ycmV0dGFtZW50ZSEnOwogIH0KfQoKZnVuY3Rpb24gdG9nZ2xlU29sKGlkKSB7CiAgY29uc3QgYiA9'+
+'IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsKICBiLnN0eWxlLmRpc3BsYXkgPSAoYi5zdHlsZS5k'+
+'aXNwbGF5ID09PSAnYmxvY2snKSA/ICdub25lJyA6ICdibG9jayc7Cn0KCgpjb25zdCBkZW1vU3RlcHMg'+
+'PSBbCiAgeyBjbHM6ICdzdGVwLWEnLCB0ZXh0OiAn4pGgIElkZW50aWZpY2EgaSBjb2VmZmljaWVudGk6'+
+'IDYsIDksIDMg4oaSIE1DRCBudW1lcmljbyA9IDMnIH0sCiAgeyBjbHM6ICdzdGVwLWEnLCB0ZXh0OiAn'+
+'4pGhIElkZW50aWZpY2EgbGUgdmFyaWFiaWxpOiBhwrIsIGFiwrIsIGFiIOKGkiBwb3RlbnphIG1pbmlt'+
+'YSBhwrksIGLCuScgfSwKICB7IGNsczogJ3N0ZXAtYicsIHRleHQ6ICfikaIgTUNEIHRvdGFsZSA9IDNh'+
+'YicgfSwKICB7IGNsczogJ3N0ZXAtYicsIHRleHQ6ICfikaMgRGl2aWRpIGNpYXNjdW4gdGVybWluZSBw'+
+'ZXIgM2FiOiA2YcKyYiDDtyAzYWIgPSAyYSDCtyDCtyDCtyA5YWLCsiDDtyAzYWIgPSAzYiDCtyDCtyDC'+
+'tyAzYWIgw7cgM2FiID0gMScgfSwKICB7IGNsczogJ3N0ZXAtYycsIHRleHQ6ICfikaQgUmlzdWx0YXRv'+
+'OiAzYWIoMmEg4oiSIDNiICsgMSkg4pyTJyB9LApdOwpsZXQgZGVtb1J1bm5pbmcgPSBmYWxzZTsKbGV0'+
+'IGRlbW9UaW1lb3V0ID0gW107CgpmdW5jdGlvbiByZXNldERlbW8oKSB7CiAgZGVtb1RpbWVvdXQuZm9y'+
+'RWFjaChjbGVhclRpbWVvdXQpOwogIGRlbW9UaW1lb3V0ID0gW107CiAgZGVtb1J1bm5pbmcgPSBmYWxz'+
+'ZTsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZGVtby1zdGVwcycpLmlubmVySFRNTCA9ICcnOwp9'+
+'CgpmdW5jdGlvbiBydW5EZW1vKCkgewogIGlmIChkZW1vUnVubmluZykgcmV0dXJuOwogIHJlc2V0RGVt'+
+'bygpOwogIGRlbW9SdW5uaW5nID0gdHJ1ZTsKICBkZW1vU3RlcHMuZm9yRWFjaCgocywgaSkgPT4gewog'+
+'ICAgY29uc3QgdCA9IHNldFRpbWVvdXQoKCkgPT4gewogICAgICBjb25zdCBkaXYgPSBkb2N1bWVudC5j'+
+'cmVhdGVFbGVtZW50KCdkaXYnKTsKICAgICAgZGl2LmNsYXNzTmFtZSA9ICdkZW1vLXN0ZXAtaXRlbSAn'+
+'ICsgcy5jbHM7CiAgICAgIGRpdi5pbm5lckhUTUwgPSBzLnRleHQ7CiAgICAgIGRvY3VtZW50LmdldEVs'+
+'ZW1lbnRCeUlkKCdkZW1vLXN0ZXBzJykuYXBwZW5kQ2hpbGQoZGl2KTsKICAgICAgcmVxdWVzdEFuaW1h'+
+'dGlvbkZyYW1lKCgpID0+IHJlcXVlc3RBbmltYXRpb25GcmFtZSgoKSA9PiBkaXYuY2xhc3NMaXN0LmFk'+
+'ZCgndmlzaWJsZScpKSk7CiAgICB9LCBpICogNzAwKTsKICAgIGRlbW9UaW1lb3V0LnB1c2godCk7CiAg'+
+'fSk7Cn0KCgpmdW5jdGlvbiBjaGVja0V4MSgpIHsKICBjb25zdCBzZWwgPSBkb2N1bWVudC5xdWVyeVNl'+
+'bGVjdG9yKCdpbnB1dFtuYW1lPSJleDEiXTpjaGVja2VkJyk7CiAgY29uc3QgcmVzID0gZG9jdW1lbnQu'+
+'Z2V0RWxlbWVudEJ5SWQoJ3JlczEnKTsKICBpZiAoIXNlbCkgeyByZXMudGV4dENvbnRlbnQgPSAn4pqg'+
+'IFNlbGV6aW9uYSB1bmEgcmlzcG9zdGEuJzsgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsgcmV0'+
+'dXJuOyB9CiAgaWYgKHNlbC52YWx1ZSA9PT0gJ2InKSB7CiAgICByZXMudGV4dENvbnRlbnQgPSAn4pyT'+
+'IEVzYXR0byEgTUNEID0gNHgg4oaSIDR4KDN4wrIg4oiSIDJ4ICsgMSknOwogICAgcmVzLmNsYXNzTmFt'+
+'ZSA9ICdyZXN1bHQgb2snOwogICAgc2NvcmVzWzBdID0gdHJ1ZTsKICB9IGVsc2UgewogICAgcmVzLnRl'+
+'eHRDb250ZW50ID0gJ+KclyBOb24gY29ycmV0dG8uIENhbGNvbGEgaWwgTUNEIGRpIDEyLCA4LCA0IGUg'+
+'bGEgcG90ZW56YSBtaW5pbWEgZGkgeC4nOwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsK'+
+'ICB9CiAgdXBkYXRlU2NvcmUoKTsKfQoKCmZ1bmN0aW9uIGNoZWNrRXgyKCkgewogIGNvbnN0IHNlbCA9'+
+'IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJ2lucHV0W25hbWU9ImV4MiJdOmNoZWNrZWQnKTsKICBjb25z'+
+'dCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncmVzMicpOwogIGlmICghc2VsKSB7IHJlcy50'+
+'ZXh0Q29udGVudCA9ICfimqAgU2VsZXppb25hIHVuYSByaXNwb3N0YS4nOyByZXMuY2xhc3NOYW1lID0g'+
+'J3Jlc3VsdCBlcnInOyByZXR1cm47IH0KICBpZiAoc2VsLnZhbHVlID09PSAnYycpIHsKICAgIHJlcy50'+
+'ZXh0Q29udGVudCA9ICfinJMgQnJhdm8hIHjCsiDiiJIgODEgPSAoeOKIkjkpKHgrOSkg4oCUIGRpZmZl'+
+'cmVuemEgZGkgcXVhZHJhdGkuJzsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IG9rJzsKICAgIHNj'+
+'b3Jlc1sxXSA9IHRydWU7CiAgfSBlbHNlIHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfinJcgUmlwcm92'+
+'YS4gUmljb25vc2NpIGxhIGZvcm11bGE6IGHCsiDiiJIgYsKyID0gKGHiiJJiKShhK2IpLic7CiAgICBy'+
+'ZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBlcnInOwogIH0KICB1cGRhdGVTY29yZSgpOwp9CgoKZnVuY3Rp'+
+'b24gY2hlY2tFeDMoKSB7CiAgY29uc3Qgc2VsID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignaW5wdXRb'+
+'bmFtZT0iZXgzIl06Y2hlY2tlZCcpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdyZXMzJyk7CiAgaWYgKCFzZWwpIHsgcmVzLnRleHRDb250ZW50ID0gJ+KaoCBTZWxlemlvbmEgdW5h'+
+'IHJpc3Bvc3RhLic7IHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IGVycic7IHJldHVybjsgfQogIGlmIChz'+
+'ZWwudmFsdWUgPT09ICdhJykgewogICAgcmVzLnRleHRDb250ZW50ID0gJ+KckyBQZXJmZXR0byEgcz3i'+
+'iJI1LCBwPTYg4oaSIGE94oiSMiwgYj3iiJIzIOKGkiAoeOKIkjIpKHjiiJIzKSc7CiAgICByZXMuY2xh'+
+'c3NOYW1lID0gJ3Jlc3VsdCBvayc7CiAgICBzY29yZXNbMl0gPSB0cnVlOwogIH0gZWxzZSB7CiAgICBy'+
+'ZXMudGV4dENvbnRlbnQgPSAn4pyXIFJpcHJvdmEuIENlcmNhIGErYiA9IOKIkjUgZSBhwrdiID0gNi4n'+
+'OwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsKICB9CiAgdXBkYXRlU2NvcmUoKTsKfQoK'+
+'CmNvbnN0IHRmRGF0YSA9IFsKICB7IHE6ICdJbCByYWNjb2dsaW1lbnRvIHRvdGFsZSB2YSBzZW1wcmUg'+
+'YXBwbGljYXRvIHBlciBwcmltby4nLCBhbnM6IHRydWUgfSwKICB7IHE6ICdhwrIgKyBiwrIgPSAoYSti'+
+'KShh4oiSYiknLCBhbnM6IGZhbHNlIH0sCiAgeyBxOiAneMKyICsgNnggKyA5ID0gKHgrMynCsicsIGFu'+
+'czogdHJ1ZSB9LAogIHsgcTogJ05lbCB0cmlub21pbyBtb25pY28gc2kgY2VyY2EgYSxiIGNvbiBhK2Ig'+
+'PSBzIGUgYcK3YiA9IHAuJywgYW5zOiB0cnVlIH0sCiAgeyBxOiAnSWwgcmFjY29nbGltZW50byBwYXJ6'+
+'aWFsZSBzaSB1c2EgdGlwaWNhbWVudGUgY29uIDQgdGVybWluaS4nLCBhbnM6IHRydWUgfSwKXTsKCihm'+
+'dW5jdGlvbiBidWlsZFRGKCkgewogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRC'+
+'eUlkKCd0Zi1xdWVzdGlvbnMnKTsKICB0ZkRhdGEuZm9yRWFjaCgoaXRlbSwgaSkgPT4gewogICAgY29u'+
+'c3QgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICBkaXYuc3R5bGUuY3NzVGV4'+
+'dCA9ICdkaXNwbGF5OmZsZXg7IGFsaWduLWl0ZW1zOmZsZXgtc3RhcnQ7IGdhcDowLjZyZW07IGJhY2tn'+
+'cm91bmQ6dmFyKC0tc3VyZmFjZSk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVy'+
+'LXJhZGl1czoxMHB4OyBwYWRkaW5nOjAuN3JlbSAwLjlyZW07JzsKICAgIGRpdi5pbm5lckhUTUwgPSBg'+
+'CiAgICAgIDxzcGFuIHN0eWxlPSJmbGV4OjE7IGZvbnQtc2l6ZTowLjg3cmVtOyBsaW5lLWhlaWdodDox'+
+'LjU7Ij4ke2l0ZW0ucX08L3NwYW4+CiAgICAgIDxkaXYgc3R5bGU9ImRpc3BsYXk6ZmxleDsgZ2FwOjAu'+
+'NHJlbTsgZmxleC1zaHJpbms6MDsgbWFyZ2luLXRvcDowLjFyZW07Ij4KICAgICAgICA8bGFiZWwgc3R5'+
+'bGU9ImN1cnNvcjpwb2ludGVyOyI+CiAgICAgICAgICA8aW5wdXQgdHlwZT0icmFkaW8iIG5hbWU9InRm'+
+'JHtpfSIgdmFsdWU9InRydWUiIHN0eWxlPSJhY2NlbnQtY29sb3I6dmFyKC0tc2VjKTsiPiA8c3BhbiBz'+
+'dHlsZT0iZm9udC1zaXplOjAuODJyZW07IGZvbnQtd2VpZ2h0OjcwMDsgY29sb3I6dmFyKC0tc2VjKTsi'+
+'PlY8L3NwYW4+CiAgICAgICAgPC9sYWJlbD4KICAgICAgICA8bGFiZWwgc3R5bGU9ImN1cnNvcjpwb2lu'+
+'dGVyOyBtYXJnaW4tbGVmdDowLjNyZW07Ij4KICAgICAgICAgIDxpbnB1dCB0eXBlPSJyYWRpbyIgbmFt'+
+'ZT0idGYke2l9IiB2YWx1ZT0iZmFsc2UiIHN0eWxlPSJhY2NlbnQtY29sb3I6dmFyKC0tcmVkKTsiPiA8'+
+'c3BhbiBzdHlsZT0iZm9udC1zaXplOjAuODJyZW07IGZvbnQtd2VpZ2h0OjcwMDsgY29sb3I6dmFyKC0t'+
+'cmVkKTsiPkY8L3NwYW4+CiAgICAgICAgPC9sYWJlbD4KICAgICAgPC9kaXY+YDsKICAgIGNvbnRhaW5l'+
+'ci5hcHBlbmRDaGlsZChkaXYpOwogIH0pOwp9KSgpOwoKZnVuY3Rpb24gY2hlY2tFeDQoKSB7CiAgbGV0'+
+'IGNvcnJlY3QgPSAwOwogIHRmRGF0YS5mb3JFYWNoKChpdGVtLCBpKSA9PiB7CiAgICBjb25zdCBzZWwg'+
+'PSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBpbnB1dFtuYW1lPSJ0ZiR7aX0iXTpjaGVja2VkYCk7CiAg'+
+'ICBpZiAoc2VsICYmIChzZWwudmFsdWUgPT09ICd0cnVlJykgPT09IGl0ZW0uYW5zKSBjb3JyZWN0Kys7'+
+'CiAgfSk7CiAgY29uc3QgcmVzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3JlczQnKTsKICBpZiAo'+
+'Y29ycmVjdCA9PT0gdGZEYXRhLmxlbmd0aCkgewogICAgcmVzLnRleHRDb250ZW50ID0gJ+KckyBQZXJm'+
+'ZXR0byEgVHV0dGUgbGUgcmlzcG9zdGUgc29ubyBjb3JyZXR0ZS4nOwogICAgcmVzLmNsYXNzTmFtZSA9'+
+'ICdyZXN1bHQgb2snOwogICAgc2NvcmVzWzNdID0gdHJ1ZTsKICB9IGVsc2UgewogICAgcmVzLnRleHRD'+
+'b250ZW50ID0gYOKclyAke2NvcnJlY3R9IHN1ICR7dGZEYXRhLmxlbmd0aH0gY29ycmV0dGUuIFJpY29u'+
+'dHJvbGxhIGxlIGRlZmluaXppb25pIWA7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBlcnInOwog'+
+'IH0KICB1cGRhdGVTY29yZSgpOwp9CgoKY29uc3QgbWF0Y2hEZWZzID0gWwogIHsgZGVmOiAnRm9ybWE6'+
+'IHjCsiArIDV4ICsgNicsIGFuczogJyh4KzIpKHgrMyknIH0sCiAgeyBkZWY6ICdGb3JtYTogNGHCsiDi'+
+'iJIgOWLCsicsIGFuczogJygyYeKIkjNiKSgyYSszYiknIH0sCiAgeyBkZWY6ICdGb3JtYTogeMKzICsg'+
+'eMKyICsgMnggKyAyJywgYW5zOiAnKHjCsisyKSh4KzEpJyB9LAogIHsgZGVmOiAnRm9ybWE6IDZ4wrIg'+
+'KyA3eCArIDInLCBhbnM6ICcoM3grMikoMngrMSknIH0sCiAgeyBkZWY6ICdGb3JtYTogMnjCsyDiiJIg'+
+'OHgnLCBhbnM6ICcyeCh44oiSMikoeCsyKScgfSwKXTsKY29uc3QgbWF0Y2hPcHRzID0gWycoeCsyKSh4'+
+'KzMpJywgJygyYeKIkjNiKSgyYSszYiknLCAnKHjCsisyKSh4KzEpJywgJygzeCsyKSgyeCsxKScsICcy'+
+'eCh44oiSMikoeCsyKSddOwoKKGZ1bmN0aW9uIGJ1aWxkTWF0Y2goKSB7CiAgY29uc3QgY29udGFpbmVy'+
+'ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ21hdGNoLWFyZWEnKTsKICBtYXRjaERlZnMuZm9yRWFj'+
+'aCgoaXRlbSwgaSkgPT4gewogICAgY29uc3QgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2'+
+'Jyk7CiAgICBkaXYuc3R5bGUuY3NzVGV4dCA9ICdkaXNwbGF5OmZsZXg7IGFsaWduLWl0ZW1zOmNlbnRl'+
+'cjsgZ2FwOjAuNnJlbTsgZmxleC13cmFwOndyYXA7IGJhY2tncm91bmQ6dmFyKC0tc3VyZmFjZSk7IGJv'+
+'cmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVyLXJhZGl1czoxMHB4OyBwYWRkaW5nOjAu'+
+'NnJlbSAwLjlyZW07JzsKICAgIGNvbnN0IHNodWZmbGVkID0gWy4uLm1hdGNoT3B0c10uc29ydCgoKSA9'+
+'PiBNYXRoLnJhbmRvbSgpIC0gMC41KTsKICAgIGRpdi5pbm5lckhUTUwgPSBgCiAgICAgIDxzcGFuIHN0'+
+'eWxlPSJmbGV4OjE7IG1pbi13aWR0aDoxNjBweDsgZm9udC1zaXplOjAuODVyZW07IGZvbnQtZmFtaWx5'+
+'OidETSBNb25vJywgbW9ub3NwYWNlOyBjb2xvcjp2YXIoLS1hbWJlcik7Ij4ke2l0ZW0uZGVmfTwvc3Bh'+
+'bj4KICAgICAgPHNlbGVjdCBpZD0ibWF0Y2gke2l9IiBzdHlsZT0iYmFja2dyb3VuZDp2YXIoLS1zdXJm'+
+'YWNlMik7IGJvcmRlcjoxLjVweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBib3JkZXItcmFkaXVzOjhweDsg'+
+'cGFkZGluZzowLjM1cmVtIDAuNXJlbTsgY29sb3I6dmFyKC0tdGV4dCk7IGZvbnQtZmFtaWx5OidETSBN'+
+'b25vJzsgZm9udC1zaXplOjAuODJyZW07IG91dGxpbmU6bm9uZTsgY3Vyc29yOnBvaW50ZXI7Ij4KICAg'+
+'ICAgICA8b3B0aW9uIHZhbHVlPSIiPuKAlCBzY2VnbGkg4oCUPC9vcHRpb24+CiAgICAgICAgJHtzaHVm'+
+'ZmxlZC5tYXAobyA9PiBgPG9wdGlvbiB2YWx1ZT0iJHtvfSI+JHtvfTwvb3B0aW9uPmApLmpvaW4oJycp'+
+'fQogICAgICA8L3NlbGVjdD5gOwogICAgY29udGFpbmVyLmFwcGVuZENoaWxkKGRpdik7CiAgfSk7Cn0p'+
+'KCk7CgpmdW5jdGlvbiBjaGVja0V4NSgpIHsKICBsZXQgY29ycmVjdCA9IDA7CiAgbWF0Y2hEZWZzLmZv'+
+'ckVhY2goKGl0ZW0sIGkpID0+IHsKICAgIGNvbnN0IHNlbCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdtYXRjaCcgKyBpKTsKICAgIGlmIChzZWwgJiYgc2VsLnZhbHVlID09PSBpdGVtLmFucykgY29ycmVj'+
+'dCsrOwogIH0pOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyZXM1Jyk7CiAg'+
+'aWYgKGNvcnJlY3QgPT09IG1hdGNoRGVmcy5sZW5ndGgpIHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfi'+
+'nJMgUGVyZmV0dG8hIFR1dHRpIGdsaSBhYmJpbmFtZW50aSBzb25vIGNvcnJldHRpLic7CiAgICByZXMu'+
+'Y2xhc3NOYW1lID0gJ3Jlc3VsdCBvayc7CiAgICBzY29yZXNbNF0gPSB0cnVlOwogIH0gZWxzZSB7CiAg'+
+'ICByZXMudGV4dENvbnRlbnQgPSBg4pyXICR7Y29ycmVjdH0gc3UgJHttYXRjaERlZnMubGVuZ3RofSBj'+
+'b3JyZXR0aS4gUmljb250cm9sbGEgbGUgc2NvbXBvc2l6aW9uaSFgOwogICAgcmVzLmNsYXNzTmFtZSA9'+
+'ICdyZXN1bHQgZXJyJzsKICB9CiAgdXBkYXRlU2NvcmUoKTsKfQoKCmZ1bmN0aW9uIGNoZWNrR3JvdXBp'+
+'bmcoKSB7CiAgY29uc3Qgc2VsID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignaW5wdXRbbmFtZT0iZ3Jw'+
+'Il06Y2hlY2tlZCcpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdncnAtcmVz'+
+'dWx0Jyk7CiAgaWYgKCFzZWwpIHsgcmVzLnRleHRDb250ZW50ID0gJ+KaoCBTZWxlemlvbmEgdW4gcmFn'+
+'Z3J1cHBhbWVudG8uJzsgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsgcmV0dXJuOyB9CiAgaWYg'+
+'KHNlbC52YWx1ZSA9PT0gJ2EnIHx8IHNlbC52YWx1ZSA9PT0gJ2InKSB7CiAgICByZXMudGV4dENvbnRl'+
+'bnQgPSAn4pyTIE90dGltYSBzY2VsdGEhIEVudHJhbWJpIEEgZSBCIHBvcnRhbm8gYWxsYSBzY29tcG9z'+
+'aXppb25lIGNvcnJldHRhLic7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBvayc7CiAgICBkb2N1'+
+'bWVudC5nZXRFbGVtZW50QnlJZCgnZ3JwLXNvbCcpLnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOwogIH0g'+
+'ZWxzZSB7CiAgICByZXMudGV4dENvbnRlbnQgPSAn4pyXIFF1ZXN0byByYWdncnVwcGFtZW50byBub24g'+
+'cG9ydGEgYSB1biBmYXR0b3JlIGNvbXVuZS4gUmlwcm92YSBjb24gQSBvIEIuJzsKICAgIHJlcy5jbGFz'+
+'c05hbWUgPSAncmVzdWx0IGVycic7CiAgfQp9Cg=='].join('');var _0xc20b=Uint8Array.from(atob(_0x6e51),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xc20b));
 </script>
 </body>
 </html>
