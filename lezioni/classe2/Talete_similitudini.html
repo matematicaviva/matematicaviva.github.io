@@ -1,0 +1,1807 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometria delle Relazioni — Talete & Similitudine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0c14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --border: rgba(255,255,255,0.07);
+      --text: #e4e2f0;
+      --muted: #9895b5;
+      --pri: #7c6af7;
+      --pri-glow: rgba(124,106,247,0.25);
+      --sec: #2dd4a4;
+      --sec-glow: rgba(45,212,164,0.2);
+      --amber: #f5c842;
+      --red: #f06080;
+      --blue: #4fa3f7;
+      --orange: #f07c42;
+      --orange-glow: rgba(240,124,66,0.2);
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,106,247,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; left: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(45,212,164,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,12,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hdr-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.2rem 0.6rem;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.6rem; }
+
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--pri), var(--sec));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+
+    .brand-text {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fs-btn {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .fs-btn:hover { border-color: var(--pri); color: var(--pri); }
+
+    /* TAB NAV */
+    .tab-nav {
+      display: flex;
+      gap: 0.3rem;
+      overflow-x: auto;
+      padding: 0.5rem 1rem 0.6rem;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.42rem 0.85rem;
+      white-space: nowrap;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .tab:hover { border-color: rgba(124,106,247,0.4); color: var(--text); }
+    .tab.active {
+      background: var(--pri);
+      border-color: var(--pri);
+      color: #fff;
+      box-shadow: 0 0 16px var(--pri-glow);
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 1.2rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    section { display: none; }
+    section.active { display: block; }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-inner {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* SECTION TITLE */
+    .sec-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      line-height: 1.2;
+    }
+    .sec-title span { color: var(--pri); }
+    .sec-title span.orange { color: var(--orange); }
+
+    .sec-num {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--pri);
+      background: var(--pri-glow);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* DEFINITION BOXES */
+    .def-box {
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .def-box::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px;
+    }
+    .def-box.pri {
+      background: linear-gradient(135deg, rgba(124,106,247,0.12), rgba(124,106,247,0.04));
+    }
+    .def-box.pri::before { background: var(--pri); }
+    .def-box.sec {
+      background: linear-gradient(135deg, rgba(45,212,164,0.12), rgba(45,212,164,0.04));
+    }
+    .def-box.sec::before { background: var(--sec); }
+    .def-box.amber {
+      background: linear-gradient(135deg, rgba(245,200,66,0.12), rgba(245,200,66,0.04));
+    }
+    .def-box.amber::before { background: var(--amber); }
+    .def-box.orange {
+      background: linear-gradient(135deg, rgba(240,124,66,0.12), rgba(240,124,66,0.04));
+    }
+    .def-box.orange::before { background: var(--orange); }
+
+    .def-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pri);
+      margin-bottom: 0.4rem;
+    }
+    .def-box.sec .def-label { color: var(--sec); }
+    .def-box.amber .def-label { color: var(--amber); }
+    .def-box.orange .def-label { color: var(--orange); }
+    .def-box p { color: var(--text); line-height: 1.6; font-size: 0.95rem; }
+    .def-box strong { color: #fff; }
+
+    /* GRID */
+    .row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media(min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
+
+    /* SVG CANVAS */
+    .canvas {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+    .canvas-title {
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    svg { max-width: 100%; height: auto; display: block; }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--pri);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--pri-glow);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--pri-glow); }
+    .btn-sec {
+      background: transparent;
+      color: var(--sec);
+      border: 1.5px solid var(--sec);
+    }
+    .btn-sec:hover { background: var(--sec-glow); }
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn-angle {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      font-size: 0.78rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-angle:hover { border-color: var(--pri); color: var(--pri); }
+
+    /* FORMULA */
+    .formula {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--pri);
+      text-align: center;
+      background: var(--pri-glow);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      letter-spacing: 0.04em;
+    }
+    .formula.orange { color: var(--orange); background: var(--orange-glow); }
+    .formula.sec { color: var(--sec); background: var(--sec-glow); }
+    .formula.amber { color: var(--amber); background: rgba(245,200,66,0.12); }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-right: 0.4rem;
+    }
+    .badge-pri { background: var(--pri-glow); color: var(--pri); }
+    .badge-sec { background: var(--sec-glow); color: var(--sec); }
+    .badge-amber { background: rgba(245,200,66,0.12); color: var(--amber); }
+    .badge-orange { background: var(--orange-glow); color: var(--orange); }
+
+    /* EXERCISES */
+    .ex-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .ex-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.7rem 0;
+    }
+    .choices label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.87rem;
+      cursor: pointer;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+    .choices label:hover { border-color: var(--pri); }
+    .choices input { accent-color: var(--pri); }
+
+    .result {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+    }
+    .result.ok { color: var(--sec); }
+    .result.err { color: var(--red); }
+
+    .sol-box {
+      display: none;
+      margin-top: 0.6rem;
+      padding: 0.7rem 1rem;
+      background: rgba(45,212,164,0.08);
+      border: 1px solid rgba(45,212,164,0.2);
+      border-radius: 10px;
+      font-size: 0.87rem;
+      color: var(--text);
+    }
+    .sol-box strong { color: var(--sec); }
+
+    /* STEP TEXT */
+    .step-text {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--sec);
+      min-height: 1.2em;
+      margin-top: 0.5rem;
+    }
+
+    /* EXAMPLE ITEMS */
+    .example-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      margin-bottom: 0.5rem;
+    }
+    .example-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .example-text { font-size: 0.87rem; line-height: 1.4; }
+    .example-text strong { color: #fff; display: block; font-size: 0.9rem; margin-bottom: 0.1rem; }
+
+    /* TWO-COL CRITERIA */
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
+    }
+    @media(max-width: 540px) { .criteria-grid { grid-template-columns: 1fr; } }
+
+    .criterion-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+    }
+    .criterion-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .criterion-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .criterion-formula {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--orange);
+      background: var(--orange-glow);
+      border-radius: 8px;
+      padding: 0.4rem 0.7rem;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    .criterion-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+
+    /* SCALE DEMO */
+    .scale-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 0.8rem;
+    }
+    .scale-item { text-align: center; }
+    .scale-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    /* INPUTS */
+    input[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.4rem 0.6rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus { outline: none; border-color: var(--pri); }
+
+    select {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+    }
+    select:focus { outline: none; border-color: var(--pri); }
+
+    /* SCORE */
+    #ex-score-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .score-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .score-val {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--sec);
+    }
+    .score-dots { display: flex; gap: 0.35rem; }
+    .score-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      transition: all 0.3s;
+    }
+    .score-dot.done { background: var(--sec); border-color: var(--sec); box-shadow: 0 0 8px var(--sec-glow); }
+
+    /* LIST */
+    ul.bullets { padding-left: 1.2rem; }
+    ul.bullets li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.3rem;
+    }
+
+    /* INTERACTIVE SLIDER AREA */
+    .slider-area {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 0.8rem 0;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .slider-row label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      min-width: 80px;
+      font-family: 'DM Mono', monospace;
+    }
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--pri);
+    }
+    .slider-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--pri);
+      min-width: 35px;
+      text-align: right;
+    }
+
+    /* PROPORTION TABLE */
+    .prop-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin: 0.8rem 0;
+    }
+    .prop-table th {
+      padding: 0.45rem 0.7rem;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .prop-table td {
+      padding: 0.45rem 0.7rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      font-family: 'DM Mono', monospace;
+    }
+    .prop-table tr:last-child td { border-bottom: none; }
+    .prop-table td.hi { color: var(--pri); font-weight: 700; }
+    .prop-table td.hi-o { color: var(--orange); font-weight: 700; }
+
+    /* NOTA BENE */
+    .nota {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      background: rgba(245,200,66,0.06);
+      border: 1px solid rgba(245,200,66,0.2);
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      margin: 0.8rem 0;
+      font-size: 0.87rem;
+    }
+    .nota-icon { flex-shrink: 0; font-size: 1rem; }
+    .nota-text { line-height: 1.5; color: var(--text); }
+    .nota-text strong { color: var(--amber); }
+
+    /* ANIMATION HELPER */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    section.active { animation: fadeIn 0.25s ease; }
+
+    /* RESPONSIVE */
+    @media(max-width: 480px) {
+      .brand-sub { display: none; }
+      .fs-btn { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
+      .tab { font-size: 0.74rem; padding: 0.4rem 0.7rem; }
+      main { padding: 0.85rem 0.65rem; }
+      .card { padding: 1rem 0.9rem; }
+      .formula { font-size: 1.05rem; }
+      .btn-row { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+      .btn-row .btn { width: 100%; justify-content: center; }
+    }
+    @media(min-width: 900px) {
+      main { padding: 1.5rem 2rem; max-width: 960px; }
+      .hdr-top { padding: 1rem 2rem 0.7rem; }
+      .tab-nav { padding: 0.5rem 1.8rem 0.65rem; }
+      .card { padding: 1.5rem; }
+      .sec-title { font-size: 1.65rem; }
+    }
+    @media(min-width: 1200px) {
+      main { max-width: 1040px; padding: 1.8rem 0; }
+      .card { padding: 1.8rem; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(180,180,190,0.35);
+      margin-top: 2rem;
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.72rem;
+      position: relative;
+      z-index: 1;
+    }
+    footer .footer-brand {
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    footer .footer-center {
+      color: var(--muted);
+      text-align: center;
+      flex: 1;
+    }
+    footer .footer-center small {
+      display: block;
+      font-size: 0.67rem;
+      color: #aaaaaa;
+      margin-top: 0.15rem;
+    }
+    footer .footer-copy {
+      color: var(--muted);
+      white-space: nowrap;
+      text-align: right;
+    }
+  
+* { user-select: none; -webkit-user-select: none; }
+</style>
+</head>
+<script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'||e.key==='p'||e.key==='P'))||
+       (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))||
+       e.key==='F12'){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  });
+  var _d=function(){var _t=new Date();debugger;if(new Date()-_t>100){document.body.innerHTML='';document.title='';}setTimeout(_d,1500);};
+  setTimeout(_d,2000);
+})();
+</script>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div class="brand">
+      <div class="brand-icon">∑</div>
+      <div>
+        <div class="brand-text">Matematica<span style="color:#f5c842;">Viva</span></div>
+        <div class="brand-sub">Classe Seconda · Geometria</div>
+      </div>
+    </div>
+    <button class="fs-btn" id="fullscreen-btn">⛶ Schermo intero</button>
+  </div>
+  <nav class="tab-nav" id="top-menu">
+    <button class="tab active" data-section="proporzioni">∶ Proporzioni</button>
+    <button class="tab" data-section="talete">∥ Teorema di Talete</button>
+    <button class="tab" data-section="triangolo">△ Talete nel △</button>
+    <button class="tab" data-section="bisettrice">✂️ Bisettrice</button>
+    <button class="tab" data-section="similitudine">≈ Similitudine</button>
+    <button class="tab" data-section="criteri">📐 Criteri</button>
+    <button class="tab" data-section="aree">⬛ Aree & Scale</button>
+    <button class="tab" data-section="cerchio">⬤ Corde & Secanti</button>
+    <button class="tab" data-section="esercizi">🧠 Esercizi</button>
+  </nav>
+</header>
+
+<main>
+
+
+
+
+<section id="proporzioni" class="active">
+  <div class="card">
+    <div class="sec-num">01 — Fondamenti</div>
+    <h2 class="sec-title">Il Linguaggio delle <span>Proporzioni</span></h2>
+
+    <div class="def-box pri">
+      <div class="def-label">Definizione</div>
+      <p>Quattro grandezze <strong>A, B, C, D</strong> sono in <strong>proporzione</strong> se il rapporto tra le prime due è uguale al rapporto fra le ultime due.</p>
+    </div>
+
+    <div class="formula">A : B = C : D</div>
+
+    <div class="nota">
+      <span class="nota-icon">📌</span>
+      <div class="nota-text"><strong>Nota Bene:</strong> A e B devono essere <strong>omogenee</strong> (stessa unità di misura), così come C e D. Le coppie A,B e C,D possono avere unità diverse tra loro.</div>
+    </div>
+
+    <div class="row">
+      <div class="canvas">
+        <div class="canvas-title">Visualizzazione A : B = C : D</div>
+        <svg viewBox="0 0 300 220">
+          
+          <line x1="60" y1="190" x2="60" y2="130" stroke="#7c6af7" stroke-width="4" stroke-linecap="round"/>
+          <text x="60" y="205" fill="#7c6af7" font-size="13" font-family="DM Mono" font-weight="700" text-anchor="middle">A</text>
+          <text x="60" y="125" fill="#7c6af7" font-size="10" font-family="DM Mono" text-anchor="middle">↑</text>
+          
+          <line x1="110" y1="190" x2="110" y2="70" stroke="#7c6af7" stroke-width="4" stroke-linecap="round"/>
+          <text x="110" y="205" fill="#7c6af7" font-size="13" font-family="DM Mono" font-weight="700" text-anchor="middle">B</text>
+          
+          <text x="150" y="138" fill="#e4e2f0" font-size="16" font-family="DM Mono" font-weight="700" text-anchor="middle">=</text>
+          
+          <line x1="190" y1="190" x2="190" y2="150" stroke="#f07c42" stroke-width="4" stroke-linecap="round"/>
+          <text x="190" y="205" fill="#f07c42" font-size="13" font-family="DM Mono" font-weight="700" text-anchor="middle">C</text>
+          
+          <line x1="240" y1="190" x2="240" y2="110" stroke="#f07c42" stroke-width="4" stroke-linecap="round"/>
+          <text x="240" y="205" fill="#f07c42" font-size="13" font-family="DM Mono" font-weight="700" text-anchor="middle">D</text>
+          
+          <line x1="50" y1="200" x2="120" y2="200" stroke="#7c6af7" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+          <line x1="180" y1="200" x2="255" y2="200" stroke="#f07c42" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+          
+          <text x="85" y="218" fill="#7c6af7" font-size="9" font-family="DM Mono" text-anchor="middle" opacity="0.8">stessa unità</text>
+          <text x="218" y="218" fill="#f07c42" font-size="9" font-family="DM Mono" text-anchor="middle" opacity="0.8">stessa unità</text>
+          
+          <line x1="60" y1="130" x2="110" y2="130" stroke="#7c6af7" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+          <line x1="190" y1="150" x2="240" y2="150" stroke="#f07c42" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+        </svg>
+      </div>
+
+      <div>
+        <div style="margin-bottom:0.6rem; font-size:0.8rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Proprietà fondamentali</div>
+
+        <div class="example-item">
+          <span class="example-icon">⚡</span>
+          <div class="example-text">
+            <strong>Prodotto dei medi = prodotto degli estremi</strong>
+            A · D = B · C &nbsp;
+          </div>
+        </div>
+        <div class="example-item">
+          <span class="example-icon">↕️</span>
+          <div class="example-text">
+            <strong>Proporzione invertita</strong>
+            B : A = D : C &nbsp;(si possono invertire entrambi i rapporti)
+          </div>
+        </div>
+        <div class="example-item">
+          <span class="example-icon">🔄</span>
+          <div class="example-text">
+            <strong>Proporzione per permutazione</strong>
+            A : C = B : D &nbsp;(si permutano i medi)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-inner" style="margin-top:1rem;">
+      <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.7rem;">🧮 Calcolatrice proporzioni — trova il termine mancante</div>
+      <p style="font-size:0.83rem; color:var(--muted); margin-bottom:0.8rem;">Inserisci tre valori e calcola il quarto: <strong style="color:var(--pri);">A : B = C : X</strong></p>
+      <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+        <input type="number" id="pA" placeholder="A" style="width:70px;">
+        <span style="font-family:'DM Mono'; color:var(--muted);">:</span>
+        <input type="number" id="pB" placeholder="B" style="width:70px;">
+        <span style="font-family:'DM Mono'; color:var(--muted);">=</span>
+        <input type="number" id="pC" placeholder="C" style="width:70px;">
+        <span style="font-family:'DM Mono'; color:var(--muted);">:</span>
+        <span id="pX" style="font-family:'DM Mono'; font-size:1.1rem; color:var(--sec); font-weight:700; min-width:50px;">X = ?</span>
+        <button class="btn btn-primary" onclick="calcProp()">Calcola</button>
+      </div>
+      <div id="prop-res" class="result" style="margin-top:0.6rem;"></div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="talete">
+  <div class="card">
+    <div class="sec-num">02 — Il Ritmo delle Rette Parallele</div>
+    <h2 class="sec-title">Teorema di <span>Talete</span></h2>
+
+    <div class="def-box pri">
+      <div class="def-label">Teorema di Talete</div>
+      <p>Dato un <strong>fascio di rette parallele</strong> tagliate da <strong>due trasversali</strong>, il rapporto tra due segmenti individuati dal fascio su una trasversale è uguale al rapporto tra i loro corrispondenti segmenti sull'altra trasversale.</p>
+    </div>
+
+    <div class="formula">AB : CD = A'B' : C'D'</div>
+    
+
+    <div class="nota">
+      <span class="nota-icon">📌</span>
+      <div class="nota-text"><strong>Nota Bene:</strong> La corrispondenza è rigida: se le rette sono parallele, il rapporto si conserva <strong>sempre</strong>, indipendentemente dalla posizione o inclinazione delle trasversali.</div>
+    </div>
+
+    <div class="row">
+      <div class="canvas">
+        <div class="canvas-title">Fascio di parallele e trasversali</div>
+        <svg id="talete-svg" viewBox="0 0 300 280">
+          
+          <line x1="20" y1="50" x2="280" y2="50" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <line x1="20" y1="110" x2="280" y2="110" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <line x1="20" y1="175" x2="280" y2="175" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <line x1="20" y1="240" x2="280" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="6,4"/>
+          
+          <text x="16" y="54" fill="#9895b5" font-size="10" font-family="DM Mono" font-style="italic">a</text>
+          <text x="16" y="114" fill="#9895b5" font-size="10" font-family="DM Mono" font-style="italic">b</text>
+          <text x="16" y="179" fill="#9895b5" font-size="10" font-family="DM Mono" font-style="italic">c</text>
+          <text x="16" y="244" fill="#9895b5" font-size="10" font-family="DM Mono" font-style="italic">d</text>
+          
+          <line x1="80" y1="20" x2="95" y2="265" stroke="#7c6af7" stroke-width="2.5"/>
+          <text x="85" y="15" fill="#7c6af7" font-size="11" font-family="DM Mono" font-weight="700">r</text>
+          
+          <circle cx="81" cy="50" r="4" fill="#7c6af7"/>
+          <circle cx="84" cy="110" r="4" fill="#7c6af7"/>
+          <circle cx="88" cy="175" r="4" fill="#7c6af7"/>
+          <circle cx="91" cy="240" r="4" fill="#7c6af7"/>
+          
+          <text x="66" y="54" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">A</text>
+          <text x="66" y="114" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">B</text>
+          <text x="68" y="179" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">C</text>
+          <text x="68" y="244" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">D</text>
+          
+          <text x="97" y="85" fill="#7c6af7" font-size="9" font-family="DM Mono" opacity="0.7">AB</text>
+          <text x="97" y="148" fill="#7c6af7" font-size="9" font-family="DM Mono" opacity="0.7">BC</text>
+          <text x="97" y="212" fill="#7c6af7" font-size="9" font-family="DM Mono" opacity="0.7">CD</text>
+          
+          <line x1="195" y1="20" x2="220" y2="265" stroke="#f07c42" stroke-width="2.5"/>
+          <text x="205" y="15" fill="#f07c42" font-size="11" font-family="DM Mono" font-weight="700">r'</text>
+          
+          <circle cx="196" cy="50" r="4" fill="#f07c42"/>
+          <circle cx="202" cy="110" r="4" fill="#f07c42"/>
+          <circle cx="210" cy="175" r="4" fill="#f07c42"/>
+          <circle cx="217" cy="240" r="4" fill="#f07c42"/>
+          
+          <text x="201" y="44" fill="#f07c42" font-size="10" font-family="DM Mono" font-weight="700">A'</text>
+          <text x="207" y="104" fill="#f07c42" font-size="10" font-family="DM Mono" font-weight="700">B'</text>
+          <text x="215" y="169" fill="#f07c42" font-size="10" font-family="DM Mono" font-weight="700">C'</text>
+          <text x="222" y="234" fill="#f07c42" font-size="10" font-family="DM Mono" font-weight="700">D'</text>
+          
+          <text x="222" y="85" fill="#f07c42" font-size="9" font-family="DM Mono" opacity="0.7">A'B'</text>
+          <text x="222" y="148" fill="#f07c42" font-size="9" font-family="DM Mono" opacity="0.7">B'C'</text>
+          <text x="222" y="212" fill="#f07c42" font-size="9" font-family="DM Mono" opacity="0.7">C'D'</text>
+          
+          <rect x="22" y="255" width="256" height="18" rx="4" fill="rgba(124,106,247,0.15)"/>
+          <text x="150" y="267" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700" text-anchor="middle">AB : BC : CD = A'B' : B'C' : C'D'</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="card-inner">
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.7rem;">🎛 Verifica interattiva</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.8rem;">Date due trasversali con i seguenti segmenti, verifica che la proporzione di Talete sia soddisfatta:</p>
+          <table class="prop-table">
+            <tr>
+              <th>Su r</th><th>Misura</th><th>Su r'</th><th>Misura</th>
+            </tr>
+            <tr>
+              <td class="hi">AB</td><td><input type="number" id="tAB" value="6" style="width:55px;"></td>
+              <td class="hi-o">A'B'</td><td><input type="number" id="tApBp" value="9" style="width:55px;"></td>
+            </tr>
+            <tr>
+              <td class="hi">BC</td><td><input type="number" id="tBC" value="4" style="width:55px;"></td>
+              <td class="hi-o">B'C'</td><td><input type="number" id="tBpCp" value="?" style="width:55px; color:var(--sec);"></td>
+            </tr>
+          </table>
+          <div class="btn-row" style="margin-top:0.7rem;">
+            <button class="btn btn-primary" onclick="checkTalete()">Verifica proporzione</button>
+          </div>
+          <div id="talete-res" class="result" style="margin-top:0.5rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="triangolo">
+  <div class="card">
+    <div class="sec-num">03 — Quando le Trasversali Formano un Triangolo</div>
+    <h2 class="sec-title">Talete nel <span>Triangolo</span></h2>
+
+    <div class="def-box sec">
+      <div class="def-label">Teorema</div>
+      <p>Se una retta <strong>parallela a un lato</strong> di un triangolo interseca gli altri due lati, allora li divide in <strong>segmenti proporzionali</strong>.</p>
+    </div>
+
+    <div class="formula sec">BD : DA = BE : EC</div>
+
+    <div class="row">
+      <div class="canvas">
+        <div class="canvas-title">Retta DE ∥ AC</div>
+        <svg id="tri-talete-svg" viewBox="0 0 300 270">
+          
+          
+          
+          <polygon points="150,25 35,240 265,240" fill="rgba(45,212,164,0.06)" stroke="#2dd4a4" stroke-width="2"/>
+          
+          <line x1="92.5" y1="132.5" x2="207.5" y2="132.5" stroke="#f07c42" stroke-width="2.5"/>
+          
+          <text x="150" y="125" fill="#f07c42" font-size="10" font-family="DM Mono" text-anchor="middle">DE ∥ AC</text>
+          
+          <circle cx="150" cy="25" r="5" fill="#2dd4a4"/>
+          <circle cx="35" cy="240" r="5" fill="#2dd4a4"/>
+          <circle cx="265" cy="240" r="5" fill="#2dd4a4"/>
+          
+          <circle cx="92.5" cy="132.5" r="5" fill="#f07c42"/>
+          <circle cx="207.5" cy="132.5" r="5" fill="#f07c42"/>
+          
+          <text x="150" y="16" fill="#2dd4a4" font-size="13" font-family="DM Mono" font-weight="700" text-anchor="middle">B</text>
+          <text x="18" y="253" fill="#2dd4a4" font-size="13" font-family="DM Mono" font-weight="700">A</text>
+          <text x="268" y="253" fill="#2dd4a4" font-size="13" font-family="DM Mono" font-weight="700">C</text>
+          
+          <text x="70" y="136" fill="#f07c42" font-size="13" font-family="DM Mono" font-weight="700">D</text>
+          <text x="214" y="136" fill="#f07c42" font-size="13" font-family="DM Mono" font-weight="700">E</text>
+          
+          <text x="108" y="86" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">BD</text>
+          <text x="42" y="198" fill="#7c6af7" font-size="10" font-family="DM Mono" font-weight="700">DA</text>
+          <text x="191" y="86" fill="#f5c842" font-size="10" font-family="DM Mono" font-weight="700">BE</text>
+          <text x="242" y="198" fill="#f5c842" font-size="10" font-family="DM Mono" font-weight="700">EC</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="def-box orange">
+          <div class="def-label">Teorema Inverso</div>
+          <p>Se una retta interseca due lati di un triangolo in modo che i segmenti definiti sui due lati siano <strong>proporzionali</strong>, allora tale retta è <strong>parallela al terzo lato</strong>.</p>
+        </div>
+
+        <div class="card-inner">
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">🔢 Trova il segmento mancante</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.7rem;">DE ∥ AC nel triangolo BAC. Dati BD = <strong style="color:var(--pri);">8</strong>, DA = <strong style="color:var(--pri);">6</strong>, BE = <strong style="color:var(--pri);">12</strong>. Quanto misura EC?</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <span style="font-family:'DM Mono'; font-size:0.85rem; color:var(--muted);">EC =</span>
+            <input type="number" id="ec-val" placeholder="?" style="width:70px;">
+            <button class="btn btn-primary" onclick="checkEC()">Verifica</button>
+            <button class="btn btn-ghost" onclick="toggleSol('ec-sol')">Soluzione</button>
+          </div>
+          <div id="ec-res" class="result" style="margin-top:0.5rem;"></div>
+          <div id="ec-sol" class="sol-box">
+            <strong>Soluzione:</strong> BD : DA = BE : EC &nbsp;→&nbsp; 8 : 6 = 12 : EC &nbsp;→&nbsp; EC = (6 × 12) / 8 = <strong>9</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="bisettrice">
+  <div class="card">
+    <div class="sec-num">04 — Il Teorema della Bisettrice</div>
+    <h2 class="sec-title">La <span>Bisettrice</span> e le proporzioni</h2>
+
+    <div class="def-box amber">
+      <div class="def-label">Teorema della Bisettrice</div>
+      <p>In un triangolo, la <strong>bisettrice di un angolo interno</strong> divide il lato opposto in segmenti <strong>proporzionali agli altri due lati</strong>.</p>
+    </div>
+
+    <div class="formula amber">AD : DB = AC : CB</div>
+
+    <div class="row">
+      <div class="canvas">
+        <div class="canvas-title">Bisettrice dell'angolo in C</div>
+        <svg viewBox="0 0 300 270">
+          
+          <line x1="25" y1="240" x2="270" y2="240" stroke="#2dd4a4" stroke-width="2.5"/>
+          <line x1="25" y1="240" x2="185" y2="30" stroke="#7c6af7" stroke-width="2.5"/>
+          <line x1="270" y1="240" x2="185" y2="30" stroke="#f07c42" stroke-width="2.5"/>
+          
+          <line x1="185" y1="30" x2="157" y2="240" stroke="#f5c842" stroke-width="2" stroke-dasharray="5,3"/>
+          
+          
+          
+          
+          
+          <path d="M 165.6 55.5 A 32 32 0 0 0 180.7 61.7" fill="none" stroke="#f5c842" stroke-width="1.8"/>
+          
+          <path d="M 180.7 61.7 A 32 32 0 0 0 197.0 59.7" fill="none" stroke="#f5c842" stroke-width="1.8"/>
+          
+          <text x="161" y="80" fill="#f5c842" font-size="10" font-family="DM Mono">α</text>
+          <text x="188" y="83" fill="#f5c842" font-size="10" font-family="DM Mono">α</text>
+          
+          <circle cx="25" cy="240" r="4" fill="#7c6af7"/>
+          <circle cx="270" cy="240" r="4" fill="#f07c42"/>
+          <circle cx="185" cy="30" r="4" fill="#f5c842"/>
+          <circle cx="157" cy="240" r="4" fill="#e4e2f0"/>
+          
+          <text x="12" y="255" fill="#7c6af7" font-size="13" font-family="DM Mono" font-weight="700">A</text>
+          <text x="272" y="255" fill="#f07c42" font-size="13" font-family="DM Mono" font-weight="700">B</text>
+          <text x="186" y="22" fill="#f5c842" font-size="13" font-family="DM Mono" font-weight="700">C</text>
+          <text x="150" y="255" fill="#e4e2f0" font-size="13" font-family="DM Mono" font-weight="700">D</text>
+          
+          <text x="72" y="228" fill="#7c6af7" font-size="10" font-family="DM Mono">AD</text>
+          <text x="200" y="228" fill="#f07c42" font-size="10" font-family="DM Mono">DB</text>
+          
+          <text x="82" y="132" fill="#7c6af7" font-size="10" font-family="DM Mono">AC</text>
+          <text x="242" y="132" fill="#f07c42" font-size="10" font-family="DM Mono">CB</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="card-inner">
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.5rem;">Come si usa il teorema</div>
+          <p style="font-size:0.85rem; line-height:1.6; color:var(--text); margin-bottom:0.7rem;">La bisettrice di C taglia AB nel punto D tale che la proporzione <span style="font-family:'DM Mono'; color:var(--amber);">AD : DB = AC : CB</span> sia verificata.</p>
+          <p style="font-size:0.85rem; line-height:1.6; color:var(--text);">Quindi, conoscendo i lati AC e CB e un segmento (AD o DB), è possibile calcolare il terzo.</p>
+        </div>
+
+        <div class="card-inner">
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">🔢 Calcolo con la bisettrice</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.7rem;">In un triangolo: AC = <strong style="color:var(--sec);">10</strong>, CB = <strong style="color:var(--sec);">15</strong>, AB = <strong style="color:var(--sec);">25</strong>.<br>La bisettrice di C divide AB in D. Quanto misura AD?</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <span style="font-family:'DM Mono'; font-size:0.85rem; color:var(--muted);">AD =</span>
+            <input type="number" id="ad-val" placeholder="?" style="width:70px;">
+            <button class="btn btn-primary" onclick="checkAD()">Verifica</button>
+            <button class="btn btn-ghost" onclick="toggleSol('ad-sol')">Soluzione</button>
+          </div>
+          <div id="ad-res" class="result" style="margin-top:0.5rem;"></div>
+          <div id="ad-sol" class="sol-box">
+            <strong>Soluzione:</strong> AD : DB = AC : CB &nbsp;→&nbsp; AD : (25 − AD) = 10 : 15<br>
+            15 · AD = 10 · (25 − AD) &nbsp;→&nbsp; 15AD = 250 − 10AD &nbsp;→&nbsp; 25AD = 250 &nbsp;→&nbsp; <strong>AD = 10</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="similitudine">
+  <div class="card">
+    <div class="sec-num">05 — Stessa Forma, Diversa Scala</div>
+    <h2 class="sec-title"><span>Similitudine</span> tra triangoli</h2>
+
+    <div class="def-box pri">
+      <div class="def-label">Definizione</div>
+      <p>Due triangoli sono <strong>simili</strong> (~) se hanno:</p>
+      <p style="margin-top:0.5rem;">1. Gli <strong>angoli ordinatamente congruenti</strong> (Â ≅ Â', B̂ ≅ B̂', Ĉ ≅ Ĉ')</p>
+      <p style="margin-top:0.3rem;">2. I <strong>lati opposti agli angoli congruenti in proporzione</strong>.</p>
+      <p style="margin-top:0.6rem; font-family:'DM Mono'; color:var(--pri); font-size:0.9rem;">Notazione: ABC ~ A'B'C'</p>
+    </div>
+
+    <div class="formula">AB : A'B' = BC : B'C' = AC : A'C' = k</div>
+
+    <div class="nota">
+      <span class="nota-icon">🔑</span>
+      <div class="nota-text"><strong>Rapporto di similitudine k:</strong> È il rapporto costante tra i lati omologhi. Se k = 1 i triangoli sono <strong>congruenti</strong>; se k ≠ 1 sono simili ma non congruenti.</div>
+    </div>
+
+    <div class="row">
+      <div class="canvas">
+        <div class="canvas-title">Triangoli simili ABC ~ A'B'C'</div>
+        <svg viewBox="0 0 300 220">
+          
+          <polygon points="40,190 140,30 180,190" fill="rgba(124,106,247,0.08)" stroke="#7c6af7" stroke-width="2.2"/>
+          
+          <polygon points="205,190 255,100 275,190" fill="rgba(240,124,66,0.08)" stroke="#f07c42" stroke-width="2"/>
+          
+          <text x="28" y="205" fill="#7c6af7" font-size="12" font-family="DM Mono" font-weight="700">A</text>
+          <text x="137" y="22" fill="#7c6af7" font-size="12" font-family="DM Mono" font-weight="700">B</text>
+          <text x="183" y="205" fill="#7c6af7" font-size="12" font-family="DM Mono" font-weight="700">C</text>
+          
+          <text x="196" y="205" fill="#f07c42" font-size="12" font-family="DM Mono" font-weight="700">A'</text>
+          <text x="255" y="93" fill="#f07c42" font-size="12" font-family="DM Mono" font-weight="700">B'</text>
+          <text x="277" y="205" fill="#f07c42" font-size="12" font-family="DM Mono" font-weight="700">C'</text>
+
+          
+          <path d="M 49.5 174.7 A 18 18 0 0 1 58.0 190.0" fill="none" stroke="#f5c842" stroke-width="1.8"/>
+          
+          <path d="M 209.9 181.3 A 10 10 0 0 1 215.0 190.0" fill="none" stroke="#f5c842" stroke-width="1.6"/>
+
+          
+          <path d="M 164.0 190.0 A 16 16 0 0 1 176.1 174.5" fill="none" stroke="#2dd4a4" stroke-width="1.8"/>
+          
+          <path d="M 266.0 190.0 A 9 9 0 0 1 273.0 181.2" fill="none" stroke="#2dd4a4" stroke-width="1.6"/>
+
+          
+          <text x="192" y="108" fill="#f5c842" font-size="9" font-family="DM Mono" text-anchor="middle">k = 1/2</text>
+          <defs>
+            <marker id="arr" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto">
+              <path d="M0,0 L5,2.5 L0,5 Z" fill="#f5c842"/>
+            </marker>
+          </defs>
+          <line x1="200" y1="110" x2="220" y2="125" stroke="#f5c842" stroke-width="1" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+
+      <div>
+        <div class="card-inner">
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">🎛 Esplora il rapporto k</div>
+          <div class="slider-area">
+            <div class="slider-row">
+              <label>Rapp. k</label>
+              <input type="range" id="k-slider" min="0.3" max="3" step="0.1" value="1.5" oninput="updateKDemo(this.value)">
+              <span class="slider-val" id="k-val">1.5</span>
+            </div>
+          </div>
+          <div id="k-demo" style="font-size:0.85rem; line-height:1.7; color:var(--text); background:var(--surface); border-radius:8px; padding:0.7rem 0.9rem; margin-top:0.5rem;">
+            
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="criteri">
+  <div class="card">
+    <div class="sec-num">06 — Come riconoscere triangoli simili</div>
+    <h2 class="sec-title">I tre <span class="orange">Criteri</span> di Similitudine</h2>
+
+    <div class="criteria-grid">
+      <div class="criterion-card">
+        <div class="criterion-num">1° Criterio — AA</div>
+        <div class="criterion-title">Due angoli congruenti</div>
+        <div class="criterion-formula">Â ≅ Â'  e  B̂ ≅ B̂' → ABC ~ A'B'C'</div>
+        <div class="criterion-desc">Se due triangoli hanno due angoli rispettivamente congruenti, allora sono simili. Poiché la somma degli angoli interni è 180°, se due angoli sono congruenti, anche il terzo lo è necessariamente.</div>
+      </div>
+
+      <div class="criterion-card">
+        <div class="criterion-num">2° Criterio — LAL</div>
+        <div class="criterion-title">Due lati proporzionali + angolo compreso</div>
+        <div class="criterion-formula">AB:A'B' = AC:A'C'  e  Â ≅ Â'</div>
+        <div class="criterion-desc">Se due triangoli hanno due lati in proporzione e l'angolo fra essi compreso congruente, allora sono simili.</div>
+      </div>
+
+      <div class="criterion-card">
+        <div class="criterion-num">3° Criterio — LLL</div>
+        <div class="criterion-title">Tutti e tre i lati proporzionali</div>
+        <div class="criterion-formula">AB:A'B' = BC:B'C' = AC:A'C'</div>
+        <div class="criterion-desc">Se due triangoli hanno i lati ordinatamente proporzionali, allora sono simili. Il rapporto costante è il fattore di similitudine k.</div>
+      </div>
+
+      <div class="criterion-card" style="border-color: rgba(45,212,164,0.2);">
+        <div class="criterion-num" style="color:var(--sec);">Memoria rapida</div>
+        <div class="criterion-title">Confronto dei criteri</div>
+        <div style="font-family:'DM Mono'; font-size:0.8rem; color:var(--sec); background:var(--sec-glow); border-radius:8px; padding:0.4rem 0.7rem; text-align:center; margin-bottom:0.4rem;">AA · LAL · LLL</div>
+        <div class="criterion-desc">Per la congruenza servono lati congruenti; per la similitudine bastano angoli congruenti o lati <em>proporzionali</em>. La similitudine è più "generosa"!</div>
+      </div>
+    </div>
+
+    <div class="card-inner" style="margin-top:0.5rem;">
+      <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">🧩 Quale criterio si applica?</div>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.7rem;">Due triangoli hanno: AB = 6, BC = 8, AC = 10 e A'B' = 3, B'C' = 4, A'C' = 5. Quale criterio dimostra la similitudine?</p>
+      <div class="choices">
+        <label><input type="radio" name="crit-q" value="AA"> 1° (AA)</label>
+        <label><input type="radio" name="crit-q" value="LAL"> 2° (LAL)</label>
+        <label><input type="radio" name="crit-q" value="LLL"> 3° (LLL)</label>
+      </div>
+      <button class="btn btn-primary" onclick="checkCrit()">Verifica</button>
+      <div id="crit-res" class="result" style="margin-top:0.5rem;"></div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="aree">
+  <div class="card">
+    <div class="sec-num">07 — La Legge delle Dimensioni</div>
+    <h2 class="sec-title">Aree, <span>Perimetri</span> e Scale</h2>
+
+    <div class="row">
+      <div class="def-box sec" style="margin:0;">
+        <div class="def-label">Dimensioni lineari (scala k)</div>
+        <p>In due triangoli simili, il rapporto di similitudine <strong>k</strong> vale per <strong>tutte</strong> le lunghezze corrispondenti, non solo i lati: altezze, perimetri, mediane e bisettrici scalano con k.</p>
+        <div style="font-family:'DM Mono'; font-size:0.95rem; color:var(--sec); margin-top:0.6rem; text-align:center;">2p' / 2p = h' / h = k</div>
+      </div>
+      <div class="def-box orange" style="margin:0;">
+        <div class="def-label">Aree (scala k²)</div>
+        <p>Il rapporto tra le <strong>aree</strong> di due figure simili è uguale al <strong>quadrato del rapporto di similitudine</strong>. Se si raddoppia il lato (k = 2), l'area quadruplica.</p>
+        <div style="font-family:'DM Mono'; font-size:0.95rem; color:var(--orange); margin-top:0.6rem; text-align:center;">Area' / Area = k²</div>
+      </div>
+    </div>
+
+    <div class="card-inner" style="margin-top:1rem;">
+      <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">🎛 Simulatore di scala</div>
+      <div class="slider-area">
+        <div class="slider-row">
+          <label>k =</label>
+          <input type="range" id="k2-slider" min="0.5" max="4" step="0.1" value="2" oninput="updateAreaDemo(this.value)">
+          <span class="slider-val" id="k2-val">2.0</span>
+        </div>
+      </div>
+      <div id="area-demo-svg" style="display:flex; align-items:center; justify-content:center; gap:2rem; padding:0.8rem; flex-wrap:wrap;">
+        
+      </div>
+      <div id="area-demo-text" style="font-family:'DM Mono'; font-size:0.85rem; text-align:center; color:var(--text); margin-top:0.5rem;"></div>
+    </div>
+
+    <div class="card-inner">
+      <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:0.5rem;">📊 Tabella riassuntiva</div>
+      <table class="prop-table">
+        <tr>
+          <th>Grandezza</th><th>Rapporto</th><th>Esempio k = 3</th>
+        </tr>
+        <tr><td>Lato</td><td class="hi">k</td><td>× 3</td></tr>
+        <tr><td>Altezza</td><td class="hi">k</td><td>× 3</td></tr>
+        <tr><td>Perimetro</td><td class="hi">k</td><td>× 3</td></tr>
+        <tr><td>Mediana</td><td class="hi">k</td><td>× 3</td></tr>
+        <tr><td>Area</td><td class="hi-o">k²</td><td>× 9</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="cerchio">
+  <div class="card">
+    <div class="sec-num">08 — Triangoli nascosti nel cerchio</div>
+    <h2 class="sec-title">Corde, <span>Secanti</span> e Tangenti</h2>
+
+    <div class="row">
+      <div>
+        <div class="def-box pri">
+          <div class="def-label">Teorema delle Corde</div>
+          <p>Se due <strong>corde si intersecano</strong> in un punto P interno alla circonferenza, i segmenti formati sono i medi e gli estremi di una proporzione.</p>
+        </div>
+        <div class="formula" style="font-size:1rem;">CP : AP = PB : PD</div>
+        <div class="formula sec" style="font-size:0.95rem; margin-top:0.4rem;">CP · PD = AP · PB</div>
+        <div class="nota" style="margin-top:0.5rem;">
+          <span class="nota-icon">📌</span>
+          <div class="nota-text">Il <strong>prodotto dei segmenti</strong> di ciascuna corda è costante (potenza del punto P).</div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas-title">Corde AB e CD che si intersecano in P</div>
+        <svg viewBox="0 0 280 260">
+          <circle cx="140" cy="130" r="105" fill="rgba(124,106,247,0.05)" stroke="#7c6af7" stroke-width="1.5"/>
+          
+          
+          <line x1="45" y1="174" x2="235" y2="86" stroke="#7c6af7" stroke-width="2.2"/>
+          
+          <line x1="54" y1="70" x2="208" y2="210" stroke="#f07c42" stroke-width="2.2"/>
+          
+          <circle cx="127" cy="136" r="5" fill="#f5c842"/>
+          
+          <circle cx="45" cy="174" r="4" fill="#7c6af7"/>
+          <circle cx="235" cy="86" r="4" fill="#7c6af7"/>
+          <circle cx="54" cy="70" r="4" fill="#f07c42"/>
+          <circle cx="208" cy="210" r="4" fill="#f07c42"/>
+          
+          <text x="28" y="180" fill="#7c6af7" font-size="12" font-family="DM Mono" font-weight="700">A</text>
+          <text x="238" y="84" fill="#7c6af7" font-size="12" font-family="DM Mono" font-weight="700">B</text>
+          <text x="40" y="65" fill="#f07c42" font-size="12" font-family="DM Mono" font-weight="700">C</text>
+          <text x="210" y="224" fill="#f07c42" font-size="12" font-family="DM Mono" font-weight="700">D</text>
+          <text x="135" y="133" fill="#f5c842" font-size="12" font-family="DM Mono" font-weight="700">P</text>
+          
+          <text x="87" y="166" fill="#7c6af7" font-size="9" font-family="DM Mono">AP</text>
+          <text x="182" y="122" fill="#7c6af7" font-size="9" font-family="DM Mono">PB</text>
+          <text x="79" y="112" fill="#f07c42" font-size="9" font-family="DM Mono">CP</text>
+          <text x="156" y="182" fill="#f07c42" font-size="9" font-family="DM Mono">PD</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:0.5rem;">
+      <div>
+        <div class="def-box sec" style="margin:0 0 0.7rem 0;">
+          <div class="def-label">Teorema delle Secanti</div>
+          <p>Da un punto esterno P si tracciano due <strong>secanti</strong>. Il prodotto dei due segmenti di una secante è uguale al prodotto dei due segmenti dell'altra.</p>
+          <div style="font-family:'DM Mono'; color:var(--sec); font-size:0.9rem; margin-top:0.5rem; text-align:center;">PA · PB = PC · PD</div>
+        </div>
+        <div class="canvas">
+          <div class="canvas-title">Secanti da punto esterno P</div>
+          <svg viewBox="0 0 280 230">
+            
+            <circle cx="155" cy="115" r="75" fill="rgba(45,212,164,0.05)" stroke="#2dd4a4" stroke-width="1.5"/>
+            
+            <circle cx="20" cy="115" r="4" fill="#f5c842"/>
+            <text x="6" y="112" fill="#f5c842" font-size="12" font-family="DM Mono" font-weight="700">P</text>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <line x1="20" y1="115" x2="238" y2="115" stroke="#7c6af7" stroke-width="2"/>
+            <circle cx="80" cy="115" r="4" fill="#7c6af7"/>
+            <circle cx="230" cy="115" r="4" fill="#7c6af7"/>
+            <text x="74" y="108" fill="#7c6af7" font-size="11" font-family="DM Mono" font-weight="700">A</text>
+            <text x="232" y="108" fill="#7c6af7" font-size="11" font-family="DM Mono" font-weight="700">B</text>
+            
+            
+            
+            <line x1="20" y1="115" x2="202" y2="48" stroke="#f07c42" stroke-width="2"/>
+            <circle cx="84" cy="92" r="4" fill="#f07c42"/>
+            <circle cx="195" cy="51" r="4" fill="#f07c42"/>
+            <text x="86" y="88" fill="#f07c42" font-size="11" font-family="DM Mono" font-weight="700">C</text>
+            <text x="197" y="46" fill="#f07c42" font-size="11" font-family="DM Mono" font-weight="700">D</text>
+            
+            
+            <text x="44" y="128" fill="#7c6af7" font-size="9" font-family="DM Mono">PA</text>
+            
+            <text x="148" y="128" fill="#7c6af7" font-size="9" font-family="DM Mono">PB</text>
+            
+            <text x="24" y="98" fill="#f07c42" font-size="9" font-family="DM Mono">PC</text>
+            
+            <text x="118" y="62" fill="#f07c42" font-size="9" font-family="DM Mono">PD</text>
+            
+            <rect x="60" y="160" width="160" height="20" rx="4" fill="rgba(45,212,164,0.12)"/>
+            <text x="140" y="174" fill="#2dd4a4" font-size="10" font-family="DM Mono" font-weight="700" text-anchor="middle">PA · PB = PC · PD</text>
+          </svg>
+        </div>
+      </div>
+
+      <div>
+        <div class="def-box amber" style="margin:0 0 0.7rem 0;">
+          <div class="def-label">Teorema della Tangente</div>
+          <p>Da un punto esterno P si tracciano una <strong>tangente</strong> e una secante. Il quadrato della tangente è uguale al prodotto dei segmenti della secante.</p>
+          <div style="font-family:'DM Mono'; color:var(--amber); font-size:0.9rem; margin-top:0.5rem; text-align:center;">PT² = PA · PB</div>
+        </div>
+        <div class="canvas">
+          <div class="canvas-title">Tangente e secante da punto esterno P</div>
+          <svg viewBox="0 0 280 230">
+            
+            <circle cx="155" cy="110" r="70" fill="rgba(245,200,66,0.05)" stroke="#f5c842" stroke-width="1.5"/>
+            
+            <circle cx="20" cy="190" r="4" fill="#f5c842"/>
+            <text x="6" y="200" fill="#f5c842" font-size="12" font-family="DM Mono" font-weight="700">P</text>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <line x1="20" y1="190" x2="104" y2="57" stroke="#f5c842" stroke-width="2"/>
+            <circle cx="96" cy="72" r="4" fill="#f5c842"/>
+            <text x="80" y="68" fill="#f5c842" font-size="11" font-family="DM Mono" font-weight="700">T</text>
+            
+            <line x1="20" y1="190" x2="215" y2="152" stroke="#7c6af7" stroke-width="2"/>
+            <circle cx="122" cy="172" r="4" fill="#7c6af7"/>
+            <circle cx="207" cy="157" r="4" fill="#7c6af7"/>
+            <text x="108" y="183" fill="#7c6af7" font-size="11" font-family="DM Mono" font-weight="700">A</text>
+            <text x="210" y="170" fill="#7c6af7" font-size="11" font-family="DM Mono" font-weight="700">B</text>
+            
+            
+            <text x="28" y="135" fill="#f5c842" font-size="9" font-family="DM Mono">PT</text>
+            
+            <text x="60" y="196" fill="#7c6af7" font-size="9" font-family="DM Mono">PA</text>
+            
+            <text x="155" y="156" fill="#7c6af7" font-size="9" font-family="DM Mono">PB</text>
+            
+            <rect x="50" y="198" width="170" height="20" rx="4" fill="rgba(245,200,66,0.12)"/>
+            <text x="135" y="212" fill="#f5c842" font-size="10" font-family="DM Mono" font-weight="700" text-anchor="middle">PT² = PA · PB</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section id="esercizi">
+  <div class="card">
+    <div class="sec-num">09 — Metti alla prova le tue conoscenze</div>
+    <h2 class="sec-title">🧠 <span>Esercizi</span> interattivi</h2>
+
+    <div id="ex-score-row">
+      <span class="score-label">Punteggio:</span>
+      <span class="score-val" id="score-text">0 / 5</span>
+      <div class="score-dots">
+        <div class="score-dot" id="dot0"></div>
+        <div class="score-dot" id="dot1"></div>
+        <div class="score-dot" id="dot2"></div>
+        <div class="score-dot" id="dot3"></div>
+        <div class="score-dot" id="dot4"></div>
+      </div>
+    </div>
+
+    
+    <div class="ex-card">
+      <div class="ex-title">① Calcola il termine mancante</div>
+      <p style="font-size:0.87rem; color:var(--muted); margin-bottom:0.8rem;">Due rette parallele tagliate da una trasversale danno: AB = 12, BC = 8. Sull'altra trasversale A'B' = 9. Quanto misura B'C'?</p>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+        <span style="font-family:'DM Mono'; font-size:0.85rem; color:var(--muted);">B'C' =</span>
+        <input type="number" id="ex1-ans" placeholder="?" style="width:80px;">
+        <button class="btn btn-primary" onclick="checkEx1()">Verifica</button>
+        <button class="btn btn-ghost" onclick="toggleSol('ex1-sol')">Soluzione</button>
+      </div>
+      <div id="ex1-res" class="result"></div>
+      <div id="ex1-sol" class="sol-box">
+        <strong>Soluzione:</strong> AB : BC = A'B' : B'C' &nbsp;→&nbsp; 12 : 8 = 9 : B'C' &nbsp;→&nbsp; B'C' = (8 × 9) / 12 = <strong>6</strong>
+      </div>
+    </div>
+
+    
+    <div class="ex-card">
+      <div class="ex-title">② Vero o Falso?</div>
+      <div id="tf-questions" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+      <div class="btn-row" style="margin-top:0.8rem;">
+        <button class="btn btn-primary" onclick="checkEx2()">Verifica tutto</button>
+      </div>
+      <div id="ex2-res" class="result"></div>
+    </div>
+
+    
+    <div class="ex-card">
+      <div class="ex-title">③ Identifica il criterio di similitudine</div>
+      <p style="font-size:0.87rem; color:var(--muted); margin-bottom:0.8rem;">Due triangoli hanno gli angoli: α = 40°, β = 70° nel primo e α' = 40°, γ' = 70° nel secondo (dove γ' è il terzo angolo di A'B'C'). Quale criterio si applica?</p>
+      <div class="choices">
+        <label><input type="radio" name="ex3-r" value="1"> 1° criterio (AA)</label>
+        <label><input type="radio" name="ex3-r" value="2"> 2° criterio (LAL)</label>
+        <label><input type="radio" name="ex3-r" value="3"> 3° criterio (LLL)</label>
+        <label><input type="radio" name="ex3-r" value="0"> Nessuno, non sono simili</label>
+      </div>
+      <button class="btn btn-primary" onclick="checkEx3()">Verifica</button>
+      <div id="ex3-res" class="result"></div>
+    </div>
+
+    
+    <div class="ex-card">
+      <div class="ex-title">④ Legge quadratica delle aree</div>
+      <p style="font-size:0.87rem; color:var(--muted); margin-bottom:0.8rem;">Un triangolo ha area 24 cm². Il triangolo simile ha rapporto di similitudine k = 3. Qual è la sua area?</p>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+        <span style="font-family:'DM Mono'; font-size:0.85rem; color:var(--muted);">Area' =</span>
+        <input type="number" id="ex4-ans" placeholder="? cm²" style="width:90px;">
+        <span style="font-family:'DM Mono'; font-size:0.82rem; color:var(--muted);">cm²</span>
+        <button class="btn btn-primary" onclick="checkEx4()">Verifica</button>
+        <button class="btn btn-ghost" onclick="toggleSol('ex4-sol')">Soluzione</button>
+      </div>
+      <div id="ex4-res" class="result"></div>
+      <div id="ex4-sol" class="sol-box">
+        <strong>Soluzione:</strong> Area' = Area × k² = 24 × 3² = 24 × 9 = <strong>216 cm²</strong>
+      </div>
+    </div>
+
+    
+    <div class="ex-card">
+      <div class="ex-title">⑤ Abbinamento — Formule e teoremi</div>
+      <div id="match-area" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+      <div class="btn-row" style="margin-top:0.8rem;">
+        <button class="btn btn-primary" onclick="checkEx5()">Verifica abbinamenti</button>
+      </div>
+      <div id="ex5-res" class="result"></div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<script>
+var _0x83d1=['dmFyIF8weGI5MmY9ZnVuY3Rpb24oKXtyZXR1cm4gTWF0aC5yYW5kb20oKTt9OyB2YXIgXzB4YjkyZj1m'+
+'dW5jdGlvbigpe3JldHVybiBNYXRoLnJhbmRvbSgpO307IHZhciBfMHhlNWFiPTA7IHZhciBfMHhiOTJm'+
+'PWZ1bmN0aW9uKCl7cmV0dXJuIE1hdGgucmFuZG9tKCk7fTsKCgpkb2N1bWVudC5nZXRFbGVtZW50QnlJ'+
+'ZCgnZnVsbHNjcmVlbi1idG4nKS5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+IHsKICBpZiAo'+
+'IWRvY3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50KSB7CiAgICBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQu'+
+'cmVxdWVzdEZ1bGxzY3JlZW4oKTsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdmdWxsc2NyZWVu'+
+'LWJ0bicpLnRleHRDb250ZW50ID0gJ+KclSBFc2NpIGRhIHNjaGVybW8gaW50ZXJvJzsKICB9IGVsc2Ug'+
+'ewogICAgZG9jdW1lbnQuZXhpdEZ1bGxzY3JlZW4oKTsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdmdWxsc2NyZWVuLWJ0bicpLnRleHRDb250ZW50ID0gJ+KbtiBTY2hlcm1vIGludGVybyc7CiAgfQp9'+
+'KTsKCgpkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndG9wLW1lbnUnKS5hZGRFdmVudExpc3RlbmVyKCdj'+
+'bGljaycsIGUgPT4gewogIGNvbnN0IGJ0biA9IGUudGFyZ2V0LmNsb3Nlc3QoJy50YWInKTsKICBpZiAo'+
+'IWJ0bikgcmV0dXJuOwogIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy50YWInKS5mb3JFYWNoKHQg'+
+'PT4gdC5jbGFzc0xpc3QucmVtb3ZlKCdhY3RpdmUnKSk7CiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFs'+
+'bCgnc2VjdGlvbicpLmZvckVhY2gocyA9PiBzLmNsYXNzTGlzdC5yZW1vdmUoJ2FjdGl2ZScpKTsKICBi'+
+'dG4uY2xhc3NMaXN0LmFkZCgnYWN0aXZlJyk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYnRuLmRh'+
+'dGFzZXQuc2VjdGlvbikuY2xhc3NMaXN0LmFkZCgnYWN0aXZlJyk7CiAgaWYgKGJ0bi5kYXRhc2V0LnNl'+
+'Y3Rpb24gPT09ICdhcmVlJykgdXBkYXRlQXJlYURlbW8oZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2sy'+
+'LXNsaWRlcicpLnZhbHVlKTsKfSk7CgoKZnVuY3Rpb24gdG9nZ2xlU29sKGlkKSB7CiAgY29uc3QgYiA9'+
+'IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsKICBiLnN0eWxlLmRpc3BsYXkgPSAoYi5zdHlsZS5k'+
+'aXNwbGF5ID09PSAnYmxvY2snKSA/ICdub25lJyA6ICdibG9jayc7Cn0KCgpjb25zdCBzY29yZXMgPSBb'+
+'ZmFsc2UsIGZhbHNlLCBmYWxzZSwgZmFsc2UsIGZhbHNlXTsKZnVuY3Rpb24gdXBkYXRlU2NvcmUoKSB7'+
+'CiAgY29uc3QgbiA9IHNjb3Jlcy5maWx0ZXIoQm9vbGVhbikubGVuZ3RoOwogIGRvY3VtZW50LmdldEVs'+
+'ZW1lbnRCeUlkKCdzY29yZS10ZXh0JykudGV4dENvbnRlbnQgPSBuICsgJyAvIDUnOwogIHNjb3Jlcy5m'+
+'b3JFYWNoKCh2LCBpKSA9PiB7CiAgICBjb25zdCBkb3QgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgn'+
+'ZG90JyArIGkpOwogICAgaWYgKGRvdCkgZG90LmNsYXNzTGlzdC50b2dnbGUoJ2RvbmUnLCB2KTsKICB9'+
+'KTsKfQoKCmZ1bmN0aW9uIGNhbGNQcm9wKCkgewogIGNvbnN0IEEgPSBwYXJzZUZsb2F0KGRvY3VtZW50'+
+'LmdldEVsZW1lbnRCeUlkKCdwQScpLnZhbHVlKTsKICBjb25zdCBCID0gcGFyc2VGbG9hdChkb2N1bWVu'+
+'dC5nZXRFbGVtZW50QnlJZCgncEInKS52YWx1ZSk7CiAgY29uc3QgQyA9IHBhcnNlRmxvYXQoZG9jdW1l'+
+'bnQuZ2V0RWxlbWVudEJ5SWQoJ3BDJykudmFsdWUpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVs'+
+'ZW1lbnRCeUlkKCdwcm9wLXJlcycpOwogIGlmIChpc05hTihBKSB8fCBpc05hTihCKSB8fCBpc05hTihD'+
+'KSB8fCBCID09PSAwKSB7CiAgICByZXMudGV4dENvbnRlbnQgPSAn4pqgIEluc2VyaXNjaSB2YWxvcmkg'+
+'dmFsaWRpIChCIOKJoCAwKS4nOwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsKICAgIHJl'+
+'dHVybjsKICB9CiAgY29uc3QgWCA9IChCICogQykgLyBBOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdwWCcpLnRleHRDb250ZW50ID0gJ1ggPSAnICsgTWF0aC5yb3VuZChYICogMTAwMCkgLyAxMDAwOwog'+
+'IHJlcy50ZXh0Q29udGVudCA9ICfinJMgUHJvcG9yemlvbmU6ICcgKyBBICsgJyA6ICcgKyBCICsgJyA9'+
+'ICcgKyBDICsgJyA6ICcgKyAoTWF0aC5yb3VuZChYKjEwMDApLzEwMDApOwogIHJlcy5jbGFzc05hbWUg'+
+'PSAncmVzdWx0IG9rJzsKfQoKCmZ1bmN0aW9uIGNoZWNrVGFsZXRlKCkgewogIGNvbnN0IEFCID0gcGFy'+
+'c2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndEFCJykudmFsdWUpOwogIGNvbnN0IEJDID0g'+
+'cGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndEJDJykudmFsdWUpOwogIGNvbnN0IEFw'+
+'QnAgPSBwYXJzZUZsb2F0KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCd0QXBCcCcpLnZhbHVlKTsKICBj'+
+'b25zdCByZXMgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndGFsZXRlLXJlcycpOwogIGlmIChpc05h'+
+'TihBQikgfHwgaXNOYU4oQkMpIHx8IGlzTmFOKEFwQnApIHx8IEJDID09PSAwIHx8IEFwQnAgPT09IDAp'+
+'IHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfimqAgSW5zZXJpc2NpIHZhbG9yaSB2YWxpZGkuJzsgcmVz'+
+'LmNsYXNzTmFtZSA9ICdyZXN1bHQgZXJyJzsgcmV0dXJuOwogIH0KICBjb25zdCBCcENwID0gKEJDICog'+
+'QXBCcCkgLyBBQjsKICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndEJwQ3AnKS52YWx1ZSA9IE1hdGgu'+
+'cm91bmQoQnBDcCAqIDEwMCkgLyAxMDA7CiAgcmVzLnRleHRDb250ZW50ID0gJ+KckyBCXCdDXCcgPSAn'+
+'ICsgKE1hdGgucm91bmQoQnBDcCoxMDApLzEwMCkgKyAnICDihpIgIEFCOkJDID0gJyArIEFCICsgJzon'+
+'ICsgQkMgKyAnID0gQVwnQlwnOkJcJ0NcJyA9ICcgKyBBcEJwICsgJzonICsgKE1hdGgucm91bmQoQnBD'+
+'cCoxMDApLzEwMCkgKyAnLiBQcm9wb3J6aW9uZSB2ZXJpZmljYXRhISc7CiAgcmVzLmNsYXNzTmFtZSA9'+
+'ICdyZXN1bHQgb2snOwp9CgoKZnVuY3Rpb24gY2hlY2tFQygpIHsKICBjb25zdCB2ID0gcGFyc2VGbG9h'+
+'dChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZWMtdmFsJykudmFsdWUpOwogIGNvbnN0IHJlcyA9IGRv'+
+'Y3VtZW50LmdldEVsZW1lbnRCeUlkKCdlYy1yZXMnKTsKICBpZiAodiA9PT0gOSkgewogICAgcmVzLnRl'+
+'eHRDb250ZW50ID0gJ+KckyBFc2F0dG8hIEJEOkRBID0gODo2ID0gNDozIOKGkiBCRTpFQyA9IDEyOjkg'+
+'PSA0OjMg4pyTJzsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IG9rJzsKICB9IGVsc2UgewogICAg'+
+'cmVzLnRleHRDb250ZW50ID0gJ+KclyBOb24gY29ycmV0dG8uIFVzYSBCRDpEQSA9IEJFOkVDIOKGkiA4'+
+'OjYgPSAxMjpFQyDihpIgRUMgPSA3Mi84ID0gOS4nOwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQg'+
+'ZXJyJzsKICB9Cn0KCgpmdW5jdGlvbiBjaGVja0FEKCkgewogIGNvbnN0IHYgPSBwYXJzZUZsb2F0KGRv'+
+'Y3VtZW50LmdldEVsZW1lbnRCeUlkKCdhZC12YWwnKS52YWx1ZSk7CiAgY29uc3QgcmVzID0gZG9jdW1l'+
+'bnQuZ2V0RWxlbWVudEJ5SWQoJ2FkLXJlcycpOwogIGlmICh2ID09PSAxMCkgewogICAgcmVzLnRleHRD'+
+'b250ZW50ID0gJ+KckyBDb3JyZXR0byEgQUQgPSAxMCwgREIgPSAxNS4gVmVyaWZpY2E6IDEwOjE1ID0g'+
+'MTA6MTUg4pyTJzsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IG9rJzsKICB9IGVsc2UgewogICAg'+
+'cmVzLnRleHRDb250ZW50ID0gJ+KclyBSaXByb3ZhLiBJbXBvc3RhIGxhIHByb3Bvcnppb25lIEFEOigy'+
+'NeKIkkFEKSA9IDEwOjE1Lic7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBlcnInOwogIH0KfQoK'+
+'CmZ1bmN0aW9uIHVwZGF0ZUtEZW1vKGspIHsKICBrID0gcGFyc2VGbG9hdChrKTsKICBkb2N1bWVudC5n'+
+'ZXRFbGVtZW50QnlJZCgnay12YWwnKS50ZXh0Q29udGVudCA9IGsudG9GaXhlZCgxKTsKICBjb25zdCBk'+
+'aXYgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnay1kZW1vJyk7CiAgY29uc3QgYTAgPSA2LCBiMCA9'+
+'IDgsIGMwID0gMTA7CiAgZGl2LmlubmVySFRNTCA9CiAgICAnPHNwYW4gc3R5bGU9ImNvbG9yOnZhcigt'+
+'LW11dGVkKTsgZm9udC1zaXplOjAuOHJlbTsiPlRyaWFuZ29sbyBvcmlnaW5hbGU6PC9zcGFuPjxicj4n'+
+'ICsKICAgICdBQiA9ICcgKyBhMCArICcsIEJDID0gJyArIGIwICsgJywgQUMgPSAnICsgYzAgKyAnPGJy'+
+'PicgKwogICAgJzxzcGFuIHN0eWxlPSJjb2xvcjp2YXIoLS1tdXRlZCk7IGZvbnQtc2l6ZTowLjhyZW07'+
+'IG1hcmdpbi10b3A6MC40cmVtOyBkaXNwbGF5OmJsb2NrOyI+VHJpYW5nb2xvIHNpbWlsZSAoayA9ICcg'+
+'KyBrLnRvRml4ZWQoMSkgKyAnKTo8L3NwYW4+JyArCiAgICAiQSdCJyA9IDxzdHJvbmcgc3R5bGU9J2Nv'+
+'bG9yOnZhcigtLXByaSk7Jz4iICsgKGEwKmspLnRvRml4ZWQoMSkgKyAiPC9zdHJvbmc+LCAiICsKICAg'+
+'ICJCJ0MnID0gPHN0cm9uZyBzdHlsZT0nY29sb3I6dmFyKC0tcHJpKTsnPiIgKyAoYjAqaykudG9GaXhl'+
+'ZCgxKSArICI8L3N0cm9uZz4sICIgKwogICAgIkEnQycgPSA8c3Ryb25nIHN0eWxlPSdjb2xvcjp2YXIo'+
+'LS1wcmkpOyc+IiArIChjMCprKS50b0ZpeGVkKDEpICsgIjwvc3Ryb25nPjxicj4iICsKICAgICc8c3Bh'+
+'biBzdHlsZT0iY29sb3I6dmFyKC0tbXV0ZWQpOyBmb250LXNpemU6MC44cmVtOyBtYXJnaW4tdG9wOjAu'+
+'NHJlbTsgZGlzcGxheTpibG9jazsiPlBlcmltZXRybyBzY2FsYSBjb24gaywgYXJlYSBjb24ga8KyOjwv'+
+'c3Bhbj4nICsKICAgICdQZXJpbWV0cm8gw5cgPHN0cm9uZyBzdHlsZT0iY29sb3I6dmFyKC0tc2VjKTsi'+
+'PicgKyBrLnRvRml4ZWQoMSkgKyAnPC9zdHJvbmc+ICDihpIgIEFyZWEgw5cgPHN0cm9uZyBzdHlsZT0i'+
+'Y29sb3I6dmFyKC0tb3JhbmdlKTsiPicgKyAoayprKS50b0ZpeGVkKDIpICsgJzwvc3Ryb25nPic7Cn0K'+
+'dXBkYXRlS0RlbW8oMS41KTsKCgpmdW5jdGlvbiB1cGRhdGVBcmVhRGVtbyhrKSB7CiAgayA9IHBhcnNl'+
+'RmxvYXQoayk7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2syLXZhbCcpLnRleHRDb250ZW50ID0g'+
+'ay50b0ZpeGVkKDEpOwogIGNvbnN0IGJhc2UgPSA1MDsKICBjb25zdCBzMSA9IGJhc2U7CiAgY29uc3Qg'+
+'czIgPSBNYXRoLm1pbihiYXNlICogaywgMTQwKTsKICBjb25zdCBhcmVhMSA9IChzMSAqIHMxICogTWF0'+
+'aC5zcXJ0KDMpIC8gNCkudG9GaXhlZCgwKTsKICBjb25zdCBhcmVhMiA9IChhcmVhMSAqIGsgKiBrKS50'+
+'b0ZpeGVkKDApOwogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhcmVh'+
+'LWRlbW8tc3ZnJyk7CiAgY29uc3Qgc3ZnSCA9IE1hdGgubWF4KHMxLCBzMikgKyAyMDsKICBjb250YWlu'+
+'ZXIuaW5uZXJIVE1MID0gYAogICAgPGRpdiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXI7Ij4KICAgICAg'+
+'PHN2ZyB2aWV3Qm94PSIwIDAgJHtzMX0gJHtzMSowLjg3fSIgd2lkdGg9IiR7czF9IiBoZWlnaHQ9IiR7'+
+'czEqMC44N30iIHN0eWxlPSJkaXNwbGF5OmJsb2NrOyBtYXJnaW46MCBhdXRvOyI+CiAgICAgICAgPHBv'+
+'bHlnb24gcG9pbnRzPSIke3MxLzJ9LDAgMCwke3MxKjAuODd9ICR7czF9LCR7czEqMC44N30iIGZpbGw9'+
+'InJnYmEoMTI0LDEwNiwyNDcsMC4yNSkiIHN0cm9rZT0iIzdjNmFmNyIgc3Ryb2tlLXdpZHRoPSIyIi8+'+
+'CiAgICAgIDwvc3ZnPgogICAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTonRE0gTW9ubyc7IGZvbnQt'+
+'c2l6ZTowLjc1cmVtOyBjb2xvcjp2YXIoLS1wcmkpOyBtYXJnaW4tdG9wOjAuM3JlbTsiPmxhdG8gPSAx'+
+'IOKGkiBBcmVhID0gMTwvZGl2PgogICAgPC9kaXY+CiAgICA8ZGl2IHN0eWxlPSJmb250LWZhbWlseTon'+
+'RE0gTW9ubyc7IGZvbnQtc2l6ZToxLjVyZW07IGNvbG9yOnZhcigtLW11dGVkKTsiPuKGkjwvZGl2Pgog'+
+'ICAgPGRpdiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXI7Ij4KICAgICAgPHN2ZyB2aWV3Qm94PSIwIDAg'+
+'JHtzMn0gJHtzMiowLjg3fSIgd2lkdGg9IiR7czJ9IiBoZWlnaHQ9IiR7czIqMC44N30iIHN0eWxlPSJk'+
+'aXNwbGF5OmJsb2NrOyBtYXJnaW46MCBhdXRvOyI+CiAgICAgICAgPHBvbHlnb24gcG9pbnRzPSIke3My'+
+'LzJ9LDAgMCwke3MyKjAuODd9ICR7czJ9LCR7czIqMC44N30iIGZpbGw9InJnYmEoMjQwLDEyNCw2Niww'+
+'LjI1KSIgc3Ryb2tlPSIjZjA3YzQyIiBzdHJva2Utd2lkdGg9IjIiLz4KICAgICAgPC9zdmc+CiAgICAg'+
+'IDxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OidETSBNb25vJzsgZm9udC1zaXplOjAuNzVyZW07IGNvbG9y'+
+'OnZhcigtLW9yYW5nZSk7IG1hcmdpbi10b3A6MC4zcmVtOyI+bGF0byA9IGs9JHtrLnRvRml4ZWQoMSl9'+
+'IOKGkiBBcmVhID0gPHN0cm9uZz4keyhrKmspLnRvRml4ZWQoMil9PC9zdHJvbmc+PC9kaXY+CiAgICA8'+
+'L2Rpdj5gOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdhcmVhLWRlbW8tdGV4dCcpLmlubmVySFRN'+
+'TCA9CiAgICAnayA9IDxzdHJvbmcgc3R5bGU9ImNvbG9yOnZhcigtLXNlYyk7Ij4nICsgay50b0ZpeGVk'+
+'KDEpICsgJzwvc3Ryb25nPiAg4oaSICAnICsKICAgICdsYXRpIMOXIDxzdHJvbmcgc3R5bGU9ImNvbG9y'+
+'OnZhcigtLXNlYyk7Ij4nICsgay50b0ZpeGVkKDEpICsgJzwvc3Ryb25nPiAgfCAgJyArCiAgICAnYXJl'+
+'ZSDDlyA8c3Ryb25nIHN0eWxlPSJjb2xvcjp2YXIoLS1vcmFuZ2UpOyI+JyArIChrKmspLnRvRml4ZWQo'+
+'MikgKyAnPC9zdHJvbmc+JzsKfQp1cGRhdGVBcmVhRGVtbygyKTsKCgpmdW5jdGlvbiBjaGVja0NyaXQo'+
+'KSB7CiAgY29uc3Qgc2VsID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignaW5wdXRbbmFtZT0iY3JpdC1x'+
+'Il06Y2hlY2tlZCcpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjcml0LXJl'+
+'cycpOwogIGlmICghc2VsKSB7IHJlcy50ZXh0Q29udGVudCA9ICfimqAgU2NlZ2xpIHVuIGNyaXRlcmlv'+
+'Lic7IHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IGVycic7IHJldHVybjsgfQogIGlmIChzZWwudmFsdWUg'+
+'PT09ICdMTEwnKSB7CiAgICByZXMudGV4dENvbnRlbnQgPSAn4pyTIENvcnJldHRvISA2OjMgPSA4OjQg'+
+'PSAxMDo1ID0gMiDihpIgdHV0dGkgaSBsYXRpIHNvbm8gcHJvcG9yemlvbmFsaSBjb24gayA9IDIuIDPC'+
+'sCBjcml0ZXJpbyAoTExMKS4nOwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgb2snOwogIH0gZWxz'+
+'ZSB7CiAgICByZXMudGV4dENvbnRlbnQgPSAn4pyXIE5vbiBjb3JyZXR0by4gQ2FsY29sYSBpIHJhcHBv'+
+'cnRpIHRyYSBpIGxhdGk6IDYvMyA9IDgvNCA9IDEwLzUgPSAyLiBUdXR0aSBpIGxhdGkgc29ubyBwcm9w'+
+'b3J6aW9uYWxpISc7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBlcnInOwogIH0KfQoKCmZ1bmN0'+
+'aW9uIGNoZWNrRXgxKCkgewogIGNvbnN0IHYgPSBwYXJzZUZsb2F0KGRvY3VtZW50LmdldEVsZW1lbnRC'+
+'eUlkKCdleDEtYW5zJykudmFsdWUpOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdleDEtcmVzJyk7CiAgaWYgKHYgPT09IDYpIHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfinJMgRXNh'+
+'dHRvISBBQjpCQyA9IEFcJ0JcJzpCXCdDXCcg4oaSIDEyOjggPSA5OjYg4pyTJzsKICAgIHJlcy5jbGFz'+
+'c05hbWUgPSAncmVzdWx0IG9rJzsKICAgIHNjb3Jlc1swXSA9IHRydWU7CiAgfSBlbHNlIHsKICAgIHJl'+
+'cy50ZXh0Q29udGVudCA9ICfinJcgUmlwcm92YS4gVXNhIGxhIHByb3Bvcnppb25lOiBBQjpCQyA9IEFc'+
+'J0JcJzpCXCdDXCcg4oaSIDEyOjggPSA5Oj8g4oaSID8gPSAoOcOXOCkvMTIuJzsKICAgIHJlcy5jbGFz'+
+'c05hbWUgPSAncmVzdWx0IGVycic7CiAgfQogIHVwZGF0ZVNjb3JlKCk7Cn0KCgpjb25zdCB0ZkRhdGEg'+
+'PSBbCiAgeyBxOiAnU2UgZHVlIHRyaWFuZ29saSBoYW5ubyBkdWUgYW5nb2xpIGNvbmdydWVudGksIGFs'+
+'bG9yYSBzb25vIHNpbWlsaS4nLCBhbnM6IHRydWUgfSwKICB7IHE6ICdJbCByYXBwb3J0byB0cmEgbGUg'+
+'YXJlZSBkaSBkdWUgdHJpYW5nb2xpIHNpbWlsaSDDqCB1Z3VhbGUgYWwgcmFwcG9ydG8gZGkgc2ltaWxp'+
+'dHVkaW5lIGsuJywgYW5zOiBmYWxzZSB9LAogIHsgcTogJ0xhIGJpc2V0dHJpY2UgZGkgdW4gYW5nb2xv'+
+'IGRpIHVuIHRyaWFuZ29sbyBkaXZpZGUgaWwgbGF0byBvcHBvc3RvIGluIHBhcnRpIHVndWFsaS4nLCBh'+
+'bnM6IGZhbHNlIH0sCiAgeyBxOiAnUGVyIGlsIFRlb3JlbWEgZGkgVGFsZXRlLCByZXR0ZSBwYXJhbGxl'+
+'bGUgdGFnbGlhdGUgZGEgdW5hIHRyYXN2ZXJzYWxlIGNyZWFubyBzZWdtZW50aSBwcm9wb3J6aW9uYWxp'+
+'LicsIGFuczogdHJ1ZSB9LAogIHsgcTogJ1NlIGlsIHJhcHBvcnRvIGRpIHNpbWlsaXR1ZGluZSDDqCBr'+
+'ID0gMSwgaSBkdWUgdHJpYW5nb2xpIHNvbm8gY29uZ3J1ZW50aS4nLCBhbnM6IHRydWUgfSwKXTsKCihm'+
+'dW5jdGlvbiBidWlsZFRGKCkgewogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRC'+
+'eUlkKCd0Zi1xdWVzdGlvbnMnKTsKICB0ZkRhdGEuZm9yRWFjaCgoaXRlbSwgaSkgPT4gewogICAgY29u'+
+'c3QgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICBkaXYuc3R5bGUuY3NzVGV4'+
+'dCA9ICdkaXNwbGF5OmZsZXg7IGFsaWduLWl0ZW1zOmZsZXgtc3RhcnQ7IGdhcDowLjZyZW07IGJhY2tn'+
+'cm91bmQ6dmFyKC0tc3VyZmFjZSk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgYm9yZGVy'+
+'LXJhZGl1czoxMHB4OyBwYWRkaW5nOjAuN3JlbSAwLjlyZW07JzsKICAgIGRpdi5pbm5lckhUTUwgPSBg'+
+'CiAgICAgIDxzcGFuIHN0eWxlPSJmbGV4OjE7IGZvbnQtc2l6ZTowLjg3cmVtOyBsaW5lLWhlaWdodDox'+
+'LjU7Ij4ke2l0ZW0ucX08L3NwYW4+CiAgICAgIDxkaXYgc3R5bGU9ImRpc3BsYXk6ZmxleDsgZ2FwOjAu'+
+'NHJlbTsgZmxleC1zaHJpbms6MDsgbWFyZ2luLXRvcDowLjFyZW07Ij4KICAgICAgICA8bGFiZWwgc3R5'+
+'bGU9ImN1cnNvcjpwb2ludGVyOyI+CiAgICAgICAgICA8aW5wdXQgdHlwZT0icmFkaW8iIG5hbWU9InRm'+
+'JHtpfSIgdmFsdWU9InRydWUiIHN0eWxlPSJhY2NlbnQtY29sb3I6dmFyKC0tc2VjKTsiPiA8c3BhbiBz'+
+'dHlsZT0iZm9udC1zaXplOjAuODJyZW07IGZvbnQtd2VpZ2h0OjcwMDsgY29sb3I6dmFyKC0tc2VjKTsi'+
+'PlY8L3NwYW4+CiAgICAgICAgPC9sYWJlbD4KICAgICAgICA8bGFiZWwgc3R5bGU9ImN1cnNvcjpwb2lu'+
+'dGVyOyBtYXJnaW4tbGVmdDowLjNyZW07Ij4KICAgICAgICAgIDxpbnB1dCB0eXBlPSJyYWRpbyIgbmFt'+
+'ZT0idGYke2l9IiB2YWx1ZT0iZmFsc2UiIHN0eWxlPSJhY2NlbnQtY29sb3I6dmFyKC0tcmVkKTsiPiA8'+
+'c3BhbiBzdHlsZT0iZm9udC1zaXplOjAuODJyZW07IGZvbnQtd2VpZ2h0OjcwMDsgY29sb3I6dmFyKC0t'+
+'cmVkKTsiPkY8L3NwYW4+CiAgICAgICAgPC9sYWJlbD4KICAgICAgPC9kaXY+YDsKICAgIGNvbnRhaW5l'+
+'ci5hcHBlbmRDaGlsZChkaXYpOwogIH0pOwp9KSgpOwoKZnVuY3Rpb24gY2hlY2tFeDIoKSB7CiAgbGV0'+
+'IGNvcnJlY3QgPSAwOwogIHRmRGF0YS5mb3JFYWNoKChpdGVtLCBpKSA9PiB7CiAgICBjb25zdCBzZWwg'+
+'PSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBpbnB1dFtuYW1lPSJ0ZiR7aX0iXTpjaGVja2VkYCk7CiAg'+
+'ICBpZiAoc2VsICYmIChzZWwudmFsdWUgPT09ICd0cnVlJykgPT09IGl0ZW0uYW5zKSBjb3JyZWN0Kys7'+
+'CiAgfSk7CiAgY29uc3QgcmVzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2V4Mi1yZXMnKTsKICBp'+
+'ZiAoY29ycmVjdCA9PT0gdGZEYXRhLmxlbmd0aCkgewogICAgcmVzLnRleHRDb250ZW50ID0gJ+KckyBQ'+
+'ZXJmZXR0byEgVHV0dGUgbGUgcmlzcG9zdGUgc29ubyBjb3JyZXR0ZS4nOwogICAgcmVzLmNsYXNzTmFt'+
+'ZSA9ICdyZXN1bHQgb2snOwogICAgc2NvcmVzWzFdID0gdHJ1ZTsKICB9IGVsc2UgewogICAgcmVzLnRl'+
+'eHRDb250ZW50ID0gYOKclyAke2NvcnJlY3R9IHN1ICR7dGZEYXRhLmxlbmd0aH0gY29ycmV0dGUuIFJp'+
+'Y29udHJvbGxhIGxlIGRlZmluaXppb25pIWA7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBlcnIn'+
+'OwogIH0KICB1cGRhdGVTY29yZSgpOwp9CgoKZnVuY3Rpb24gY2hlY2tFeDMoKSB7CiAgY29uc3Qgc2Vs'+
+'ID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcignaW5wdXRbbmFtZT0iZXgzLXIiXTpjaGVja2VkJyk7CiAg'+
+'Y29uc3QgcmVzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2V4My1yZXMnKTsKICBpZiAoIXNlbCkg'+
+'eyByZXMudGV4dENvbnRlbnQgPSAn4pqgIFNjZWdsaSB1bmEgcmlzcG9zdGEuJzsgcmVzLmNsYXNzTmFt'+
+'ZSA9ICdyZXN1bHQgZXJyJzsgcmV0dXJuOyB9CiAgaWYgKHNlbC52YWx1ZSA9PT0gJzEnKSB7CiAgICBy'+
+'ZXMudGV4dENvbnRlbnQgPSAn4pyTIENvcnJldHRvISBEdWUgYW5nb2xpIGNvbmdydWVudGkgYmFzdGFu'+
+'byAoaWwgdGVyem8gw6ggZGV0ZXJtaW5hdG8gYXV0b21hdGljYW1lbnRlIGEgNzDCsCkuIDHCsCBjcml0'+
+'ZXJpbyBBQS4nOwogICAgcmVzLmNsYXNzTmFtZSA9ICdyZXN1bHQgb2snOwogICAgc2NvcmVzWzJdID0g'+
+'dHJ1ZTsKICB9IGVsc2UgewogICAgcmVzLnRleHRDb250ZW50ID0gJ+KclyBOb24gY29ycmV0dG8uIENv'+
+'biDOsSA9IDQwwrAgZSDOsi/OsyA9IDcwwrAsIGR1ZSBhbmdvbGkgY29pbmNpZG9ubyDihpIgMcKwIGNy'+
+'aXRlcmlvIChBQSkuJzsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IGVycic7CiAgfQogIHVwZGF0'+
+'ZVNjb3JlKCk7Cn0KCgpmdW5jdGlvbiBjaGVja0V4NCgpIHsKICBjb25zdCB2ID0gcGFyc2VGbG9hdChk'+
+'b2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZXg0LWFucycpLnZhbHVlKTsKICBjb25zdCByZXMgPSBkb2N1'+
+'bWVudC5nZXRFbGVtZW50QnlJZCgnZXg0LXJlcycpOwogIGlmICh2ID09PSAyMTYpIHsKICAgIHJlcy50'+
+'ZXh0Q29udGVudCA9ICfinJMgRXNhdHRvISBBcmVhXCcgPSAyNCDDlyAzwrIgPSAyNCDDlyA5ID0gMjE2'+
+'IGNtwrIuJzsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IG9rJzsKICAgIHNjb3Jlc1szXSA9IHRy'+
+'dWU7CiAgfSBlbHNlIHsKICAgIHJlcy50ZXh0Q29udGVudCA9ICfinJcgTm9uIGNvcnJldHRvLiBSaWNv'+
+'cmRhOiBBcmVhXCcgPSBBcmVhIMOXIGvCsiA9IDI0IMOXIDkuJzsKICAgIHJlcy5jbGFzc05hbWUgPSAn'+
+'cmVzdWx0IGVycic7CiAgfQogIHVwZGF0ZVNjb3JlKCk7Cn0KCgpjb25zdCBtYXRjaERlZnMgPSBbCiAg'+
+'eyBkZWY6ICdSYXBwb3J0byBjb3N0YW50ZSB0cmEgaSBsYXRpIG9tb2xvZ2hpIGRpIGR1ZSB0cmlhbmdv'+
+'bGkgc2ltaWxpLicsIGFuczogJ2sgKHJhcHBvcnRvIGRpIHNpbWlsaXR1ZGluZSknIH0sCiAgeyBkZWY6'+
+'ICdTZSBERSDiiKUgQUMgbmVsIHRyaWFuZ29sbyBCQUMsIGFsbG9yYSBCRDpEQSA9IEJFOkVDLicsIGFu'+
+'czogJ1RhbGV0ZSBuZWwgdHJpYW5nb2xvJyB9LAogIHsgZGVmOiAnTGEgYmlzZXR0cmljZSBkZWxsXCdh'+
+'bmdvbG8gQyBkaXZpZGUgQUIgaW4gRDogQUQ6REIgPSBBQzpDQi4nLCBhbnM6ICdUZW9yZW1hIGRlbGxh'+
+'IGJpc2V0dHJpY2UnIH0sCiAgeyBkZWY6ICdJbCBwcm9kb3R0byBkZWkgc2VnbWVudGkgZGkgdW5hIGNv'+
+'cmRhIMOoIHVndWFsZSBhbCBwcm9kb3R0byBkZWkgc2VnbWVudGkgZGVsbFwnYWx0cmEuJywgYW5zOiAn'+
+'VGVvcmVtYSBkZWxsZSBjb3JkZScgfSwKICB7IGRlZjogJ0lsIHJhcHBvcnRvIHRyYSBsZSBhcmVlIGRp'+
+'IGR1ZSBmaWd1cmUgc2ltaWxpIMOoIGvCsi4nLCBhbnM6ICdMZWdnZSBxdWFkcmF0aWNhIGRlbGxlIGFy'+
+'ZWUnIH0sCl07CmNvbnN0IG1hdGNoT3B0cyA9IFsnayAocmFwcG9ydG8gZGkgc2ltaWxpdHVkaW5lKScs'+
+'ICdUYWxldGUgbmVsIHRyaWFuZ29sbycsICdUZW9yZW1hIGRlbGxhIGJpc2V0dHJpY2UnLCAnVGVvcmVt'+
+'YSBkZWxsZSBjb3JkZScsICdMZWdnZSBxdWFkcmF0aWNhIGRlbGxlIGFyZWUnXTsKCihmdW5jdGlvbiBi'+
+'dWlsZE1hdGNoKCkgewogIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdt'+
+'YXRjaC1hcmVhJyk7CiAgbWF0Y2hEZWZzLmZvckVhY2goKGl0ZW0sIGkpID0+IHsKICAgIGNvbnN0IGRp'+
+'diA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpOwogICAgZGl2LnN0eWxlLmNzc1RleHQgPSAn'+
+'ZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDowLjZyZW07IGZsZXgtd3JhcDp3cmFw'+
+'OyBiYWNrZ3JvdW5kOnZhcigtLXN1cmZhY2UpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7'+
+'IGJvcmRlci1yYWRpdXM6MTBweDsgcGFkZGluZzowLjZyZW0gMC45cmVtOyc7CiAgICBjb25zdCBzaHVm'+
+'ZmxlZCA9IFsuLi5tYXRjaE9wdHNdLnNvcnQoKCkgPT4gTWF0aC5yYW5kb20oKSAtIDAuNSk7CiAgICBk'+
+'aXYuaW5uZXJIVE1MID0gYAogICAgICA8c3BhbiBzdHlsZT0iZmxleDoxOyBtaW4td2lkdGg6MTQwcHg7'+
+'IGZvbnQtc2l6ZTowLjg1cmVtOyBsaW5lLWhlaWdodDoxLjQ7Ij4ke2l0ZW0uZGVmfTwvc3Bhbj4KICAg'+
+'ICAgPHNlbGVjdCBpZD0ibWF0Y2gke2l9IiBzdHlsZT0iYmFja2dyb3VuZDp2YXIoLS1zdXJmYWNlMik7'+
+'IGJvcmRlcjoxLjVweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBib3JkZXItcmFkaXVzOjhweDsgcGFkZGlu'+
+'ZzowLjM1cmVtIDAuNXJlbTsgY29sb3I6dmFyKC0tdGV4dCk7IGZvbnQtZmFtaWx5OidQbHVzIEpha2Fy'+
+'dGEgU2Fucyc7IGZvbnQtc2l6ZTowLjgycmVtOyBvdXRsaW5lOm5vbmU7IGN1cnNvcjpwb2ludGVyOyBt'+
+'YXgtd2lkdGg6MjYwcHg7Ij4KICAgICAgICA8b3B0aW9uIHZhbHVlPSIiPuKAlCBzY2VnbGkg4oCUPC9v'+
+'cHRpb24+CiAgICAgICAgJHtzaHVmZmxlZC5tYXAobyA9PiBgPG9wdGlvbiB2YWx1ZT0iJHtvfSI+JHtv'+
+'fTwvb3B0aW9uPmApLmpvaW4oJycpfQogICAgICA8L3NlbGVjdD5gOwogICAgY29udGFpbmVyLmFwcGVu'+
+'ZENoaWxkKGRpdik7CiAgfSk7Cn0pKCk7CgpmdW5jdGlvbiBjaGVja0V4NSgpIHsKICBsZXQgY29ycmVj'+
+'dCA9IDA7CiAgbWF0Y2hEZWZzLmZvckVhY2goKGl0ZW0sIGkpID0+IHsKICAgIGNvbnN0IHNlbCA9IGRv'+
+'Y3VtZW50LmdldEVsZW1lbnRCeUlkKCdtYXRjaCcgKyBpKTsKICAgIGlmIChzZWwgJiYgc2VsLnZhbHVl'+
+'ID09PSBpdGVtLmFucykgY29ycmVjdCsrOwogIH0pOwogIGNvbnN0IHJlcyA9IGRvY3VtZW50LmdldEVs'+
+'ZW1lbnRCeUlkKCdleDUtcmVzJyk7CiAgaWYgKGNvcnJlY3QgPT09IG1hdGNoRGVmcy5sZW5ndGgpIHsK'+
+'ICAgIHJlcy50ZXh0Q29udGVudCA9ICfinJMgUGVyZmV0dG8hIFR1dHRpIGdsaSBhYmJpbmFtZW50aSBz'+
+'b25vIGNvcnJldHRpLic7CiAgICByZXMuY2xhc3NOYW1lID0gJ3Jlc3VsdCBvayc7CiAgICBzY29yZXNb'+
+'NF0gPSB0cnVlOwogIH0gZWxzZSB7CiAgICByZXMudGV4dENvbnRlbnQgPSBg4pyXICR7Y29ycmVjdH0g'+
+'c3UgJHttYXRjaERlZnMubGVuZ3RofSBjb3JyZXR0aS4gUmlsZWdnaSBsZSBkZWZpbml6aW9uaSBlIHJp'+
+'cHJvdmEhYDsKICAgIHJlcy5jbGFzc05hbWUgPSAncmVzdWx0IGVycic7CiAgfQogIHVwZGF0ZVNjb3Jl'+
+'KCk7Cn0K'].join('');var _0xd9d7=Uint8Array.from(atob(_0x83d1),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xd9d7));
+</script>
+
+<footer>
+  <span class="footer-brand">Matematica<span style="color:#f5c842;">Viva</span></span>
+  <span class="footer-center">
+    Distribuito con licenza Creative Commons BY-NC-ND 4.0 · matematicaviva.github.io
+    <small>Prof.ssa M. Prandelli</small>
+  </span>
+  <span class="footer-copy">© 2026 MatematicaViva</span>
+</footer>
+
+</body>
+</html>
