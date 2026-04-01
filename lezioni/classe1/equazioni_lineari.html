@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Equazioni Lineari</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0c14; --surface: #13131f; --surface2: #1a1a2e;
+      --border: rgba(255,255,255,0.07); --text: #e4e2f0; --muted: #9895b5;
+      --pri: #7c6af7; --pri-glow: rgba(124,106,247,0.25);
+      --sec: #2dd4a4; --sec-glow: rgba(45,212,164,0.2);
+      --amber: #f5c842; --red: #f06080; --blue: #4fa3f7; --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(124,106,247,0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+    body::after { content: ''; position: fixed; bottom: -150px; left: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(45,212,164,0.06) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+    header { position: sticky; top: 0; z-index: 100; background: rgba(12,12,20,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .hdr-top { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem 0.6rem; }
+    .brand { display: flex; align-items: center; gap: 0.6rem; }
+    .brand-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--pri), var(--sec)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; font-weight: 700; color: white; }
+    .brand-text { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; line-height: 1.1; color: #fff; }
+    .brand-sub { font-size: 0.68rem; color: var(--muted); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+    .fs-btn { background: transparent; border: 1.5px solid var(--border); color: var(--muted); padding: 0.35rem 0.7rem; border-radius: 8px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .fs-btn:hover { border-color: var(--pri); color: var(--pri); }
+    .tab-nav { display: flex; gap: 0.3rem; overflow-x: auto; padding: 0.5rem 1rem 0.6rem; scrollbar-width: none; }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab { display: flex; align-items: center; gap: 0.3rem; padding: 0.42rem 0.85rem; white-space: nowrap; border-radius: 999px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); font-size: 0.8rem; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+    .tab:hover { border-color: rgba(124,106,247,0.4); color: var(--text); }
+    .tab.active { background: var(--pri); border-color: var(--pri); color: #fff; box-shadow: 0 0 16px var(--pri-glow); }
+    main { position: relative; z-index: 1; padding: 1.2rem 1rem; max-width: 900px; margin: 0 auto; }
+    section { display: none; }
+    section.active { display: block; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1rem; }
+    .card-inner { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin-bottom: 0.8rem; }
+    .sec-title { font-family: 'Fraunces', serif; font-size: 1.55rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; line-height: 1.2; }
+    .sec-title span { color: var(--pri); }
+    .sec-num { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--pri); background: var(--pri-glow); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.6rem; }
+    .def-box { border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0 1rem; position: relative; overflow: hidden; }
+    .def-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px; }
+    .def-box.pri { background: linear-gradient(135deg, rgba(124,106,247,0.12), rgba(124,106,247,0.04)); }
+    .def-box.pri::before { background: var(--pri); }
+    .def-box.sec { background: linear-gradient(135deg, rgba(45,212,164,0.12), rgba(45,212,164,0.04)); }
+    .def-box.sec::before { background: var(--sec); }
+    .def-box.amber { background: linear-gradient(135deg, rgba(245,200,66,0.12), rgba(245,200,66,0.04)); }
+    .def-box.amber::before { background: var(--amber); }
+    .def-box.red { background: linear-gradient(135deg, rgba(240,96,128,0.12), rgba(240,96,128,0.04)); }
+    .def-box.red::before { background: var(--red); }
+    .def-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pri); margin-bottom: 0.4rem; }
+    .def-box.sec .def-label { color: var(--sec); }
+    .def-box.amber .def-label { color: var(--amber); }
+    .def-box.red .def-label { color: var(--red); }
+    .def-box p { color: var(--text); line-height: 1.6; font-size: 0.95rem; }
+    .def-box strong { color: #fff; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media(min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
+    .row3 { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media(min-width: 640px) { .row3 { grid-template-columns: 1fr 1fr 1fr; } }
+    .formula { font-family: 'DM Mono', monospace; font-size: 1.3rem; font-weight: 500; color: var(--pri); text-align: center; background: var(--pri-glow); border-radius: 10px; padding: 0.7rem 1rem; margin: 0.8rem 0; letter-spacing: 0.04em; }
+    .formula-box { font-family: 'DM Mono', monospace; background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(45,212,164,0.08)); border: 1px solid rgba(124,106,247,0.3); border-radius: 12px; padding: 1rem 1.2rem; margin: 0.8rem 0; }
+    .mono { font-family: 'DM Mono', monospace; }
+    .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px; margin-right: 0.4rem; }
+    .badge-pri { background: var(--pri-glow); color: var(--pri); }
+    .badge-sec { background: var(--sec-glow); color: var(--sec); }
+    .badge-amber { background: rgba(245,200,66,0.2); color: var(--amber); }
+    .badge-red { background: rgba(240,96,128,0.15); color: var(--red); }
+    .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.3rem; border-radius: 999px; padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--pri); color: #fff; box-shadow: 0 4px 14px var(--pri-glow); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--pri-glow); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-ghost { background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .tab-btn { padding: 0.42rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); font-size: 0.8rem; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+    .tab-btn:hover { border-color: rgba(124,106,247,0.4); color: var(--text); }
+    .tab-btn.active { background: var(--pri); border-color: var(--pri); color: #fff; }
+    .quiz-option { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; padding: 0.75rem 1.1rem; cursor: pointer; transition: all 0.2s; text-align: left; width: 100%; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; min-height: 44px; }
+    .quiz-option:hover:not(:disabled) { border-color: var(--pri); background: rgba(124,106,247,0.1); }
+    .quiz-option.correct { background: rgba(45,212,164,0.15); border-color: var(--sec); color: #a7f3d0; }
+    .quiz-option.wrong { background: rgba(240,96,128,0.12); border-color: var(--red); color: #fca5a5; }
+    .ex-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
+    .ex-title { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.8rem; }
+    .step-text { text-align: center; font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--sec); min-height: 1.2em; margin-top: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    thead tr { border-bottom: 2px solid rgba(124,106,247,0.3); }
+    th { padding: 0.75rem; text-align: left; color: var(--sec); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    td { padding: 0.75rem; border-bottom: 1px solid rgba(124,106,247,0.12); color: var(--text); line-height: 1.5; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(124,106,247,0.05); }
+    ol.steps { padding-left: 1.4rem; }
+    ol.steps li { font-size: 0.9rem; line-height: 1.6; color: var(--text); margin-bottom: 0.4rem; padding-left: 0.3rem; }
+    ol.steps strong { color: #fff; }
+    input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(124,106,247,0.3); outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--pri); cursor: pointer; box-shadow: 0 2px 8px var(--pri-glow); }
+    input[type="number"] { background: var(--surface2); border: 1.5px solid var(--border); color: var(--text); border-radius: 8px; padding: 0.4rem 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.9rem; width: 80px; text-align: center; outline: none; }
+    input[type="number"]:focus { border-color: var(--pri); }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 500; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; }
+    .toast.show { opacity: 1; }
+    .toast.success { background: rgba(45,212,164,0.9); color: #0c0c14; }
+    .toast.error { background: rgba(240,96,128,0.9); color: #fff; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    section.active > * { animation: fadeInUp 0.35s ease both; }
+    section.active > *:nth-child(2) { animation-delay: 0.06s; }
+    section.active > *:nth-child(3) { animation-delay: 0.12s; }
+    section.active > *:nth-child(4) { animation-delay: 0.18s; }
+    @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 10px rgba(124,106,247,0.2); } 50% { box-shadow: 0 0 25px rgba(124,106,247,0.4); } }
+    .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+    .hl { color: var(--pri); font-weight: 700; }
+    .hl-g { color: var(--sec); font-weight: 700; }
+    .hl-a { color: var(--amber); font-weight: 700; }
+    .hl-r { color: var(--red); font-weight: 700; }
+    footer { border-top: 1px solid rgba(180,180,190,0.35); margin-top: 2rem; padding: 0.7rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: 0.72rem; position: relative; z-index: 1; }
+    footer .footer-brand { font-weight: 700; color: #fff; white-space: nowrap; }
+    footer .footer-center { color: var(--muted); text-align: center; flex: 1; }
+    footer .footer-center small { display: block; font-size: 0.67rem; color: #aaa; margin-top: 0.15rem; }
+    footer .footer-copy { color: var(--muted); white-space: nowrap; text-align: right; }
+    @media (pointer: coarse) { .btn, .tab, .fs-btn, .tab-btn { min-height: 44px; } }
+    @media (max-width: 480px) { :root { --radius: 12px; } .sec-title { font-size: 1.25rem; } .hdr-top { padding: 0.65rem 0.85rem 0.5rem; } .brand-sub { display: none; } .tab-nav { padding: 0.4rem 0.6rem 0.5rem; } .tab { font-size: 0.74rem; padding: 0.4rem 0.7rem; } main { padding: 0.85rem 0.65rem; } .card { padding: 1rem 0.9rem; } }
+    @media (min-width: 900px) { main { padding: 1.5rem 2rem; max-width: 960px; } .hdr-top { padding: 1rem 2rem 0.7rem; } .tab-nav { padding: 0.5rem 1.8rem 0.65rem; } .card { padding: 1.5rem; } .sec-title { font-size: 1.65rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div class="brand">
+      <div class="brand-icon">x</div>
+      <div>
+        <div class="brand-text">Matematica<span style="color:var(--amber)">Viva</span></div>
+        <div class="brand-sub">Classe Prima · Algebra</div>
+      </div>
+    </div>
+    <button class="fs-btn" id="fullscreen-btn">⛶ Schermo intero</button>
+  </div>
+  <nav class="tab-nav" id="top-menu">
+    <button class="tab active" data-section="intro">📐 Introduzione</button>
+    <button class="tab" data-section="struttura">🔍 Principi Equivalenza</button>
+    <button class="tab" data-section="determinata">✅ Determinata</button>
+    <button class="tab" data-section="indeterminata">♾️ Indeterminata</button>
+    <button class="tab" data-section="impossibile">🚫 Impossibile</button>
+    <button class="tab" data-section="fratte">🔢 Fratte</button>
+    <button class="tab" data-section="laboratorio">🧮 Laboratorio</button>
+    <button class="tab" data-section="riassunto">📋 Riassunto</button>
+    <button class="tab" data-section="verifica">🧠 Verifica</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- § 0 INTRODUZIONE -->
+<section id="intro" class="active">
+  <div class="card">
+    <div class="sec-num">01 — Definizione</div>
+    <h2 class="sec-title">Le <span>Equazioni</span></h2>
+    <div class="def-box pri">
+      <div class="def-label">Cos'è un'equazione?</div>
+      <p>Un'<strong>equazione</strong> è un'uguaglianza tra due espressioni letterali per la quale cerchiamo gli eventuali valori che, sostituiti a una o più lettere, dette <strong>incognite</strong>, la rendono vera.</p>
+    </div>
+    
+    <div class="formula-box mono" style="font-size:1.1rem;text-align:center;">
+      ax + b &nbsp;=&nbsp; cx + d &nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:0.82rem;">(a, b, c, d ∈ ℝ)</span>
+    </div>
+
+    <p style="margin-top:1rem;line-height:1.8;color:rgba(228,226,240,0.85);">Chiamiamo <strong style="color:var(--sec);">primo membro</strong> l'espressione a sinistra del segno <strong style="color:var(--amber);">=</strong>, <strong style="color:var(--sec);">secondo membro</strong> quella a destra.</p>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin:1rem 0;text-align:center;">
+      <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;letter-spacing:0.06em;text-transform:uppercase;">Analisi di: 3x + 5 = 2x − 1</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+        <div><div class="mono" style="font-size:1.25rem;background:rgba(124,106,247,0.2);border:2px solid var(--pri);border-radius:10px;padding:0.5rem 1rem;color:var(--pri);">3x + 5</div><div style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">Primo membro</div></div>
+        <div class="mono" style="font-size:1.8rem;color:var(--amber);">=</div>
+        <div><div class="mono" style="font-size:1.25rem;background:rgba(45,212,164,0.2);border:2px solid var(--sec);border-radius:10px;padding:0.5rem 1rem;color:var(--sec);">2x − 1</div><div style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">Secondo membro</div></div>
+      </div>
+    </div>
+
+    <div class="def-label">Radici o soluzioni</div>
+      <p>In un'equazione chiamiamo <strong style="color:var(--amber);">radici o soluzioni</strong> i valori, da attribuire alle incognite, che rendono uguali il primo e il secondo membro. Risolvere un'equazione vuol dire trovarne tutte le soluzioni!</p>
+    </div>
+    <div class="def-label">Equazione in forma normale</div>
+      <p>Un'equazione è in <strong style="color:var(--amber);">forma normale</strong> se è del tipo <strong style="color:var(--sec);">P(x)=0</strong>, con P(x) polinomio ridotto a forma normale. Il grado di P(x) è il <strong style="color:var(--sec);">grado dell'equazione</strong>!</p>
+    </div>
+
+    <div class="row3">
+      <div style="background:rgba(124,106,247,0.08);border:1px solid rgba(124,106,247,0.2);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:0.4rem;">🛒</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">Al supermercato</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">10 € e latte a 1,50 €. Quante bottiglie?</div>
+        <div class="mono" style="color:var(--sec);font-size:0.88rem;">1.5·x = 10</div>
+      </div>
+      <div style="background:rgba(45,212,164,0.08);border:1px solid rgba(45,212,164,0.2);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:0.4rem;">🚗</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">In viaggio</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">180 km in 2 ore: velocità?</div>
+        <div class="mono" style="color:var(--sec);font-size:0.88rem;">2·v = 180</div>
+      </div>
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:0.4rem;">🎂</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;">Una ricetta</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">3 uova per 6 porzioni: quante per 10?</div>
+        <div class="mono" style="color:var(--sec);font-size:0.88rem;">3/6 = x/10</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 1 PRINCIPI DI EQUIVALENZA -->
+<section id="struttura">
+  <div class="card">
+    <div class="sec-num">02 — Equivalenza</div>
+    
+    
+    <h2 class="sec-title">I <span>Principi</span> di equivalenza</h2>
+    <div> <p>Due equazioni nelle stesse incognite sono <strong> equivalenti </strong>se hanno le stesse soluzioni.</p></div>
+    <h3 style="font-size:1rem;color:var(--amber);margin:1.5rem 0 0.8rem;font-family:'Fraunces',serif;">⚖️ Primo e secondo principio</h3>
+    <div class="row">
+      <div class="def-box pri">
+        <div class="def-label">1° Principio </div>
+        <p><strong>Aggiungendo o sottraendo</strong> a entrambi i membri di un'equazione uno stesso numero, o espressione letterale, otteniamo un'equazione equivalente a quella data.</p>
+        <div class="mono" style="font-size:0.88rem;margin-top:0.7rem;background:rgba(0,0,0,0.25);border-radius:8px;padding:0.6rem;line-height:2;">x + 3 = 7<br>x + 3 <span style="color:var(--pri)">− 3</span> = 7 <span style="color:var(--pri)">− 3</span><br><span style="color:var(--sec)">x = 4 ✓</span></div>
+      </div>
+      <div class="def-box sec">
+        <div class="def-label">2° Principio </div>
+        <p><strong>Moltiplicando o dividendo</strong> entrambi i membri di un'equazione per uno stesso numero o espressione letterale <em>diversi da zero</em>, otteniamo un'equazione equivalente a quella data.</p>
+        <div class="mono" style="font-size:0.88rem;margin-top:0.7rem;background:rgba(0,0,0,0.25);border-radius:8px;padding:0.6rem;line-height:2;">2x = 10<br>2x <span style="color:var(--sec)">÷ 2</span> = 10 <span style="color:var(--sec)">÷ 2</span><br><span style="color:var(--sec)">x = 5 ✓</span></div>
+      </div>
+    </div>
+     <p style="margin-top:1rem;line-height:1.8;color:rgba(228,226,240,0.85);">Puoi pensarla come una <strong style="color:var(--sec);">bilancia in equilibrio</strong>: qualunque operazione fai su un piatto, devi farla anche sull'altro — questo è il principio alla base dei <strong style="color:var(--amber);">principi di equivalenza</strong>.</p>
+    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+      <svg width="340" height="165" viewBox="0 0 340 165" style="max-width:100%;">
+        <defs><linearGradient id="bG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7c6af7"/><stop offset="100%" style="stop-color:#2dd4a4"/></linearGradient></defs>
+        <circle cx="170" cy="85" r="7" fill="url(#bG)"><animate attributeName="r" values="7;9;7" dur="2.5s" repeatCount="indefinite"/></circle>
+        <line x1="170" y1="85" x2="170" y2="142" stroke="rgba(255,255,255,0.22)" stroke-width="4"/>
+        <rect x="138" y="142" width="64" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+        <line x1="30" y1="85" x2="310" y2="85" stroke="url(#bG)" stroke-width="3.5"/>
+        <line x1="45" y1="85" x2="45" y2="122" stroke="rgba(124,106,247,0.6)" stroke-width="2"/>
+        <ellipse cx="45" cy="130" rx="42" ry="11" fill="rgba(124,106,247,0.18)" stroke="rgba(124,106,247,0.5)" stroke-width="1.5"/>
+        <text x="45" y="134" text-anchor="middle" fill="#7c6af7" font-size="12" font-family="DM Mono,monospace">3x + 5</text>
+        <line x1="295" y1="85" x2="295" y2="122" stroke="rgba(45,212,164,0.6)" stroke-width="2"/>
+        <ellipse cx="295" cy="130" rx="42" ry="11" fill="rgba(45,212,164,0.18)" stroke="rgba(45,212,164,0.5)" stroke-width="1.5"/>
+        <text x="295" y="134" text-anchor="middle" fill="#2dd4a4" font-size="12" font-family="DM Mono,monospace">2x + 9</text>
+        <text x="170" y="158" text-anchor="middle" fill="rgba(255,255,255,0.28)" font-size="20" font-family="DM Mono,monospace">=</text>
+      </svg>
+    </div>
+    <div class="row" style="margin-top:0.5rem;">
+      <div style="background:rgba(124,106,247,0.08);border:1px solid rgba(124,106,247,0.2);border-radius:12px;padding:0.9rem;"><span class="badge badge-pri">Regola del trasporto</span><p style="font-size:0.88rem;margin-top:0.5rem;color:rgba(228,226,240,0.8);">Data un'equazione, ne otteniamo una equivalente se trasportiamo un termine da un membro all'altro <span class="mono" style="color:var(--pri)">cambiandogli segno</span>.</p></div>
+      <div style="background:rgba(45,212,164,0.08);border:1px solid rgba(45,212,164,0.2);border-radius:12px;padding:0.9rem;"><span class="badge badge-sec">Regola di cancellazione</span><p style="font-size:0.88rem;margin-top:0.5rem;color:rgba(228,226,240,0.8);">Data un'equazione, ne otteniamo una equivalente se in entrambi i membri <span class="mono" style="color:var(--sec)">cancelliamo termini uguali</span>.</p></div>
+      <div style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);border-radius:12px;padding:0.9rem;"><span class="badge badge-amber">Regola del cambiamento di segno</span><p style="font-size:0.88rem;margin-top:0.5rem;color:rgba(228,226,240,0.8);">Data un'equazione, ne otteniamo una equivalente se <span class="mono" style="color:var(--amber)">cambiamo segno</span> a <span class="mono" style="color:var(--amber)">tutti i suoi termini</span>.</p></div>
+    </div>
+    
+   
+</section>
+
+<!-- § 2 DETERMINATA -->
+<section id="determinata">
+  <div class="card">
+    <div class="sec-num">03 — Primo tipo</div>
+    <h2 class="sec-title">Equazione lineare o di primo grado <span>Determinata</span></h2>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.85);">Supponiamo che l'equazione sia nella forma <span class="mono" style="color:var(--amber)">ax=b</span> con a ≠ 0, allora possiamo dividere entrambi i membri per "a":</p>
+    <div class="formula">ax = b &nbsp; con a ≠ 0 &nbsp;&nbsp;->&nbsp;&nbsp; x = b/a</div>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.75);">Esiste <strong>esattamente un valore</strong> di x che soddisfa l'equazione. L'insieme soluzione S ha un solo elemento. L'equazione data è detta <span class="mono" style="color:var(--amber)">determinata</span></p>
+    <div class="row" style="margin-top:1rem;">
+      <div class="def-box sec"><div class="def-label">✅ Esempio 1</div><div class="mono" style="line-height:2;font-size:0.92rem;">4x − 3 = 2x + 9<br>4x − 2x = 9 + 3<br>2x = 12<br><span style="color:var(--sec)">x = 6</span></div></div>
+      <div class="def-box sec"><div class="def-label">✅ Esempio 2</div><div class="mono" style="line-height:2;font-size:0.92rem;">5x − 10 = 0<br>5x = 10<br><span style="color:var(--sec)">x = 2</span></div></div>
+    </div>
+    <div class="card-inner" style="margin-top:1.2rem;background:rgba(45,212,164,0.06);border-color:rgba(45,212,164,0.2);">
+      <h3 style="font-size:1rem;color:var(--sec);margin-bottom:0.8rem;font-family:'Fraunces',serif;">📝 Esempio Guidato</h3>
+      <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Risolvere: 4x − 3 = 2x + 9</p>
+      <div style="font-size:0.92rem;line-height:1.9;color:rgba(228,226,240,0.8);">
+        <div id="d1s1" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">1.</strong> Spostiamo x a sinistra: <span class="mono" style="color:var(--sec)">4x − 2x = 9 + 3</span></div>
+        <div id="d1s2" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">2.</strong> Semplifichiamo: <span class="mono" style="color:var(--sec)">2x = 12</span></div>
+        <div id="d1s3" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">3.</strong> Dividiamo per 2: <span class="mono" style="color:var(--sec)">x = 6</span></div>
+        <div id="d1s4" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">4.</strong> Verifica: 4·6−3 = 21 = 2·6+9 ✓ &nbsp;<span style="color:var(--sec)">DETERMINATA</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:0.8rem;" id="btn_d1" onclick="revealStep('d1',1,4,'btn_d1')">Mostra passo successivo</button>
+    </div>
+    <div class="card-inner" style="margin-top:0.8rem;background:rgba(124,106,247,0.06);border-color:rgba(124,106,247,0.2);">
+      <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">🏋️ Esercizio</h3>
+      <p style="margin-bottom:0.6rem;">Qual è la soluzione di <span class="mono">3x + 7 = x + 15</span>?</p>
+      <div style="display:flex;flex-direction:column;gap:0.45rem;" id="q_det">
+        <button class="quiz-option" onclick="checkQuiz('q_det',this,false)">x = 11</button>
+        <button class="quiz-option" onclick="checkQuiz('q_det',this,true)">x = 4</button>
+        <button class="quiz-option" onclick="checkQuiz('q_det',this,false)">x = 7</button>
+        <button class="quiz-option" onclick="checkQuiz('q_det',this,false)">x = −4</button>
+      </div>
+      <p id="q_detFeedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- § 3 INDETERMINATA -->
+<section id="indeterminata">
+  <div class="card">
+    <div class="sec-num">04 — Secondo tipo</div>
+    <h2 class="sec-title">Equazione <span>Indeterminata</span></h2>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.85);">L'equazione <span class="hl-a">ax=b</span> è <span class="hl-a">indeterminata</span> se a=0 e b=0, quindi l'equazione è nella forma <em> 0X=0</em>:</p>
+    <div class="formula" style="color:var(--amber);">0 · x = 0 &nbsp;&nbsp;→&nbsp;&nbsp; 0 = 0 &nbsp; (sempre vero!)</div>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.75);">L'uguaglianza è vera per <strong>qualunque valore</strong> di x: l'equazione ha <strong>infinite soluzioni</strong> (S = ℝ).</p>
+    <div class="row" style="margin-top:1rem;">
+      <div class="def-box amber"><div class="def-label">♾️ Esempio 1</div><div class="mono" style="line-height:2;font-size:0.92rem;">4(x + 1) = 4x + 4<br>4x + 4 = 4x + 4<br>0 = 0<br><span style="color:var(--amber)">S = ℝ</span></div></div>
+      <div class="def-box amber"><div class="def-label">♾️ Esempio 2</div><div class="mono" style="line-height:2;font-size:0.92rem;">3(x − 2) = 3x − 6<br>3x − 6 = 3x − 6<br>0 = 0<br><span style="color:var(--amber)">S = ℝ</span></div></div>
+    </div>
+    <div class="card-inner" style="margin-top:1.2rem;background:rgba(245,200,66,0.06);border-color:rgba(245,200,66,0.2);">
+      <h3 style="font-size:1rem;color:var(--amber);margin-bottom:0.8rem;font-family:'Fraunces',serif;">📝 Esempio Guidato</h3>
+      <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Risolvere: 3(x + 2) = 3x + 6</p>
+      <div style="font-size:0.92rem;line-height:1.9;color:rgba(228,226,240,0.8);">
+        <div id="i1s1" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">1.</strong> Espandiamo: <span class="mono" style="color:var(--amber)">3x + 6 = 3x + 6</span></div>
+        <div id="i1s2" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">2.</strong> Raccogliamo: <span class="mono" style="color:var(--amber)">3x − 3x = 6 − 6 → 0 = 0</span></div>
+        <div id="i1s3" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">3.</strong> 0 = 0 è vera per ogni valore di x!</div>
+        <div id="i1s4" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">4.</strong> <span style="color:var(--amber)">INDETERMINATA — S = ℝ (infinite soluzioni)</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:0.8rem;" id="btn_i1" onclick="revealStep('i1',1,4,'btn_i1')">Mostra passo successivo</button>
+    </div>
+    <div class="card-inner" style="margin-top:0.8rem;background:rgba(124,106,247,0.06);border-color:rgba(124,106,247,0.2);">
+      <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">🏋️ Esercizio</h3>
+      <p style="margin-bottom:0.6rem;">L'equazione <span class="mono">2x − 6 = 2(x − 3)</span> è:</p>
+      <div style="display:flex;flex-direction:column;gap:0.45rem;" id="q_ind">
+        <button class="quiz-option" onclick="checkQuiz('q_ind',this,false)">Determinata: x = 0</button>
+        <button class="quiz-option" onclick="checkQuiz('q_ind',this,false)">Impossibile</button>
+        <button class="quiz-option" onclick="checkQuiz('q_ind',this,true)">Indeterminata: S = ℝ</button>
+        <button class="quiz-option" onclick="checkQuiz('q_ind',this,false)">Determinata: x = 3</button>
+      </div>
+      <p id="q_indFeedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- § 4 IMPOSSIBILE -->
+<section id="impossibile">
+  <div class="card">
+    <div class="sec-num">05 — Terzo tipo</div>
+    <h2 class="sec-title">Equazione <span>Impossibile</span></h2>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.85);">L'equazione <span class="hl-r">ax=b</span> è <span class="hl-r">impossibile</span> se <strong>a=0 e b ≠ 0</strong>:</p>
+    <div class="formula" style="color:var(--red);">0 · x = b &nbsp; con b ≠ 0 &nbsp;&nbsp;→&nbsp;&nbsp; 0 = b &nbsp; (assurdo!)</div>
+    <p style="line-height:1.8;color:rgba(228,226,240,0.75);">Nessun valore di x renderà mai vera un'uguaglianza come "0 = 5". L'equazione <strong>non ha soluzioni</strong> (S = ∅).</p>
+    <div class="row" style="margin-top:1rem;">
+      <div class="def-box red"><div class="def-label">🚫 Esempio 1</div><div class="mono" style="line-height:2;font-size:0.92rem;">x + 3 = x + 8<br>x − x = 8 − 3<br><span style="color:var(--red)">0 = 5 ✗ → S = ∅</span></div></div>
+      <div class="def-box red"><div class="def-label">🚫 Esempio 2</div><div class="mono" style="line-height:2;font-size:0.92rem;">2(x + 1) = 2x + 5<br>2x + 2 = 2x + 5<br><span style="color:var(--red)">2 = 5 ✗ → S = ∅</span></div></div>
+    </div>
+    <div class="card-inner" style="margin-top:1.2rem;background:rgba(240,96,128,0.06);border-color:rgba(240,96,128,0.2);">
+      <h3 style="font-size:1rem;color:var(--red);margin-bottom:0.8rem;font-family:'Fraunces',serif;">📝 Esempio Guidato</h3>
+      <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Risolvere: 5x + 7 = 5x − 2</p>
+      <div style="font-size:0.92rem;line-height:1.9;color:rgba(228,226,240,0.8);">
+        <div id="imp1s1" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">1.</strong> Spostiamo x: <span class="mono" style="color:var(--red)">5x − 5x = −2 − 7</span></div>
+        <div id="imp1s2" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">2.</strong> Risultato: <span class="mono" style="color:var(--red)">0 = −9</span> — uguaglianza FALSA!</div>
+        <div id="imp1s3" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">3.</strong> 0 = −9 è falsa per qualunque x.</div>
+        <div id="imp1s4" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">4.</strong> <span style="color:var(--red)">IMPOSSIBILE — S = ∅ (nessuna soluzione)</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:0.8rem;" id="btn_imp1" onclick="revealStep('imp1',1,4,'btn_imp1')">Mostra passo successivo</button>
+    </div>
+    <div class="card-inner" style="margin-top:0.8rem;background:rgba(124,106,247,0.06);border-color:rgba(124,106,247,0.2);">
+      <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">🏋️ Esercizio</h3>
+      <p style="margin-bottom:0.6rem;">Risolvendo <span class="mono">7x + 4 = 7x − 3</span> si ottiene:</p>
+      <div style="display:flex;flex-direction:column;gap:0.45rem;" id="q_imp">
+        <button class="quiz-option" onclick="checkQuiz('q_imp',this,false)">x = 7/4</button>
+        <button class="quiz-option" onclick="checkQuiz('q_imp',this,false)">x = 0</button>
+        <button class="quiz-option" onclick="checkQuiz('q_imp',this,false)">Indeterminata</button>
+        <button class="quiz-option" onclick="checkQuiz('q_imp',this,true)">Impossibile + 4 = −3  ✗</button>
+      </div>
+      <p id="q_impFeedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- § 5 FRATTE -->
+<section id="fratte">
+  <div class="card">
+    <div class="sec-num">06 — Caso speciale</div>
+    <h2 class="sec-title">Le Equazioni <span>Fratte</span></h2>
+    <div class="def-box amber">
+      <div class="def-label">⚠️ Quando l'incognita è al denominatore</div>
+      <p>Un'equazione è <strong>fratta</strong> quando l'incognita compare in uno o più <strong>denominatori</strong>. Il denominatore non può essere zero, quindi dobbiamo tenere conto delle <strong style="color:var(--red)">condizioni di esistenza</strong> delle frazioni algebriche presenti!</p>
+    </div>
+    <div class="row" style="margin-top:0.5rem;">
+      <div style="background:rgba(124,106,247,0.08);border:1px solid rgba(124,106,247,0.2);border-radius:12px;padding:0.9rem;">
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">Esempio fratta</p>
+        <div class="mono" style="font-size:1rem;text-align:center;color:var(--pri);">1/(x−2) + 3/x = 5/6</div>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.5rem;">Denominatori: (x−2), x, 6</p>
+      </div>
+      <div style="background:rgba(240,96,128,0.08);border:1px solid rgba(240,96,128,0.25);border-radius:12px;padding:0.9rem;">
+        <p style="font-size:0.78rem;color:var(--red);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;">C.E. — Condizioni di Esistenza</p>
+        <div class="mono" style="font-size:0.92rem;line-height:2;color:var(--red);">x − 2 ≠ 0 → x ≠ 2<br>x ≠ 0</div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">⚡ Prima cosa da fare sempre!</p>
+      </div>
+    </div>
+    <h3 style="font-size:1rem;color:var(--amber);margin:1.5rem 0 1rem;font-family:'Fraunces',serif;">📋 Metodo in 5 passi</h3>
+    <ol class="steps">
+      <li><strong>Trova le C.E.:</strong> poni ogni denominatore ≠ 0 e ricava i valori esclusi.</li>
+      <li><strong>Calcola il M.C.D.</strong> di tutti i denominatori.</li>
+      <li><strong>Esegui le operazioni</strong> fra le frazioni algebriche presenti nell'equazione</li>
+      <li><strong>Moltiplica tutto per il M.C.D.</strong>: i denominatori scompaiono.</li>
+      <li><strong>Risolvi l'equazione intera</strong> risultante.</li>
+      <li><strong style="color:var(--red)">Verifica con le C.E.!</strong> Se la soluzione è un valore escluso → S = ∅.</li>
+    </ol>
+    <div class="card-inner" style="margin-top:1.2rem;background:rgba(45,212,164,0.06);border-color:rgba(45,212,164,0.2);">
+      <h3 style="font-size:1rem;color:var(--sec);margin-bottom:0.8rem;font-family:'Fraunces',serif;">📝 Esempio Guidato</h3>
+      <p class="mono" style="font-size:1rem;margin-bottom:0.8rem;">Risolvere: 2/(x−1) = 3/(x+2)</p>
+      <div style="font-size:0.92rem;line-height:1.9;color:rgba(228,226,240,0.8);">
+        <div id="f1s1" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">1.</strong> C.E.: x ≠ 1 e x ≠ −2</div>
+        <div id="f1s2" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">2.</strong> M.C.D. = (x−1)(x+2). Eseguo le somme fra frazioni algebriche e poi moltiplico per il M.C.D.: <span class="mono" style="color:var(--sec)">2(x+2) = 3(x−1)</span></div>
+        <div id="f1s3" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">3.</strong> Espando e risolvo: <span class="mono" style="color:var(--sec)">2x+4 = 3x−3 → x = 7</span></div>
+        <div id="f1s4" style="opacity:0;transition:opacity 0.4s;"><strong style="color:#fff">4.</strong> x=7 ≠ 1 e x=7 ≠ −2 ✓ &nbsp;<span style="color:var(--sec)">ACCETTATA → x = 7</span></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:0.8rem;" id="btn_f1" onclick="revealStep('f1',1,4,'btn_f1')">Mostra passo successivo</button>
+    </div>
+    <div class="card-inner" style="margin-top:0.8rem;background:rgba(124,106,247,0.06);border-color:rgba(124,106,247,0.2);">
+      <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">🏋️ Esercizio</h3>
+      <p style="margin-bottom:0.6rem;">Quali sono le C.E. di: <span class="mono">1/(x−3) = 2/(x+1)</span>?</p>
+      <div style="display:flex;flex-direction:column;gap:0.45rem;" id="q_fr">
+        <button class="quiz-option" onclick="checkQuiz('q_fr',this,false)">x ≠ 0</button>
+        <button class="quiz-option" onclick="checkQuiz('q_fr',this,true)">x ≠ 3 e x ≠ −1</button>
+        <button class="quiz-option" onclick="checkQuiz('q_fr',this,false)">x ≠ 3</button>
+        <button class="quiz-option" onclick="checkQuiz('q_fr',this,false)">x ≠ −3 e x ≠ 1</button>
+      </div>
+      <p id="q_frFeedback" style="margin-top:0.6rem;font-size:0.88rem;min-height:1.2em;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- § 6 LABORATORIO -->
+<section id="laboratorio">
+  <div class="card">
+    <div class="sec-num">07 — Interattivo</div>
+    <h2 class="sec-title">Laboratorio <span>Interattivo</span></h2>
+    <div class="btn-row" style="margin-bottom:1.2rem;margin-top:0.5rem;">
+      <button class="tab-btn active" onclick="switchLab(this,'lab-bilancia')">⚖️ Bilancia</button>
+      <button class="tab-btn" onclick="switchLab(this,'lab-solver')">🧮 Risolutore</button>
+    </div>
+    <div id="lab-bilancia">
+      <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">Sposta i cursori e osserva l'equazione cambiare.</p>
+      <div style="display:flex;justify-content:center;margin-bottom:1rem;">
+        <svg id="labSvg" width="380" height="175" viewBox="0 0 380 175" style="max-width:100%;">
+          <defs><linearGradient id="lG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#7c6af7"/><stop offset="100%" style="stop-color:#2dd4a4"/></linearGradient></defs>
+          <circle cx="190" cy="90" r="7" fill="url(#lG)"/>
+          <line x1="190" y1="90" x2="190" y2="148" stroke="rgba(255,255,255,0.22)" stroke-width="4"/>
+          <rect x="158" y="148" width="64" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+          <g id="labArm" style="transform-origin:190px 90px;transform:rotate(0deg);transition:transform 0.8s cubic-bezier(0.34,1.56,0.64,1)">
+            <line x1="30" y1="90" x2="350" y2="90" stroke="url(#lG)" stroke-width="3.5"/>
+            <line x1="48" y1="90" x2="48" y2="128" stroke="rgba(124,106,247,0.6)" stroke-width="2"/>
+            <ellipse cx="48" cy="137" rx="44" ry="11" fill="rgba(124,106,247,0.18)" stroke="rgba(124,106,247,0.5)" stroke-width="1.5"/>
+            <text id="labLeft" x="48" y="141" text-anchor="middle" fill="#7c6af7" font-size="12" font-family="DM Mono,monospace">2x+1</text>
+            <line x1="332" y1="90" x2="332" y2="128" stroke="rgba(45,212,164,0.6)" stroke-width="2"/>
+            <ellipse cx="332" cy="137" rx="44" ry="11" fill="rgba(45,212,164,0.18)" stroke="rgba(45,212,164,0.5)" stroke-width="1.5"/>
+            <text id="labRight" x="332" y="141" text-anchor="middle" fill="#2dd4a4" font-size="12" font-family="DM Mono,monospace">7</text>
+          </g>
+        </svg>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1rem;">
+        <div><label style="display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;">Coeff. a: <span id="lv_a" class="mono" style="color:var(--pri)">2</span></label><input type="range" id="lab_a" min="1" max="6" step="1" value="2" oninput="updateLab()"></div>
+        <div><label style="display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;">Termine b: <span id="lv_b" class="mono" style="color:var(--pri)">1</span></label><input type="range" id="lab_b" min="-8" max="8" step="1" value="1" oninput="updateLab()"></div>
+        <div><label style="display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;">2° membro c: <span id="lv_c" class="mono" style="color:var(--sec)">7</span></label><input type="range" id="lab_c" min="1" max="20" step="1" value="7" oninput="updateLab()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="formula-box" style="text-align:center;padding:0.8rem;"><div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em;">Equazione</div><div id="lab_eq" class="mono" style="color:var(--pri);font-size:1.05rem;">2x + 1 = 7</div></div>
+        <div class="formula-box" style="text-align:center;padding:0.8rem;"><div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em;">Soluzione</div><div id="lab_sol" class="mono" style="color:var(--sec);font-size:1.05rem;">x = 3</div></div>
+      </div>
+      <p id="lab_status" class="step-text"></p>
+    </div>
+    <div id="lab-solver" style="display:none;">
+      <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">Inserisci i coefficienti di <span class="mono">ax + b = cx + d</span> per vedere lo svolgimento.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.6rem;margin-bottom:1rem;">
+        <div><label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">a (coeff sx)</label><input type="number" id="sol_a" value="3" oninput="updateSolver()"></div>
+        <div><label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">b (termine sx)</label><input type="number" id="sol_b" value="-5" oninput="updateSolver()"></div>
+        <div><label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">c (coeff dx)</label><input type="number" id="sol_c" value="1" oninput="updateSolver()"></div>
+        <div><label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">d (termine dx)</label><input type="number" id="sol_d" value="7" oninput="updateSolver()"></div>
+      </div>
+      <div id="solver_steps" style="display:flex;flex-direction:column;gap:0.6rem;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- § 7 RIASSUNTO -->
+<section id="riassunto">
+  <div class="card">
+    <div class="sec-num">08 — Riepilogo</div>
+    <h2 class="sec-title">Riassunto <span>Finale</span></h2>
+    <h3 style="font-size:1rem;color:var(--pri);margin-bottom:0.8rem;font-family:'Fraunces',serif;">Tabella Riepilogativa</h3>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Tipo</th><th style="text-align:center;">Forma finale</th><th style="text-align:center;">Soluzione</th></tr></thead>
+        <tbody>
+          <tr><td><span style="color:var(--sec);font-weight:700;">✅ Determinata</span></td><td style="text-align:center;" class="mono">ax = b (a ≠ 0)</td><td style="text-align:center;" class="mono">S = {b/a}</td></tr>
+          <tr><td><span style="color:var(--amber);font-weight:700;">♾️ Indeterminata</span></td><td style="text-align:center;" class="mono">0 = 0</td><td style="text-align:center;" class="mono">S = ℝ</td></tr>
+          <tr><td><span style="color:var(--red);font-weight:700;">🚫 Impossibile</span></td><td style="text-align:center;" class="mono">0 = b (b ≠ 0)</td><td style="text-align:center;" class="mono">S = ∅</td></tr>
+          <tr><td><span style="color:var(--blue);font-weight:700;">🔢 Fratta</span></td><td style="text-align:center;" class="mono">con C.E.</td><td style="text-align:center;" class="mono">Verificare C.E.!</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 style="font-size:1rem;color:var(--pri);margin:1.5rem 0 1rem;font-family:'Fraunces',serif;">Schema Decisionale</h3>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:0.5rem 0;">
+      <div style="background:var(--pri);color:white;padding:0.6rem 1.5rem;border-radius:10px;font-weight:600;font-size:0.9rem;text-align:center;">Raccogli: ax = b</div>
+      <div style="width:2px;height:16px;background:var(--border);"></div>
+      <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+        <div style="text-align:center;"><div style="background:rgba(45,212,164,0.15);border:1px solid rgba(45,212,164,0.4);padding:0.45rem 0.9rem;border-radius:8px;font-size:0.88rem;">a ≠ 0</div><div style="width:2px;height:12px;background:var(--border);margin:0 auto;"></div><div style="font-size:0.78rem;color:var(--sec);font-weight:600;">DETERMINATA</div><div style="font-size:0.72rem;color:var(--muted);">x = b/a</div></div>
+        <div style="text-align:center;"><div style="background:rgba(245,200,66,0.15);border:1px solid rgba(245,200,66,0.4);padding:0.45rem 0.9rem;border-radius:8px;font-size:0.88rem;">a=0, b=0</div><div style="width:2px;height:12px;background:var(--border);margin:0 auto;"></div><div style="font-size:0.78rem;color:var(--amber);font-weight:600;">INDETERMINATA</div><div style="font-size:0.72rem;color:var(--muted);">S = ℝ</div></div>
+        <div style="text-align:center;"><div style="background:rgba(240,96,128,0.15);border:1px solid rgba(240,96,128,0.4);padding:0.45rem 0.9rem;border-radius:8px;font-size:0.88rem;">a=0, b≠0</div><div style="width:2px;height:12px;background:var(--border);margin:0 auto;"></div><div style="font-size:0.78rem;color:var(--red);font-weight:600;">IMPOSSIBILE</div><div style="font-size:0.72rem;color:var(--muted);">S = ∅</div></div>
+      </div>
+    </div>
+    <h3 style="font-size:1rem;color:var(--pri);margin:1.5rem 0 1rem;font-family:'Fraunces',serif;">Equazioni fratte — procedura</h3>
+    <ol class="steps">
+      <li><strong>C.E.:</strong> tutti i fattori dei denominatori ≠ 0</li>
+      <li><strong>M.C.D.</strong> di tutti i denominatori</li>
+      <li>Moltiplica tutto per M.C.D. → equazione intera</li>
+      <li>Risolvi l'equazione intera</li>
+      <li><strong>Verifica la soluzione con le C.E.!</strong></li>
+    </ol>
+  </div>
+</section>
+
+<!-- § 8 VERIFICA -->
+<section id="verifica">
+  <div class="card">
+    <div class="sec-num">09 — Esercizi finali</div>
+    <h2 class="sec-title">Mettiti alla <span>Prova</span></h2>
+    <div id="finalExercises"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span class="footer-brand">Matematica<span style="color:#f5c842;">Viva</span></span>
+  <span class="footer-center">
+    Distribuito con licenza Creative Commons BY-NC-ND 4.0 · matematicaviva.github.io
+    <small>Prof.ssa M. Prandelli</small>
+  </span>
+  <span class="footer-copy">© 2026 MatematicaViva</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var _0x69ab=['Ly8g4pWQ4pWQIE5BViDilZDilZAKY29uc3QgdGFicyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JB'+
+'bGwoJyN0b3AtbWVudSAudGFiJyk7CmNvbnN0IHNlY3MgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9y'+
+'QWxsKCdtYWluIHNlY3Rpb24nKTsKZnVuY3Rpb24gc2hvd1NlY3Rpb24oaWQpIHsKICBzZWNzLmZv'+
+'ckVhY2gocyA9PiB7IHMuY2xhc3NMaXN0LnJlbW92ZSgnYWN0aXZlJyk7IHMuc3R5bGUuZGlzcGxh'+
+'eSA9ICdub25lJzsgfSk7CiAgY29uc3QgdCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsK'+
+'ICB0LmNsYXNzTGlzdC5hZGQoJ2FjdGl2ZScpOyB0LnN0eWxlLmRpc3BsYXkgPSAnYmxvY2snOwog'+
+'IHRhYnMuZm9yRWFjaChiID0+IGIuY2xhc3NMaXN0LnJlbW92ZSgnYWN0aXZlJykpOwogIGRvY3Vt'+
+'ZW50LnF1ZXJ5U2VsZWN0b3IoYGJ1dHRvbltkYXRhLXNlY3Rpb249IiR7aWR9Il1gKS5jbGFzc0xp'+
+'c3QuYWRkKCdhY3RpdmUnKTsKICB3aW5kb3cuc2Nyb2xsVG8oeyB0b3A6IDAsIGJlaGF2aW9yOiAn'+
+'c21vb3RoJyB9KTsKICBpZiAoaWQgPT09ICdsYWJvcmF0b3JpbycpIHNldFRpbWVvdXQoKCkgPT4g'+
+'eyB1cGRhdGVMYWIoKTsgdXBkYXRlU29sdmVyKCk7IH0sIDUwKTsKfQp0YWJzLmZvckVhY2godCA9'+
+'PiB0LmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKCkgPT4gc2hvd1NlY3Rpb24odC5kYXRhc2V0'+
+'LnNlY3Rpb24pKSk7CnNob3dTZWN0aW9uKCdpbnRybycpOwoKLy8g4pWQ4pWQIEZVTExTQ1JFRU4g'+
+'4pWQ4pWQCmNvbnN0IGZzQnRuID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z1bGxzY3JlZW4t'+
+'YnRuJyk7CmZ1bmN0aW9uIHVwZGF0ZUZzTGFiZWwoKSB7IGZzQnRuLnRleHRDb250ZW50ID0gKGRv'+
+'Y3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50IHx8IGRvY3VtZW50LndlYmtpdEZ1bGxzY3JlZW5FbGVt'+
+'ZW50KSA/ICfinJUgRXNjaScgOiAn4pu2IFNjaGVybW8gaW50ZXJvJzsgfQpmc0J0bi5hZGRFdmVu'+
+'dExpc3RlbmVyKCdjbGljaycsICgpID0+IHsKICBjb25zdCBlbCA9IGRvY3VtZW50LmRvY3VtZW50'+
+'RWxlbWVudDsKICBjb25zdCBpbkZzID0gISEoZG9jdW1lbnQuZnVsbHNjcmVlbkVsZW1lbnQgfHwg'+
+'ZG9jdW1lbnQud2Via2l0RnVsbHNjcmVlbkVsZW1lbnQpOwogIGlmICghaW5GcykgeyAoZWwucmVx'+
+'dWVzdEZ1bGxzY3JlZW4gfHwgZWwud2Via2l0UmVxdWVzdEZ1bGxzY3JlZW4gfHwgZWwubW96UmVx'+
+'dWVzdEZ1bGxTY3JlZW4pLmNhbGwoZWwpLmNhdGNoKCgpPT57fSk7IH0KICBlbHNlIHsgKGRvY3Vt'+
+'ZW50LmV4aXRGdWxsc2NyZWVuIHx8IGRvY3VtZW50LndlYmtpdEV4aXRGdWxsc2NyZWVuKS5jYWxs'+
+'KGRvY3VtZW50KS5jYXRjaCgoKT0+e30pOyB9Cn0pOwpkb2N1bWVudC5hZGRFdmVudExpc3RlbmVy'+
+'KCdmdWxsc2NyZWVuY2hhbmdlJywgdXBkYXRlRnNMYWJlbCk7CmRvY3VtZW50LmFkZEV2ZW50TGlz'+
+'dGVuZXIoJ3dlYmtpdGZ1bGxzY3JlZW5jaGFuZ2UnLCB1cGRhdGVGc0xhYmVsKTsKCi8vIOKVkOKV'+
+'kCBUT0FTVCDilZDilZAKZnVuY3Rpb24gc2hvd1RvYXN0KG1zZywgdHlwZSkgewogIGNvbnN0IHQg'+
+'PSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgndG9hc3QnKTsKICB0LnRleHRDb250ZW50ID0gbXNn'+
+'OyB0LmNsYXNzTmFtZSA9ICd0b2FzdCBzaG93ICcgKyB0eXBlOwogIHNldFRpbWVvdXQoKCkgPT4g'+
+'dC5jbGFzc0xpc3QucmVtb3ZlKCdzaG93JyksIDI1MDApOwp9CgovLyDilZDilZAgUVVJWiDilZDi'+
+'lZAKZnVuY3Rpb24gY2hlY2tRdWl6KGNvbnRhaW5lcklkLCBidG4sIGNvcnJlY3QpIHsKICBjb25z'+
+'dCBjb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChjb250YWluZXJJZCk7CiAgY29u'+
+'dGFpbmVyLnF1ZXJ5U2VsZWN0b3JBbGwoJy5xdWl6LW9wdGlvbicpLmZvckVhY2goYiA9PiB7IGIu'+
+'ZGlzYWJsZWQgPSB0cnVlOyBiLnN0eWxlLnBvaW50ZXJFdmVudHMgPSAnbm9uZSc7IH0pOwogIGNv'+
+'bnN0IGZiID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoY29udGFpbmVySWQgKyAnRmVlZGJhY2sn'+
+'KTsKICBpZiAoY29ycmVjdCkgewogICAgYnRuLmNsYXNzTGlzdC5hZGQoJ2NvcnJlY3QnKTsKICAg'+
+'IGlmIChmYikgeyBmYi50ZXh0Q29udGVudCA9ICfinIUgQ29ycmV0dG8hIE90dGltbyBsYXZvcm8h'+
+'JzsgZmIuc3R5bGUuY29sb3IgPSAndmFyKC0tc2VjKSc7IH0KICAgIHNob3dUb2FzdCgnUmlzcG9z'+
+'dGEgZXNhdHRhISDwn46JJywgJ3N1Y2Nlc3MnKTsKICB9IGVsc2UgewogICAgYnRuLmNsYXNzTGlz'+
+'dC5hZGQoJ3dyb25nJyk7CiAgICBpZiAoZmIpIHsgZmIudGV4dENvbnRlbnQgPSAn4p2MIE5vbiBj'+
+'b3JyZXR0by4gUmlwcm92YSBsYSBwcm9zc2ltYSB2b2x0YSEnOyBmYi5zdHlsZS5jb2xvciA9ICd2'+
+'YXIoLS1yZWQpJzsgfQogICAgY29udGFpbmVyLnF1ZXJ5U2VsZWN0b3JBbGwoJy5xdWl6LW9wdGlv'+
+'bicpLmZvckVhY2goYiA9PiB7IGlmIChiLmdldEF0dHJpYnV0ZSgnb25jbGljaycpICYmIGIuZ2V0'+
+'QXR0cmlidXRlKCdvbmNsaWNrJykuaW5jbHVkZXMoJ3RydWUnKSkgYi5jbGFzc0xpc3QuYWRkKCdj'+
+'b3JyZWN0Jyk7IH0pOwogICAgc2hvd1RvYXN0KCdOb24gZXNhdHRvLCBjb250cm9sbGEgbGEgcmlz'+
+'cG9zdGEgY29ycmV0dGEuJywgJ2Vycm9yJyk7CiAgfQp9CgovLyDilZDilZAgU1RFUCBSRVZFQUwg'+
+'4pWQ4pWQCmNvbnN0IHN0ZXBDb3VudGVycyA9IHt9OwpmdW5jdGlvbiByZXZlYWxTdGVwKHByZWZp'+
+'eCwgc3RhcnQsIHRvdGFsLCBidG5JZCkgewogIGlmIChzdGVwQ291bnRlcnNbcHJlZml4XSA9PT0g'+
+'dW5kZWZpbmVkKSBzdGVwQ291bnRlcnNbcHJlZml4XSA9IHN0YXJ0OwogIGNvbnN0IGVsID0gZG9j'+
+'dW1lbnQuZ2V0RWxlbWVudEJ5SWQoYCR7cHJlZml4fXMke3N0ZXBDb3VudGVyc1twcmVmaXhdfWAp'+
+'OwogIGlmIChlbCkgZWwuc3R5bGUub3BhY2l0eSA9ICcxJzsKICBzdGVwQ291bnRlcnNbcHJlZml4'+
+'XSsrOwogIGlmIChzdGVwQ291bnRlcnNbcHJlZml4XSA+IHRvdGFsKSB7CiAgICBjb25zdCBidG4g'+
+'PSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChidG5JZCk7CiAgICBpZiAoYnRuKSB7IGJ0bi50ZXh0'+
+'Q29udGVudCA9ICfinIUgQ29tcGxldGF0byc7IGJ0bi5kaXNhYmxlZCA9IHRydWU7IGJ0bi5zdHls'+
+'ZS5vcGFjaXR5ID0gJzAuNSc7IH0KICB9Cn0KCi8vIOKVkOKVkCBMQUI6IEJJTEFOQ0lBIOKVkOKV'+
+'kApmdW5jdGlvbiB1cGRhdGVMYWIoKSB7CiAgY29uc3QgYSA9IHBhcnNlSW50KGRvY3VtZW50Lmdl'+
+'dEVsZW1lbnRCeUlkKCdsYWJfYScpLnZhbHVlKXx8MTsKICBjb25zdCBiID0gcGFyc2VJbnQoZG9j'+
+'dW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xhYl9iJykudmFsdWUpfHwwOwogIGNvbnN0IGMgPSBwYXJz'+
+'ZUludChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbGFiX2MnKS52YWx1ZSl8fDE7CiAgZG9jdW1l'+
+'bnQuZ2V0RWxlbWVudEJ5SWQoJ2x2X2EnKS50ZXh0Q29udGVudCA9IGE7CiAgZG9jdW1lbnQuZ2V0'+
+'RWxlbWVudEJ5SWQoJ2x2X2InKS50ZXh0Q29udGVudCA9IGIgPj0gMCA/ICcrJytiIDogJycrYjsK'+
+'ICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbHZfYycpLnRleHRDb250ZW50ID0gYzsKICBjb25z'+
+'dCBiU3RyID0gYiA+PSAwID8gJysnK2IgOiAnJytiOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlk'+
+'KCdsYWJfZXEnKS50ZXh0Q29udGVudCA9IGAke2F9eCAke2JTdHJ9ID0gJHtjfWA7CiAgY29uc3Qg'+
+'c29sID0gKGMgLSBiKSAvIGE7CiAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xhYl9zb2wnKS50'+
+'ZXh0Q29udGVudCA9IE51bWJlci5pc0ludGVnZXIoc29sKSA/IGB4ID0gJHtzb2x9YCA6IGB4ID0g'+
+'JHsoYy1iKX0vJHthfSDiiYggJHtzb2wudG9GaXhlZCgyKX1gOwogIGNvbnN0IGFybSA9IGRvY3Vt'+
+'ZW50LmdldEVsZW1lbnRCeUlkKCdsYWJBcm0nKTsKICBjb25zdCB0aWx0ID0gTWF0aC5tYXgoLTE0'+
+'LCBNYXRoLm1pbigxNCwgKGEgKiBzb2wgKyBiIC0gYykgKiAzKSk7CiAgYXJtLnN0eWxlLnRyYW5z'+
+'Zm9ybSA9IGByb3RhdGUoJHt0aWx0fWRlZylgOwogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCds'+
+'YWJMZWZ0JykudGV4dENvbnRlbnQgPSBgJHthfXgke2I+PTA/JysnK2I6Yn1gOwogIGRvY3VtZW50'+
+'LmdldEVsZW1lbnRCeUlkKCdsYWJSaWdodCcpLnRleHRDb250ZW50ID0gYCR7Y31gOwogIGNvbnN0'+
+'IHN0ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xhYl9zdGF0dXMnKTsKICBzdC5pbm5lckhU'+
+'TUwgPSBNYXRoLmFicyh0aWx0KSA8IDAuNSA/ICc8c3BhbiBzdHlsZT0iY29sb3I6dmFyKC0tc2Vj'+
+'KSI+4pqW77iPIEJpbGFuY2lhIGluIGVxdWlsaWJyaW8hPC9zcGFuPicgOiAnPHNwYW4gc3R5bGU9'+
+'ImNvbG9yOnZhcigtLWFtYmVyKSI+QmlsYW5jaWEgc2JpbGFuY2lhdGEuLi48L3NwYW4+JzsKfQoK'+
+'Ly8g4pWQ4pWQIExBQjogU09MVkVSIOKVkOKVkApmdW5jdGlvbiBzd2l0Y2hMYWIoYnRuLCBpZCkg'+
+'ewogIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdsYWItYmlsYW5jaWEnKS5zdHlsZS5kaXNwbGF5'+
+'ID0gaWQ9PT0nbGFiLWJpbGFuY2lhJyA/ICcnIDogJ25vbmUnOwogIGRvY3VtZW50LmdldEVsZW1l'+
+'bnRCeUlkKCdsYWItc29sdmVyJykuc3R5bGUuZGlzcGxheSA9IGlkPT09J2xhYi1zb2x2ZXInID8g'+
+'JycgOiAnbm9uZSc7CiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnI2xhYm9yYXRvcmlvIC50'+
+'YWItYnRuJykuZm9yRWFjaChiID0+IGIuY2xhc3NMaXN0LnJlbW92ZSgnYWN0aXZlJykpOwogIGJ0'+
+'bi5jbGFzc0xpc3QuYWRkKCdhY3RpdmUnKTsKICBpZiAoaWQgPT09ICdsYWItc29sdmVyJykgdXBk'+
+'YXRlU29sdmVyKCk7CiAgZWxzZSB1cGRhdGVMYWIoKTsKfQoKZnVuY3Rpb24gdXBkYXRlU29sdmVy'+
+'KCkgewogIGNvbnN0IGEgPSBwYXJzZUZsb2F0KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzb2xf'+
+'YScpLnZhbHVlKXx8MDsKICBjb25zdCBiID0gcGFyc2VGbG9hdChkb2N1bWVudC5nZXRFbGVtZW50'+
+'QnlJZCgnc29sX2InKS52YWx1ZSl8fDA7CiAgY29uc3QgYyA9IHBhcnNlRmxvYXQoZG9jdW1lbnQu'+
+'Z2V0RWxlbWVudEJ5SWQoJ3NvbF9jJykudmFsdWUpfHwwOwogIGNvbnN0IGQgPSBwYXJzZUZsb2F0'+
+'KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzb2xfZCcpLnZhbHVlKXx8MDsKICBjb25zdCBuZXdB'+
+'ID0gYSAtIGMsIG5ld0IgPSBkIC0gYjsKICBjb25zdCBmbXQgPSBuID0+IG4gPj0gMCA/ICcrJytu'+
+'IDogJycrbjsKICBjb25zdCBzdGVwcyA9IFsKICAgIHsgbGFiZWw6J0VxdWF6aW9uZSBkaSBwYXJ0'+
+'ZW56YScsIHRleHQ6YCR7YX14ICR7Zm10KGIpfSA9ICR7Y314ICR7Zm10KGQpfWAsIGNvbDoncmdi'+
+'YSgxMjQsMTA2LDI0NywwLjEpJyB9LAogICAgeyBsYWJlbDonUmFjY29nbGlhbW8gaSB0ZXJtaW5p'+
+'JywgdGV4dDpgJHthfXgg4oiSICgke2N9eCkgPSAke2R9IOKIkiAoJHtifSlcbiR7bmV3QX14ID0g'+
+'JHtuZXdCfWAsIGNvbDoncmdiYSg0NSwyMTIsMTY0LDAuMDgpJyB9CiAgXTsKICBpZiAobmV3QSA9'+
+'PT0gMCkgewogICAgaWYgKG5ld0IgPT09IDApIHN0ZXBzLnB1c2goeyBsYWJlbDon4pm+77iPIElO'+
+'REVURVJNSU5BVEEnLCB0ZXh0OicwID0gMCDihpIgUyA9IOKEnSAoaW5maW5pdGUgc29sdXppb25p'+
+'KScsIGNvbDoncmdiYSgyNDUsMjAwLDY2LDAuMTIpJyB9KTsKICAgIGVsc2Ugc3RlcHMucHVzaCh7'+
+'IGxhYmVsOifwn5qrIElNUE9TU0lCSUxFJywgdGV4dDpgMCA9ICR7bmV3Qn0gKGFzc3VyZG8hKSDi'+
+'hpIgUyA9IOKIhWAsIGNvbDoncmdiYSgyNDAsOTYsMTI4LDAuMTIpJyB9KTsKICB9IGVsc2Ugewog'+
+'ICAgY29uc3Qgc29sID0gbmV3Qi9uZXdBOwogICAgc3RlcHMucHVzaCh7IGxhYmVsOifinIUgREVU'+
+'RVJNSU5BVEEnLCB0ZXh0OmB4ID0gJHtuZXdCfS8ke25ld0F9ID0gJHtOdW1iZXIuaXNJbnRlZ2Vy'+
+'KHNvbCk/c29sOnNvbC50b0ZpeGVkKDQpfWAsIGNvbDoncmdiYSg0NSwyMTIsMTY0LDAuMTIpJyB9'+
+'KTsKICB9CiAgY29uc3QgY29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3NvbHZl'+
+'cl9zdGVwcycpOwogIGNvbnRhaW5lci5pbm5lckhUTUwgPSAnJzsKICBzdGVwcy5mb3JFYWNoKChz'+
+'LCBpKSA9PiB7CiAgICBjb25zdCBkaXYgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsK'+
+'ICAgIGRpdi5zdHlsZS5jc3NUZXh0ID0gYGJhY2tncm91bmQ6JHtzLmNvbH07Ym9yZGVyLXJhZGl1'+
+'czoxMHB4O3BhZGRpbmc6MC44cmVtIDFyZW07YW5pbWF0aW9uOmZhZGVJblVwIDAuM3MgZWFzZSAk'+
+'e2kqMC4wOH1zIGJvdGg7YDsKICAgIGRpdi5pbm5lckhUTUwgPSBgPHAgc3R5bGU9ImZvbnQtc2l6'+
+'ZTowLjc1cmVtO2ZvbnQtd2VpZ2h0OjcwMDtjb2xvcjp2YXIoLS1zZWMpO21hcmdpbi1ib3R0b206'+
+'MC4zcmVtO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzowLjA4ZW07Ij4k'+
+'e3MubGFiZWx9PC9wPjxwIGNsYXNzPSJtb25vIiBzdHlsZT0iZm9udC1zaXplOjAuOXJlbTt3aGl0'+
+'ZS1zcGFjZTpwcmUtbGluZTtsaW5lLWhlaWdodDoxLjg7Ij4ke3MudGV4dH08L3A+YDsKICAgIGNv'+
+'bnRhaW5lci5hcHBlbmRDaGlsZChkaXYpOwogIH0pOwp9CgovLyDilZDilZAgRklOQUwgRVhFUkNJ'+
+'U0VTIOKVkOKVkApjb25zdCBmaW5hbFByb2JsZW1zID0gWwogIHsgdGV4dDonUmlzb2x2aTogNXgg'+
+'4oiSIDggPSAyeCArIDcnLCBvcHRpb25zOlsneCA9IDMnLCd4ID0gNScsJ3ggPSAxJywneCA9IOKI'+
+'kjEnXSwgY29ycmVjdDoxLCBkaWZmaWN1bHR5OifirZAnLCBleHBsYW5hdGlvbjonNXgg4oiSIDJ4'+
+'ID0gNyArIDgg4oaSIDN4ID0gMTUg4oaSIHggPSA1LiBWZXJpZmljYTogNcK3NeKIkjg9MTcgZSAy'+
+'wrc1Kzc9MTcg4pyTJyB9LAogIHsgdGV4dDonQ2hlIHRpcG8gw6g6IDQoeCArIDMpID0gNHggKyAx'+
+'Mj8nLCBvcHRpb25zOlsnRGV0ZXJtaW5hdGE6IHg9MycsJ0ltcG9zc2liaWxlJywnSW5kZXRlcm1p'+
+'bmF0YTogUz3ihJ0nLCdEZXRlcm1pbmF0YTogeD0xMiddLCBjb3JyZWN0OjIsIGRpZmZpY3VsdHk6'+
+'J+KtkCcsIGV4cGxhbmF0aW9uOidFc3BhbmRlbmRvOiA0eCsxMj00eCsxMi4gUmFjY29nbGllbmRv'+
+'OiAwPTAg4oaSIGlkZW50aXTDoCBzZW1wcmUgdmVyYSDihpIgSU5ERVRFUk1JTkFUQSwgUz3ihJ0u'+
+'JyB9LAogIHsgdGV4dDonUmlzb2x2aTogM3ggKyA1ID0gM3gg4oiSIDInLCBvcHRpb25zOlsneCA9'+
+'IOKIkjcnLCdJbXBvc3NpYmlsZScsJ3ggPSA3JywnSW5kZXRlcm1pbmF0YSddLCBjb3JyZWN0OjEs'+
+'IGRpZmZpY3VsdHk6J+KtkOKtkCcsIGV4cGxhbmF0aW9uOiczeOKIkjN4ID0g4oiSMuKIkjUg4oaS'+
+'IDA94oiSNy4gRmFsc2EgcGVyIG9nbmkgeCDihpIgSU1QT1NTSUJJTEUsIFM94oiFLicgfSwKICB7'+
+'IHRleHQ6J1F1YWxpIHNvbm8gbGUgQy5FLiBkaTogNC8oeCsyKSA9IDEveD8nLCBvcHRpb25zOlsn'+
+'eCDiiaAgMicsJ3gg4omgIDAnLCd4IOKJoCDiiJIyIGUgeCDiiaAgMCcsJ3gg4omgIDQnXSwgY29y'+
+'cmVjdDoyLCBkaWZmaWN1bHR5OifirZDirZAnLCBleHBsYW5hdGlvbjonSSBkZW5vbWluYXRvcmkg'+
+'c29ubyAoeCsyKSBlIHguIFF1aW5kaSB4KzLiiaAwIOKGkiB44omg4oiSMiBlIHjiiaAwLicgfSwK'+
+'ICB7IHRleHQ6J1Jpc29sdmk6IDQvKHgrMikgPSAxL3guIFF1YWxlIGFmZmVybWF6aW9uZSDDqCBj'+
+'b3JyZXR0YT8nLCBvcHRpb25zOlsneD3iiJIyLzMsIGFjY2V0dGF0YScsJ3g9Mi8zLCBhY2NldHRh'+
+'dGEnLCd4PTAsIGVzY2x1c2EgZGFsbGEgQy5FLicsJ0ltcG9zc2liaWxlJ10sIGNvcnJlY3Q6MSwg'+
+'ZGlmZmljdWx0eTon4q2Q4q2Q4q2QJywgZXhwbGFuYXRpb246J0MuRS46IHjiiaDiiJIyIGUgeOKJ'+
+'oDAuIE0uQy5ELj14KHgrMikuIE1vbHRpcGxpY286IDR4PXgrMiDihpIgM3g9MiDihpIgeD0yLzMu'+
+'IFZlcmlmaWNhIEMuRS46IDIvM+KJoOKIkjIgZSAyLzPiiaAwIOKGkiBBQ0NFVFRBVEEuIFM9ezIv'+
+'M30uJyB9Cl07CmZ1bmN0aW9uIGJ1aWxkRmluYWxFeGVyY2lzZXMoKSB7CiAgY29uc3QgY29udGFp'+
+'bmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZpbmFsRXhlcmNpc2VzJyk7CiAgaWYgKCFj'+
+'b250YWluZXIpIHJldHVybjsKICBjb250YWluZXIuaW5uZXJIVE1MID0gJyc7CiAgZmluYWxQcm9i'+
+'bGVtcy5mb3JFYWNoKChwcm9iLCBpKSA9PiB7CiAgICBjb25zdCBkaXYgPSBkb2N1bWVudC5jcmVh'+
+'dGVFbGVtZW50KCdkaXYnKTsKICAgIGRpdi5jbGFzc05hbWUgPSAnZXgtY2FyZCc7CiAgICBkaXYu'+
+'c3R5bGUubWFyZ2luVG9wID0gaT09PTAgPyAnMXJlbScgOiAnMCc7CiAgICBkaXYuaW5uZXJIVE1M'+
+'ID0gYAogICAgICA8ZGl2IHN0eWxlPSJkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNl'+
+'LWJldHdlZW47YWxpZ24taXRlbXM6Y2VudGVyO21hcmdpbi1ib3R0b206MC44cmVtOyI+CiAgICAg'+
+'ICAgPGRpdiBjbGFzcz0iZXgtdGl0bGUiIHN0eWxlPSJtYXJnaW46MDsiPkVzZXJjaXppbyAke2kr'+
+'MX08L2Rpdj4KICAgICAgICA8c3BhbiBjbGFzcz0iYmFkZ2UgYmFkZ2UtcHJpIj5EaWZmaWNvbHTD'+
+'oDogJHtwcm9iLmRpZmZpY3VsdHl9PC9zcGFuPgogICAgICA8L2Rpdj4KICAgICAgPHAgY2xhc3M9'+
+'Im1vbm8iIHN0eWxlPSJmb250LXNpemU6MC45OHJlbTttYXJnaW4tYm90dG9tOjAuOHJlbTsiPiR7'+
+'cHJvYi50ZXh0fTwvcD4KICAgICAgPGRpdiBzdHlsZT0iZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0'+
+'aW9uOmNvbHVtbjtnYXA6MC40NXJlbTsiIGlkPSJmaW5hbCR7aX0iPgogICAgICAgICR7cHJvYi5v'+
+'cHRpb25zLm1hcCgob3B0LGopID0+IGA8YnV0dG9uIGNsYXNzPSJxdWl6LW9wdGlvbiIgb25jbGlj'+
+'az0iY2hlY2tGaW5hbCgke2l9LCR7an0pIj4ke29wdH08L2J1dHRvbj5gKS5qb2luKCcnKX0KICAg'+
+'ICAgPC9kaXY+CiAgICAgIDxwIGlkPSJmaW5hbCR7aX1GZWVkYmFjayIgc3R5bGU9Im1hcmdpbi10'+
+'b3A6MC42cmVtO2ZvbnQtc2l6ZTowLjg4cmVtO21pbi1oZWlnaHQ6MS4yZW07Ij48L3A+CiAgICAg'+
+'IDxkaXYgaWQ9ImZpbmFsJHtpfUV4cGxhbmF0aW9uIiBzdHlsZT0iZGlzcGxheTpub25lO21hcmdp'+
+'bi10b3A6MC44cmVtO2JhY2tncm91bmQ6cmdiYSgxMjQsMTA2LDI0NywwLjA4KTtib3JkZXI6MXB4'+
+'IHNvbGlkIHJnYmEoMTI0LDEwNiwyNDcsMC4yKTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzow'+
+'LjlyZW07Ij4KICAgICAgICA8cCBzdHlsZT0iZm9udC1zaXplOjAuODhyZW07bGluZS1oZWlnaHQ6'+
+'MS43O2NvbG9yOnJnYmEoMjI4LDIyNiwyNDAsMC44KTsiPiR7cHJvYi5leHBsYW5hdGlvbn08L3A+'+
+'CiAgICAgIDwvZGl2PgogICAgICA8YnV0dG9uIGNsYXNzPSJidG4gYnRuLWdob3N0IiBzdHlsZT0i'+
+'bWFyZ2luLXRvcDowLjZyZW07Ym9yZGVyLXJhZGl1czoxMHB4O2ZvbnQtc2l6ZTowLjgycmVtOyIg'+
+'b25jbGljaz0iZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZpbmFsJHtpfUV4cGxhbmF0aW9uJyku'+
+'c3R5bGUuZGlzcGxheT0nYmxvY2snO3RoaXMuc3R5bGUuZGlzcGxheT0nbm9uZSc7Ij5Nb3N0cmEg'+
+'c3ZvbGdpbWVudG88L2J1dHRvbj5gOwogICAgY29udGFpbmVyLmFwcGVuZENoaWxkKGRpdik7CiAg'+
+'fSk7Cn0KZnVuY3Rpb24gY2hlY2tGaW5hbChwcm9iSWR4LCBvcHRJZHgpIHsKICBjb25zdCBjb250'+
+'YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZmluYWwnK3Byb2JJZHgpOwogIGNvbnN0'+
+'IGJ0bnMgPSBjb250YWluZXIucXVlcnlTZWxlY3RvckFsbCgnLnF1aXotb3B0aW9uJyk7CiAgY29u'+
+'c3QgY29ycmVjdCA9IGZpbmFsUHJvYmxlbXNbcHJvYklkeF0uY29ycmVjdCA9PT0gb3B0SWR4Owog'+
+'IGJ0bnMuZm9yRWFjaCgoYixqKSA9PiB7IGIuZGlzYWJsZWQ9dHJ1ZTsgYi5zdHlsZS5wb2ludGVy'+
+'RXZlbnRzPSdub25lJzsgaWYoaj09PWZpbmFsUHJvYmxlbXNbcHJvYklkeF0uY29ycmVjdCkgYi5j'+
+'bGFzc0xpc3QuYWRkKCdjb3JyZWN0Jyk7IGlmKGo9PT1vcHRJZHgmJiFjb3JyZWN0KSBiLmNsYXNz'+
+'TGlzdC5hZGQoJ3dyb25nJyk7IH0pOwogIGNvbnN0IGZiID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5'+
+'SWQoJ2ZpbmFsJytwcm9iSWR4KydGZWVkYmFjaycpOwogIGlmIChjb3JyZWN0KSB7IGZiLnRleHRD'+
+'b250ZW50PSfinIUgQ29ycmV0dG8hJzsgZmIuc3R5bGUuY29sb3I9J3ZhcigtLXNlYyknOyBzaG93'+
+'VG9hc3QoJ0VzYXR0byEg8J+OiScsJ3N1Y2Nlc3MnKTsgfQogIGVsc2UgeyBmYi50ZXh0Q29udGVu'+
+'dD0n4p2MIE5vbiBjb3JyZXR0by4gR3VhcmRhIGxvIHN2b2xnaW1lbnRvLic7IGZiLnN0eWxlLmNv'+
+'bG9yPSd2YXIoLS1yZWQpJzsgc2hvd1RvYXN0KCdTYmFnbGlhdG8sIGNvbnRyb2xsYSBsbyBzdm9s'+
+'Z2ltZW50by4nLCdlcnJvcicpOyB9Cn0KCi8vIOKVkOKVkCBJTklUIOKVkOKVkApidWlsZEZpbmFs'+
+'RXhlcmNpc2VzKCk7CnVwZGF0ZUxhYigpOwp1cGRhdGVTb2x2ZXIoKTsK'].join('');var _0xe0e7=Uint8Array.from(atob(_0x69ab),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xe0e7));
+</script>
+</body>
+</html>
