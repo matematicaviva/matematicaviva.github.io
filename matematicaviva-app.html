@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matematica Viva – Contenuti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --text-hint: #999;
+    --accent: #1a56a0;
+    --accent-bg: #e8f0fb;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111;
+      --surface: #1c1c1e;
+      --border: rgba(255,255,255,0.1);
+      --border-strong: rgba(255,255,255,0.2);
+      --text: #f0f0f0;
+      --text-muted: #aaa;
+      --text-hint: #666;
+      --accent: #5b9cf6;
+      --accent-bg: #1a2a42;
+    }
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px; flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  header span {
+    font-size: 13px; color: var(--text-muted); font-weight: 400;
+  }
+  .header-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .doc-count {
+    font-size: 12px; color: var(--text-hint);
+    background: var(--bg);
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border);
+  }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 56px); }
+
+  /* Sidebar */
+  aside {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 1.25rem 1rem;
+    border-right: 0.5px solid var(--border);
+    background: var(--surface);
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .sidebar-section-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--text-hint);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sidebar-btn {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; padding: 7px 10px;
+    border: none; background: transparent;
+    border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 400;
+    color: var(--text-muted);
+    transition: background .12s, color .12s;
+    text-align: left;
+  }
+  .sidebar-btn i { font-size: 16px; }
+  .sidebar-btn:hover { background: var(--bg); color: var(--text); }
+  .sidebar-btn.active { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+  .sidebar-btn .count {
+    margin-left: auto; font-size: 11px;
+    color: var(--text-hint); font-weight: 400;
+  }
+
+  /* Main */
+  main { flex: 1; padding: 1.5rem; min-width: 0; }
+
+  /* Search */
+  .search-wrap {
+    position: relative; margin-bottom: 1.25rem;
+  }
+  .search-wrap i {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-hint); font-size: 17px; pointer-events: none;
+  }
+  #searchInput {
+    width: 100%; height: 40px;
+    padding: 0 14px 0 38px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+  }
+  #searchInput:focus { border-color: var(--accent); }
+  #searchInput::placeholder { color: var(--text-hint); }
+
+  /* Classe pills */
+  .classe-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem;
+  }
+  .pill {
+    padding: 4px 13px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border-strong);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all .12s;
+    font-family: inherit;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Section title */
+  .sec-title {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-hint);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin: 1.5rem 0 .6rem;
+    padding-bottom: 6px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  /* Grid */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+    margin-bottom: .25rem;
+  }
+
+  /* Card */
+  .doc-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex; align-items: flex-start; gap: 12px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .doc-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(26,86,160,.07);
+  }
+  .doc-icon {
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 19px;
+  }
+  .icon-pdf { background: #faece7; color: #993c1d; }
+  .icon-html { background: #e8f0fb; color: #185fa5; }
+  @media (prefers-color-scheme: dark) {
+    .icon-pdf { background: #3a1a10; color: #f0a080; }
+    .icon-html { background: #0e1f38; color: #7eb4f5; }
+  }
+  .doc-info { flex: 1; min-width: 0; }
+  .doc-title {
+    font-size: 13px; font-weight: 500;
+    color: var(--text); line-height: 1.4; margin-bottom: 3px;
+  }
+  .doc-meta { font-size: 11px; color: var(--text-hint); }
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 1px 6px; border-radius: 4px; margin-left: 5px;
+    vertical-align: middle; letter-spacing: .03em;
+  }
+  .badge-pdf { background: #faece7; color: #993c1d; }
+  .badge-html { background: #e8f0fb; color: #185fa5; }
+  @media (prefers-color-scheme: dark) {
+    .badge-pdf { background: #3a1a10; color: #f0a080; }
+    .badge-html { background: #0e1f38; color: #7eb4f5; }
+  }
+
+  /* Empty */
+  .empty {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--text-hint); font-size: 14px;
+  }
+  .empty i { font-size: 36px; display: block; margin-bottom: 10px; }
+
+  /* Viewer */
+  .viewer-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 200;
+    align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .viewer-overlay.open { display: flex; }
+  .viewer-box {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: min(96vw, 960px);
+    height: min(92vh, 760px);
+    display: flex; flex-direction: column;
+    border: 0.5px solid var(--border-strong);
+    overflow: hidden;
+  }
+  .viewer-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+  }
+  .viewer-title {
+    font-size: 13px; font-weight: 500;
+    color: var(--text); flex: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .btn-icon {
+    width: 30px; height: 30px;
+    border: 0.5px solid var(--border-strong);
+    background: transparent;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted); font-size: 16px;
+    flex-shrink: 0; text-decoration: none;
+    transition: background .12s;
+  }
+  .btn-icon:hover { background: var(--bg); }
+  .viewer-frame {
+    flex: 1; border: none; width: 100%; display: block;
+    background: var(--bg);
+  }
+
+  /* Mobile */
+  @media (max-width: 680px) {
+    aside { display: none; }
+    .doc-grid { grid-template-columns: 1fr; }
+    main { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon"><i class="ti ti-math" aria-hidden="true"></i></div>
+  <div>
+    <h1>Matematica Viva</h1>
+  </div>
+  <div class="header-right">
+    <span class="doc-count" id="totalCount">0 documenti</span>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div>
+      <div class="sidebar-section-label">Categoria</div>
+      <button class="sidebar-btn active" data-cat="all">
+        <i class="ti ti-layout-grid" aria-hidden="true"></i> Tutto
+        <span class="count" id="cnt-all"></span>
+      </button>
+      <button class="sidebar-btn" data-cat="teoria">
+        <i class="ti ti-book" aria-hidden="true"></i> Teoria
+        <span class="count" id="cnt-teoria"></span>
+      </button>
+      <button class="sidebar-btn" data-cat="esercizi">
+        <i class="ti ti-pencil" aria-hidden="true"></i> Esercizi
+        <span class="count" id="cnt-esercizi"></span>
+      </button>
+      <button class="sidebar-btn" data-cat="schemi">
+        <i class="ti ti-layout-list" aria-hidden="true"></i> Schemi
+        <span class="count" id="cnt-schemi"></span>
+      </button>
+      <button class="sidebar-btn" data-cat="lezioni">
+        <i class="ti ti-player-play" aria-hidden="true"></i> Lezioni interattive
+        <span class="count" id="cnt-lezioni"></span>
+      </button>
+    </div>
+    <div>
+      <div class="sidebar-section-label">Formato</div>
+      <button class="sidebar-btn" data-tipo="all">
+        <i class="ti ti-files" aria-hidden="true"></i> Tutti i formati
+      </button>
+      <button class="sidebar-btn" data-tipo="pdf">
+        <i class="ti ti-file-type-pdf" aria-hidden="true"></i> Solo PDF
+      </button>
+      <button class="sidebar-btn" data-tipo="html">
+        <i class="ti ti-player-play" aria-hidden="true"></i> Solo HTML
+      </button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" id="searchInput" placeholder="Cerca argomento…" aria-label="Cerca documento">
+    </div>
+
+    <div class="classe-row" id="classeFilter">
+      <button class="pill active" data-classe="all">Tutte le classi</button>
+      <button class="pill" data-classe="1">Classe 1ª</button>
+      <button class="pill" data-classe="2">Classe 2ª</button>
+      <button class="pill" data-classe="3">Classe 3ª</button>
+      <button class="pill" data-classe="4">Classe 4ª</button>
+      <button class="pill" data-classe="5">Classe 5ª</button>
+    </div>
+
+    <div id="docList" role="main" aria-live="polite"></div>
+  </main>
+</div>
+
+<!-- Viewer -->
+<div class="viewer-overlay" id="viewerOverlay" role="dialog" aria-modal="true" aria-label="Visualizzatore documento">
+  <div class="viewer-box">
+    <div class="viewer-header">
+      <span class="viewer-title" id="viewerTitle"></span>
+      <a class="btn-icon" id="viewerExtLink" href="#" target="_blank" rel="noopener" title="Apri in nuova scheda" aria-label="Apri in nuova scheda">
+        <i class="ti ti-external-link" aria-hidden="true"></i>
+      </a>
+      <button class="btn-icon" id="viewerClose" title="Chiudi" aria-label="Chiudi visualizzatore">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <iframe class="viewer-frame" id="viewerFrame" title="Documento" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+const BASE = "https://matematicaviva.github.io/";
+
+const docs = [
+  {titolo:"Rette perpendicolari e parallele",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/rette_parallele_perpendicolari.pdf"},
+  {titolo:"Quadrilateri",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/quadrilateri.pdf"},
+  {titolo:"Scomposizione di polinomi",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/scomposizione_polinomi.pdf"},
+  {titolo:"Equazioni lineari intere e fratte",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/equazioni_lineari.pdf"},
+  {titolo:"Teorema di Talete e similitudini",cat:"teoria",classe:2,tipo:"pdf",url:"viewer.html?file=teoria/classe2/talete_similitudini.pdf"},
+  {titolo:"Sezione aurea",cat:"teoria",classe:2,tipo:"pdf",url:"viewer.html?file=teoria/classe2/sezione_aurea.pdf"},
+  {titolo:"Disequazioni di II grado",cat:"teoria",classe:2,tipo:"pdf",url:"viewer.html?file=teoria/classe2/disequazioni_secondo_grado.pdf"},
+  {titolo:"Disequazioni di II grado con metodo algebrico e grafico",cat:"teoria",classe:2,tipo:"pdf",url:"viewer.html?file=teoria/classe2/disequazioni_parabola_v.pdf"},
+  {titolo:"Goniometria: introduzione",cat:"teoria",classe:4,tipo:"pdf",url:"viewer.html?file=teoria/classe4/goniometria.pdf"},
+  {titolo:"Esercizi su rette parallele e perpendicolari",cat:"esercizi",classe:1,tipo:"pdf",url:"viewer.html?file=esercizi/classe1/Scheda_Esercizi_Parallele_Perpendicolari.pdf"},
+  {titolo:"Esercizi teoremi di Pitagora ed Euclide",cat:"esercizi",classe:2,tipo:"pdf",url:"viewer.html?file=esercizi/classe2/esercizi_euclide_pitagora_.pdf"},
+  {titolo:"Sintesi quadrilateri",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/formulario_quadrilateri.pdf"},
+  {titolo:"Sintesi rette parallele e perpendicolari",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/formulario_parallele_perpendicolari.pdf"},
+  {titolo:"Sintesi scomposizione di polinomi",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/formulario_polinomi.pdf"},
+  {titolo:"Sintesi equazioni lineari intere e fratte",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/sintesi_equazioni_lineari.pdf"},
+  {titolo:"Sintesi disequazioni di secondo grado",cat:"schemi",classe:2,tipo:"pdf",url:"viewer.html?file=schemi/classe2/sintesi_disequazioni_sec.pdf"},
+  {titolo:"Sintesi sezione aurea",cat:"schemi",classe:2,tipo:"pdf",url:"viewer.html?file=schemi/classe2/formulario_sezione_aurea.pdf"},
+  {titolo:"Goniometria: sintesi relazioni introduttive",cat:"schemi",classe:4,tipo:"pdf",url:"viewer.html?file=schemi/classe4/sintesi_goniometria.pdf"},
+  {titolo:"Rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/rette_parallele_perpendicolari.html"},
+  {titolo:"Esercizi rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/Scheda_Esercizi_Parallele_Perpendicolari_def.html"},
+  {titolo:"Quadrilateri",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/quadrilateri_def.html"},
+  {titolo:"Scomposizione di polinomi",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/scomposizione_polinomi.html"},
+  {titolo:"Equazioni lineari intere e fratte",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/equazioni_lineari.html"},
+  {titolo:"Coniche",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/coniche.html"},
+  {titolo:"Talete e le similitudini",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/Talete_similitudini.html"},
+  {titolo:"Sezione aurea",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/Sezione_aurea_def.html"},
+  {titolo:"Disequazioni di secondo grado",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/Disequazioni_secondo_grado_def.html"},
+  {titolo:"Disequazioni di secondo grado e parabola",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/disequazioni_parabola_v.html"},
+  {titolo:"Circonferenza",cat:"lezioni",classe:3,tipo:"html",url:"lezioni/classe3/circonferenza.html"},
+  {titolo:"Goniometria: introduzione",cat:"lezioni",classe:4,tipo:"html",url:"lezioni/classe4/goniometria_def.html"},
+  {titolo:"Coordinate sferiche",cat:"lezioni",classe:5,tipo:"html",url:"lezioni/classe5/Coordinate_sferiche_def.html"},
+];
+
+const catLabel = {teoria:"Teoria",esercizi:"Esercizi",schemi:"Schemi",lezioni:"Lezioni interattive"};
+const catIcon  = {teoria:"ti-book",esercizi:"ti-pencil",schemi:"ti-layout-list",lezioni:"ti-player-play"};
+
+let filterClasse = "all", filterCat = "all", filterTipo = "all", searchQ = "";
+
+function getFiltered() {
+  const q = searchQ.toLowerCase();
+  return docs.filter(d => {
+    if (filterClasse !== "all" && d.classe !== parseInt(filterClasse)) return false;
+    if (filterCat !== "all" && d.cat !== filterCat) return false;
+    if (filterTipo !== "all" && d.tipo !== filterTipo) return false;
+    if (q && !d.titolo.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function updateCounts() {
+  ["teoria","esercizi","schemi","lezioni"].forEach(cat => {
+    const el = document.getElementById("cnt-" + cat);
+    if (el) el.textContent = docs.filter(d => d.cat === cat).length;
+  });
+  const allEl = document.getElementById("cnt-all");
+  if (allEl) allEl.textContent = docs.length;
+}
+
+function render() {
+  const filtered = getFiltered();
+  document.getElementById("totalCount").textContent = filtered.length + " document" + (filtered.length === 1 ? "o" : "i");
+
+  if (!filtered.length) {
+    document.getElementById("docList").innerHTML =
+      '<div class="empty"><i class="ti ti-mood-empty" aria-hidden="true"></i>Nessun documento trovato</div>';
+    return;
+  }
+
+  const groups = {};
+  filtered.forEach(d => {
+    const key = d.cat + "_" + d.classe;
+    if (!groups[key]) groups[key] = {cat: d.cat, classe: d.classe, items: []};
+    groups[key].items.push(d);
+  });
+
+  const catOrder = ["teoria","esercizi","schemi","lezioni"];
+  const sorted = Object.values(groups).sort((a,b) => {
+    const ci = catOrder.indexOf(a.cat) - catOrder.indexOf(b.cat);
+    return ci !== 0 ? ci : a.classe - b.classe;
+  });
+
+  let html = "";
+  sorted.forEach(g => {
+    html += `<div class="sec-title">${catLabel[g.cat]} — Classe ${g.classe}ª</div><div class="doc-grid">`;
+    g.items.forEach(d => {
+      const isPdf = d.tipo === "pdf";
+      html += `<div class="doc-card" tabindex="0" role="button" aria-label="Apri ${d.titolo}" data-url="${d.url}" data-title="${d.titolo}">
+        <div class="doc-icon ${isPdf ? "icon-pdf" : "icon-html"}">
+          <i class="ti ${isPdf ? "ti-file-type-pdf" : "ti-player-play"}" aria-hidden="true"></i>
+        </div>
+        <div class="doc-info">
+          <div class="doc-title">${d.titolo}<span class="badge ${isPdf ? "badge-pdf" : "badge-html"}">${isPdf ? "PDF" : "HTML"}</span></div>
+          <div class="doc-meta">Classe ${d.classe}ª · ${catLabel[d.cat]}</div>
+        </div>
+      </div>`;
+    });
+    html += "</div>";
+  });
+
+  document.getElementById("docList").innerHTML = html;
+
+  document.querySelectorAll(".doc-card").forEach(card => {
+    const open = () => openViewer(card.dataset.url, card.dataset.title);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+  });
+}
+
+// Sidebar cat
+document.querySelectorAll("[data-cat]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-cat]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filterCat = btn.dataset.cat;
+    render();
+  });
+});
+
+// Sidebar tipo
+document.querySelectorAll("[data-tipo]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-tipo]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filterTipo = btn.dataset.tipo;
+    render();
+  });
+});
+
+// Pills classe
+document.getElementById("classeFilter").addEventListener("click", e => {
+  const btn = e.target.closest("[data-classe]"); if (!btn) return;
+  document.querySelectorAll("[data-classe]").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  filterClasse = btn.dataset.classe;
+  render();
+});
+
+// Search
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchQ = e.target.value;
+  render();
+});
+
+// Viewer
+function openViewer(relUrl, title) {
+  const full = relUrl.startsWith("http") ? relUrl : BASE + relUrl;
+  document.getElementById("viewerTitle").textContent = title;
+  document.getElementById("viewerFrame").src = full;
+  document.getElementById("viewerExtLink").href = full;
+  document.getElementById("viewerOverlay").classList.add("open");
+  document.getElementById("viewerClose").focus();
+}
+
+document.getElementById("viewerClose").addEventListener("click", closeViewer);
+document.getElementById("viewerOverlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("viewerOverlay")) closeViewer();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeViewer();
+});
+
+function closeViewer() {
+  document.getElementById("viewerOverlay").classList.remove("open");
+  setTimeout(() => { document.getElementById("viewerFrame").src = ""; }, 200);
+}
+
+updateCounts();
+render();
+</script>
+</body>
+</html>
