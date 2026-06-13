@@ -5,33 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MatematicaViva – Contenuti</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --header-bg: #1a1a2e;
-  --header-border: rgba(255,255,255,0.08);
-  --accent: #4f8ef7;
-  --accent-dark: #2563eb;
-  --bg: #f5f6fa;
-  --surface: #ffffff;
-  --border: rgba(0,0,0,0.09);
-  --border-strong: rgba(0,0,0,0.16);
-  --text: #1a1a2e;
-  --text-muted: #5a6070;
+  --blu:       #1a3a5c;
+  --blu-mid:   #2d5f8a;
+  --blu-soft:  #e8f0f8;
+  --accento:   #d4882b;
+  --accento-light: #fdf3e3;
+  --testo:     #2c2c2c;
+  --testo-soft:#5a5a6a;
+  --bg:        #f7f8fc;
+  --bianco:    #ffffff;
+  --bordo:     #dde3ed;
+  --raggio:    10px;
+  --ombra:     0 2px 12px rgba(26,58,92,0.09);
+  
   --text-hint: #9aa0ad;
-  --radius: 8px;
   --radius-lg: 12px;
-  --footer-bg: #1a1a2e;
-  --nav-hover: rgba(255,255,255,0.12);
+  --nav-hover: rgba(255,255,255,0.15);
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background: var(--bg);
-  color: var(--text);
+  color: var(--testo);
   min-height: 100vh;
   font-size: 15px;
   line-height: 1.6;
@@ -41,69 +42,71 @@ body {
 
 /* ── HEADER ── */
 header {
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--header-border);
+  background: linear-gradient(135deg, var(--blu-mid) 0%, var(--blu) 100%);
+  border-bottom: 1px solid var(--bordo);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 150;
+  box-shadow: 0 2px 16px rgba(26,58,92,0.18);
 }
 
 .header-inner {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 14px 32px;
   display: flex;
   align-items: center;
-  height: 58px;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: #fff;
   text-decoration: none;
-  flex-shrink: 0;
+  opacity: .95;
+  z-index: 160;
 }
-.logo-symbol {
-  width: 36px; height: 36px;
-  background: var(--accent);
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: #fff; font-weight: 700;
-  line-height: 1;
-}
-.logo-text {
-  font-size: 17px; font-weight: 600;
-  color: #fff; letter-spacing: -0.02em;
-}
+.logo span { color: #f0c06e; }
 
-nav {
-  display: flex;
-  gap: 4px;
-  flex: 1;
-}
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
 nav a {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,.82);
   text-decoration: none;
-  font-size: 13px;
+  font-size: .88rem;
   font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: background .15s, color .15s;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: background .2s, color .2s;
 }
-nav a:hover { background: var(--nav-hover); color: #fff; }
-nav a.active { background: var(--nav-hover); color: #fff; }
+nav a:hover, nav a.active {
+  background: var(--nav-hover);
+  color: #fff;
+}
 
 .header-badge {
-  margin-left: auto;
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.5);
   background: rgba(255,255,255,0.06);
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.1);
   flex-shrink: 0;
+}
+
+/* Pulsante Menu Mobile */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 160;
+  padding: 4px;
 }
 
 /* ── MAIN ── */
@@ -112,37 +115,38 @@ nav a.active { background: var(--nav-hover); color: #fff; }
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
-  padding: 1.5rem 1.5rem 2rem;
+  padding: 40px 24px 64px;
 }
 
-/* Toolbar */
+/* Toolbar Filtri */
 .toolbar {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 1.25rem;
-  background: var(--surface);
-  border: 0.5px solid var(--border-strong);
+  margin-bottom: 2rem;
+  background: var(--bianco);
+  border: 1px solid var(--bordo);
   border-radius: var(--radius-lg);
   padding: 12px 14px;
+  box-shadow: var(--ombra);
 }
 
 .toolbar select {
-  height: 36px;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius);
+  height: 40px;
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
   padding: 0 10px;
-  font-size: 13px;
+  font-size: 14px;
   background: var(--bg);
-  color: var(--text);
+  color: var(--testo);
   font-family: inherit;
   outline: none;
   cursor: pointer;
   min-width: 150px;
   transition: border-color .15s;
 }
-.toolbar select:focus { border-color: var(--accent); }
+.toolbar select:focus { border-color: var(--accento); }
 
 .search-wrap {
   position: relative;
@@ -150,23 +154,23 @@ nav a.active { background: var(--nav-hover); color: #fff; }
   min-width: 180px;
 }
 .search-wrap i {
-  position: absolute; left: 9px; top: 50%;
+  position: absolute; left: 11px; top: 50%;
   transform: translateY(-50%);
   color: var(--text-hint); font-size: 16px; pointer-events: none;
 }
 #searchInput {
-  width: 100%; height: 36px;
-  padding: 0 10px 0 32px;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius);
+  width: 100%; height: 40px;
+  padding: 0 10px 0 34px;
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
   background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
+  color: var(--testo);
+  font-size: 14px;
   font-family: inherit;
   outline: none;
   transition: border-color .15s;
 }
-#searchInput:focus { border-color: var(--accent); }
+#searchInput:focus { border-color: var(--accento); }
 #searchInput::placeholder { color: var(--text-hint); }
 
 .result-count {
@@ -176,69 +180,123 @@ nav a.active { background: var(--nav-hover); color: #fff; }
   margin-left: auto;
 }
 
-/* Section title */
-.sec-title {
-  font-size: 11px; font-weight: 600;
-  color: var(--text-hint);
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  margin: 1.5rem 0 .5rem;
-  padding-bottom: 5px;
-  border-bottom: 0.5px solid var(--border);
+/* Macro Categorie (Teoria, Esercizi, ecc.) */
+.macro-section {
+  margin-bottom: 2.5rem;
+}
+.macro-title {
+  font-family: 'Lora', serif;
+  font-size: 1.6rem;
+  color: var(--blu);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--bordo);
 }
 
-/* Doc list */
-.doc-list { display: flex; flex-direction: column; gap: 4px; }
+/* Stile Tendine (Details/Summary) */
+details {
+  background: var(--bianco);
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
+  margin-bottom: 12px;
+  box-shadow: var(--ombra);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+details[open] {
+  border-color: var(--blu-mid);
+}
+summary {
+  padding: 14px 20px;
+  font-weight: 600;
+  color: var(--blu);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: '▼';
+  font-size: 0.75rem;
+  color: var(--blu-mid);
+  transition: transform .2s;
+}
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+summary .badge-count {
+  background: var(--blu-soft);
+  color: var(--blu-mid);
+  font-size: 0.8rem;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-left: auto;
+  margin-right: 15px;
+}
 
+/* Lista file dentro la tendina */
+.doc-list {
+  padding: 4px 16px 16px;
+  border-top: 1px solid var(--bordo);
+  background: #fafbfe;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Riga del singolo documento */
 .doc-row {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 14px;
+  background: var(--bianco);
+  border: 1px solid var(--bordo);
+  border-radius: 8px;
+  padding: 12px 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: border-color .12s, box-shadow .12s;
+  transition: border-color .12s, box-shadow .12s, background-color .15s;
 }
 .doc-row:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(79,142,247,.08);
+  background-color: var(--blu-soft);
+  border-color: var(--blu-mid);
 }
 .doc-icon {
-  width: 32px; height: 32px;
-  border-radius: 7px;
+  width: 40px; height: 40px;
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-size: 17px;
+  flex-shrink: 0; font-size: 1.4rem;
 }
-.icon-pdf  { background: #faece7; color: #993c1d; }
-.icon-html { background: #e8f0fb; color: #1a56a0; }
+.icon-pdf  { background: #ffebeb; color: #c92a2a; }
+.icon-html { background: #eef5ff; color: #1c7ed6; }
 
 .doc-title {
-  font-size: 13px; font-weight: 500;
-  color: var(--text); flex: 1; min-width: 0;
+  font-size: .95rem; font-weight: 500;
+  color: var(--testo); flex: 1; min-width: 0;
 }
-.badge {
-  display: inline-block; font-size: 10px; font-weight: 600;
-  padding: 1px 6px; border-radius: 4px; margin-left: 6px;
-  vertical-align: middle;
+.badge-type {
+  display: inline-block; font-size: .72rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px; margin-left: 8px;
 }
-.badge-pdf  { background: #faece7; color: #993c1d; }
-.badge-html { background: #e8f0fb; color: #1a56a0; }
+.badge-pdf  { background: #ffebeb; color: #c92a2a; }
+.badge-html { background: #eef5ff; color: #1c7ed6; }
 
 .doc-meta {
-  font-size: 11px; color: var(--text-hint);
+  font-size: 11px; color: var(--testo-soft);
   white-space: nowrap; flex-shrink: 0;
 }
 
-/* Empty */
+/* Empty state */
 .empty {
-  text-align: center; padding: 4rem 2rem;
-  color: var(--text-hint); font-size: 13px;
+  text-align: center; padding: 3rem 1rem;
+  color: var(--text-hint); font-size: 14px;
 }
 .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
 
-/* ── VIEWER ── */
+/* ── VIEWER OVERLAY ── */
 .viewer-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(10,10,30,.65);
@@ -248,20 +306,20 @@ nav a.active { background: var(--nav-hover); color: #fff; }
 }
 .viewer-overlay.open { display: flex; }
 .viewer-box {
-  background: var(--surface);
+  background: var(--bianco);
   border-radius: var(--radius-lg);
   width: min(96vw, 960px);
   height: min(92vh, 760px);
   display: flex; flex-direction: column;
-  border: 0.5px solid var(--border-strong);
+  border: 1px solid var(--bordo);
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0,0,0,.3);
 }
 .viewer-header {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px;
-  border-bottom: 0.5px solid var(--border);
-  background: var(--header-bg);
+  border-bottom: 1px solid var(--bordo);
+  background: var(--blu);
   flex-shrink: 0;
 }
 .viewer-title {
@@ -270,101 +328,143 @@ nav a.active { background: var(--nav-hover); color: #fff; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .btn-icon {
-  width: 30px; height: 30px;
+  width: 36px; height: 36px;
   border: 1px solid rgba(255,255,255,.15);
   background: rgba(255,255,255,.06);
   border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(255,255,255,.7); font-size: 16px;
+  cursor: pointer; color: rgba(255,255,255,.7); font-size: 18px;
   text-decoration: none; flex-shrink: 0;
   transition: background .12s;
 }
 .btn-icon:hover { background: rgba(255,255,255,.15); color: #fff; }
-.viewer-frame { flex: 1; border: none; width: 100%; display: block; }
+.viewer-frame { flex: 1; border: none; width: 100%; display: block; height: calc(100% - 57px); }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--footer-bg);
-  border-top: 1px solid rgba(255,255,255,.06);
+  background: var(--blu-soft);
+  border-top: 1px solid var(--bordo);
   margin-top: auto;
 }
 .footer-inner {
-  max-width: 1100px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 1.5rem;
-}
-.footer-top {
+  padding: 36px 32px;
   display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-.footer-brand {
-  display: flex; align-items: center; gap: 10px;
-  flex-shrink: 0;
-}
-.footer-brand .logo-symbol { width: 32px; height: 32px; font-size: 18px; }
-.footer-brand-text {
-  font-size: 15px; font-weight: 600;
-  color: #fff; letter-spacing: -0.01em;
-}
-.footer-info {
-  flex: 1;
-}
-.footer-info p {
-  font-size: 13px;
-  color: rgba(255,255,255,.55);
-  line-height: 1.6;
-  margin-bottom: 2px;
-}
-.footer-info p strong {
-  color: rgba(255,255,255,.75);
-  font-weight: 500;
-}
-.footer-bottom {
-  border-top: 1px solid rgba(255,255,255,.07);
-  padding-top: 1rem;
-  display: flex;
+  flex-direction: column;
+  gap: 12px;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
 }
-.footer-bottom p {
-  font-size: 12px;
-  color: rgba(255,255,255,.35);
+.footer-logo {
+  font-family: 'Lora', serif;
+  font-size: 1.2rem;
+  color: var(--blu);
+  font-weight: 600;
 }
-.footer-bottom a {
-  color: rgba(255,255,255,.45);
-  text-decoration: none;
-  transition: color .15s;
+.footer-logo span { color: #f0c06e; }
+.footer-info {
+  font-size: .9rem;
+  color: var(--testo-soft);
+  text-align: center;
 }
-.footer-bottom a:hover { color: rgba(255,255,255,.7); }
+.footer-bio {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 4px 0;
+}
+.footer-bio span {
+  background: var(--bianco);
+  border: 1px solid var(--bordo);
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: .8rem;
+  color: var(--testo-soft);
+}
+.footer-copy {
+  font-size: .8rem; color: #8a9ab5; margin-top: 4px; text-align: center;
+}
+.footer-copy a { color: #8a9ab5; text-decoration: none; }
+.footer-copy a:hover { color: var(--blu); }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .header-inner { gap: 1rem; }
-  nav a { font-size: 12px; padding: 5px 8px; }
-  .logo-text { font-size: 15px; }
-  .toolbar { flex-direction: column; align-items: stretch; }
-  .toolbar select, .search-wrap { width: 100%; min-width: unset; }
-  .result-count { margin-left: 0; }
+/* ── MEDIA QUERIES MOBILE ── */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  nav {
+    display: none;
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 260px;
+    background: var(--blu);
+    flex-direction: column;
+    padding: 80px 24px 24px;
+    gap: 12px;
+    z-index: 155;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+  }
+  nav.mobile-open {
+    display: flex;
+  }
+  nav a {
+    font-size: 1.05rem;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    color: #fff;
+  }
+
+  .header-inner { padding: 12px 20px; }
+  .header-badge { display: none; }
+
+  .main-wrap { padding: 24px 16px 48px; }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .toolbar select, .search-wrap {
+    width: 100%;
+    min-width: unset;
+  }
+  .result-count {
+    margin-left: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .macro-title { font-size: 1.35rem; }
+  summary { padding: 12px 16px; font-size: 0.95rem; }
+  summary .badge-count { margin-right: 8px; font-size: 0.75rem; }
+  .doc-list { padding: 4px 10px 12px; }
+  .doc-row { padding: 10px 12px; gap: 10px; }
+  .doc-title { font-size: 0.88rem; }
+  .doc-icon { width: 36px; height: 36px; font-size: 1.2rem; }
   .doc-meta { display: none; }
-  .footer-top { flex-direction: column; gap: 1rem; }
+
+  .viewer-overlay { padding: 0; }
+  .viewer-box { width: 100vw; height: 100vh; border-radius: 0; border: none; }
+  .viewer-header { padding: 12px; }
+
+  .footer-inner { padding: 32px 16px; }
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <a class="logo" href="https://matematicaviva.github.io/">
-      <div class="logo-symbol">∑</div>
-      <span class="logo-text">MatematicaViva</span>
+      Matematica<span>Viva</span>
     </a>
-    <nav>
+    
+    <button class="menu-toggle" id="menuToggle" aria-label="Apri menu" aria-expanded="false">
+      <i class="ti ti-menu-2" id="menuIcon"></i>
+    </button>
+
+    <nav id="mainNav">
       <a href="https://matematicaviva.github.io/#teoria">Teoria</a>
       <a href="https://matematicaviva.github.io/#esercizi">Esercizi</a>
       <a href="https://matematicaviva.github.io/#schemi">Schemi</a>
@@ -374,7 +474,6 @@ footer {
   </div>
 </header>
 
-<!-- MAIN -->
 <div class="main-wrap">
   <div class="toolbar">
     <select id="selClasse" aria-label="Filtra per classe">
@@ -407,12 +506,11 @@ footer {
   <div id="docList" role="main" aria-live="polite"></div>
 </div>
 
-<!-- VIEWER -->
 <div class="viewer-overlay" id="viewerOverlay" role="dialog" aria-modal="true" aria-label="Visualizzatore documento">
   <div class="viewer-box">
     <div class="viewer-header">
       <span class="viewer-title" id="viewerTitle"></span>
-      <a class="btn-icon" id="viewerExtLink" href="#" target="_blank" rel="noopener" title="Apri in nuova scheda" aria-label="Apri in nuova scheda">
+      <a class="btn-icon" id="viewerExtLink" href="#" target="_blank" rel="noopener" title="Apri in nuova scheda">
         <i class="ti ti-external-link" aria-hidden="true"></i>
       </a>
       <button class="btn-icon" id="viewerClose" aria-label="Chiudi visualizzatore">
@@ -423,28 +521,24 @@ footer {
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="logo-symbol">∑</div>
-        <span class="footer-brand-text">MatematicaViva</span>
-      </div>
-      <div class="footer-info">
-        <p><strong>M. Prandelli</strong> — Docente di matematica</p>
-        <p>Laurea in Matematica · PhD in Matematica pura e applicata</p>
-        <p>Scuola Secondaria Superiore · Università</p>
-      </div>
+    <div class="footer-logo">Matematica<span>Viva</span></div>
+    <div class="footer-info">
+      <p><strong>M. Prandelli</strong> — Docente di matematica</p>
+      <p>Laurea in Matematica · PhD in Matematica pura e applicata</p>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 — MatematicaViva</p>
-      <p>
-        <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.it" target="_blank" rel="noopener">
-          Licenza Creative Commons BY-NC-ND 4.0
-        </a>
-      </p>
+    <div class="footer-bio">
+      <span>PhD in Matematica</span>
+      <span>Scuola Superiore</span>
+      <span>Università</span>
     </div>
+    <p class="footer-copy">
+      © 2026 — MatematicaViva · 
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.it" target="_blank" rel="noopener">
+        Licenza Creative Commons BY-NC-ND 4.0
+      </a>
+    </p>
   </div>
 </footer>
 
@@ -488,6 +582,25 @@ const docs = [
 const catLabel = {teoria:"Teoria", esercizi:"Esercizi", schemi:"Schemi", lezioni:"Lezioni interattive"};
 let fClasse="all", fCat="all", fTipo="all", fQ="";
 
+// Drawer Menu Mobile
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
+const menuIcon = document.getElementById("menuIcon");
+
+menuToggle.addEventListener("click", () => {
+  const isOpen = mainNav.classList.toggle("mobile-open");
+  menuToggle.setAttribute("aria-expanded", isOpen);
+  menuIcon.className = isOpen ? "ti ti-x" : "ti ti-menu-2";
+});
+
+mainNav.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    mainNav.classList.remove("mobile-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuIcon.className = "ti ti-menu-2";
+  });
+});
+
 function getFiltered() {
   const q = fQ.toLowerCase();
   return docs.filter(d => {
@@ -505,8 +618,10 @@ function render() {
   document.getElementById("resultCount").textContent = n + " risultat" + (n===1?"o":"i");
   document.getElementById("totalBadge").textContent = n + " document" + (n===1?"o":"i");
 
+  const targetContainer = document.getElementById("docList");
+
   if (!filtered.length) {
-    document.getElementById("docList").innerHTML =
+    targetContainer.innerHTML =
       '<div class="empty"><i class="ti ti-mood-empty" aria-hidden="true"></i>Nessun documento trovato</div>';
     return;
   }
@@ -525,30 +640,38 @@ function render() {
   });
 
   let html = "";
-  sorted.forEach(g => {
-    const showCat = fCat === "all";
-    const showCls = fClasse === "all";
-    let label = "";
-    if (showCat && showCls) label = `${catLabel[g.cat]} — Classe ${g.classe}ª`;
-    else if (showCat) label = catLabel[g.cat];
-    else if (showCls) label = `Classe ${g.classe}ª`;
-    if (label) html += `<div class="sec-title">${label}</div>`;
+  let currentCat = "";
 
-    html += `<div class="doc-list">`;
+  sorted.forEach(g => {
+    if (currentCat !== g.cat) {
+      currentCat = g.cat;
+      html += `<div class="macro-title">${catLabel[g.cat]}</div>`;
+    }
+
+    const forceOpen = (fQ !== "" || fClasse !== "all" || fCat !== "all" || fTipo !== "all") ? "open" : "";
+    const s = g.items.length === 1 ? "e" : "i";
+
+    html += `<details ${forceOpen}>`;
+    html += `  <summary>Classe ${g.classe}ª <span class="badge-count">${g.items.length} lezion${s}</span></summary>`;
+    html += `  <div class="doc-list">`;
+    
     g.items.forEach(d => {
       const isPdf = d.tipo === "pdf";
-      html += `<div class="doc-row" tabindex="0" role="button" aria-label="Apri ${d.titolo}" data-url="${d.url}" data-title="${d.titolo}">
-        <div class="doc-icon ${isPdf?"icon-pdf":"icon-html"}">
-          <i class="ti ${isPdf?"ti-file-type-pdf":"ti-player-play"}" aria-hidden="true"></i>
-        </div>
-        <span class="doc-title">${d.titolo}<span class="badge ${isPdf?"badge-pdf":"badge-html"}">${isPdf?"PDF":"HTML"}</span></span>
-        <span class="doc-meta">Classe ${d.classe}ª · ${catLabel[d.cat]}</span>
-      </div>`;
+      html += `    <div class="doc-row" tabindex="0" role="button" aria-label="Apri ${d.titolo}" data-url="${d.url}" data-title="${d.titolo}">`;
+      html += `      <div class="doc-icon ${isPdf ? 'icon-pdf' : 'icon-html'}">`;
+      html += `        <i class="ti ${isPdf ? 'ti-file-type-pdf' : 'ti-file-code'}" aria-hidden="true"></i>`;
+      html += `      </div>`;
+      html += `      <span class="doc-title">${d.titolo}<span class="badge-type ${isPdf ? 'badge-pdf' : 'badge-html'}">${d.tipo.toUpperCase()}</span></span>`;
+      html += `      <span class="doc-meta">Classe ${d.classe}ª · ${catLabel[d.cat]}</span>`;
+      html += `    </div>`;
     });
-    html += `</div>`;
+    
+    html += `  </div>`;
+    html += `</details>`;
   });
 
-  document.getElementById("docList").innerHTML = html;
+  targetContainer.innerHTML = html;
+
   document.querySelectorAll(".doc-row").forEach(row => {
     const open = () => openViewer(row.dataset.url, row.dataset.title);
     row.addEventListener("click", open);
@@ -568,10 +691,12 @@ function openViewer(relUrl, title) {
   document.getElementById("viewerExtLink").href = full;
   document.getElementById("viewerOverlay").classList.add("open");
   document.getElementById("viewerClose").focus();
+  document.body.style.overflow = "hidden";
 }
 
 function closeViewer() {
   document.getElementById("viewerOverlay").classList.remove("open");
+  document.body.style.overflow = "";
   setTimeout(() => { document.getElementById("viewerFrame").src = ""; }, 200);
 }
 
