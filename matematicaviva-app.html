@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.5.0/dist/tabler-icons.min.css">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -60,17 +63,33 @@ header {
   gap: 24px;
 }
 
+/* LOGO EDITATO: Elegante e senza sfondi pesanti */
 .logo {
   font-family: 'Lora', serif;
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: .02em;
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   opacity: .95;
   z-index: 160;
+  display: flex;
+  align-items: center;
 }
+.logo text { font-family: 'Lora', serif; }
 .logo span { color: #f0c06e; }
+
+/* Iniziali MV nell'Header */
+.logo-m {
+  color: #ffffff; /* Chiara sul fondo scuro dell'header per leggibilità */
+  font-weight: 700;
+  margin-right: 1px;
+}
+.logo-v {
+  color: var(--accento); /* Il tuo oro originale */
+  font-weight: 700;
+  margin-right: 12px;
+}
 
 nav { display: flex; gap: 6px; flex-wrap: wrap; }
 nav a {
@@ -97,7 +116,7 @@ nav a:hover, nav a.active {
   flex-shrink: 0;
 }
 
-/* Pulsante Menu Mobile */
+/* Pulsante Hamburger Menu Mobile */
 .menu-toggle {
   display: none;
   background: none;
@@ -109,7 +128,7 @@ nav a:hover, nav a.active {
   padding: 4px;
 }
 
-/* ── MAIN ── */
+/* ── MAIN LAYOUT ── */
 .main-wrap {
   flex: 1;
   max-width: 1100px;
@@ -118,7 +137,7 @@ nav a:hover, nav a.active {
   padding: 40px 24px 64px;
 }
 
-/* Toolbar Filtri */
+/* Toolbar dei Filtri */
 .toolbar {
   display: flex;
   gap: 8px;
@@ -180,10 +199,8 @@ nav a:hover, nav a.active {
   margin-left: auto;
 }
 
-/* Macro Categorie (Teoria, Esercizi, ecc.) */
-.macro-section {
-  margin-bottom: 2.5rem;
-}
+/* Macro Categorie */
+.macro-section { margin-bottom: 2.5rem; }
 .macro-title {
   font-family: 'Lora', serif;
   font-size: 1.6rem;
@@ -194,7 +211,7 @@ nav a:hover, nav a.active {
   border-bottom: 2px solid var(--bordo);
 }
 
-/* Stile Tendine (Details/Summary) */
+/* Stile Tendine Accordion (Details/Summary) */
 details {
   background: var(--bianco);
   border: 1px solid var(--bordo);
@@ -204,9 +221,7 @@ details {
   overflow: hidden;
   transition: border-color .2s;
 }
-details[open] {
-  border-color: var(--blu-mid);
-}
+details[open] { border-color: var(--blu-mid); }
 summary {
   padding: 14px 20px;
   font-weight: 600;
@@ -225,9 +240,7 @@ summary::after {
   color: var(--blu-mid);
   transition: transform .2s;
 }
-details[open] summary::after {
-  transform: rotate(180deg);
-}
+details[open] summary::after { transform: rotate(180deg); }
 summary .badge-count {
   background: var(--blu-soft);
   color: var(--blu-mid);
@@ -238,7 +251,7 @@ summary .badge-count {
   margin-right: 15px;
 }
 
-/* Lista file dentro la tendina */
+/* Liste File Interne */
 .doc-list {
   padding: 4px 16px 16px;
   border-top: 1px solid var(--bordo);
@@ -248,7 +261,6 @@ summary .badge-count {
   gap: 8px;
 }
 
-/* Riga del singolo documento */
 .doc-row {
   background: var(--bianco);
   border: 1px solid var(--bordo);
@@ -273,10 +285,7 @@ summary .badge-count {
 .icon-pdf  { background: #ffebeb; color: #c92a2a; }
 .icon-html { background: #eef5ff; color: #1c7ed6; }
 
-.doc-title {
-  font-size: .95rem; font-weight: 500;
-  color: var(--testo); flex: 1; min-width: 0;
-}
+.doc-title { font-size: .95rem; font-weight: 500; color: var(--testo); flex: 1; min-width: 0; }
 .badge-type {
   display: inline-block; font-size: .72rem; font-weight: 600;
   padding: 2px 8px; border-radius: 4px; margin-left: 8px;
@@ -284,19 +293,12 @@ summary .badge-count {
 .badge-pdf  { background: #ffebeb; color: #c92a2a; }
 .badge-html { background: #eef5ff; color: #1c7ed6; }
 
-.doc-meta {
-  font-size: 11px; color: var(--testo-soft);
-  white-space: nowrap; flex-shrink: 0;
-}
+.doc-meta { font-size: 11px; color: var(--testo-soft); white-space: nowrap; flex-shrink: 0; }
 
-/* Empty state */
-.empty {
-  text-align: center; padding: 3rem 1rem;
-  color: var(--text-hint); font-size: 14px;
-}
+.empty { text-align: center; padding: 3rem 1rem; color: var(--text-hint); font-size: 14px; }
 .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
 
-/* ── VIEWER OVERLAY ── */
+/* ── VISUALIZZATORE OVERLAY ── */
 .viewer-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(10,10,30,.65);
@@ -360,16 +362,17 @@ footer {
   font-size: 1.2rem;
   color: var(--blu);
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
 .footer-logo span { color: #f0c06e; }
-.footer-info {
-  font-size: .9rem;
-  color: var(--testo-soft);
-  text-align: center;
-}
-.footer-bio {
-  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 4px 0;
-}
+
+/* Iniziali MV nel Footer (Chiaro su Chiaro sistemato: M in blu e V in oro) */
+.footer-logo-m { color: var(--blu); font-weight: 700; margin-right: 1px; }
+.footer-logo-v { color: var(--accento); font-weight: 700; margin-right: 8px; }
+
+.footer-info { font-size: .9rem; color: var(--testo-soft); text-align: center; }
+.footer-bio { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 4px 0; }
 .footer-bio span {
   background: var(--bianco);
   border: 1px solid var(--bordo);
@@ -378,17 +381,13 @@ footer {
   font-size: .8rem;
   color: var(--testo-soft);
 }
-.footer-copy {
-  font-size: .8rem; color: #8a9ab5; margin-top: 4px; text-align: center;
-}
+.footer-copy { font-size: .8rem; color: #8a9ab5; margin-top: 4px; text-align: center; }
 .footer-copy a { color: #8a9ab5; text-decoration: none; }
 .footer-copy a:hover { color: var(--blu); }
 
-/* ── MEDIA QUERIES MOBILE ── */
+/* ── ADATTAMENTO SMARTPHONE (Responsive) ── */
 @media (max-width: 768px) {
-  .menu-toggle {
-    display: block;
-  }
+  .menu-toggle { display: block; }
 
   nav {
     display: none;
@@ -402,9 +401,7 @@ footer {
     z-index: 155;
     box-shadow: -4px 0 20px rgba(0,0,0,0.3);
   }
-  nav.mobile-open {
-    display: flex;
-  }
+  nav.mobile-open { display: flex; }
   nav a {
     font-size: 1.05rem;
     padding: 12px 16px;
@@ -425,15 +422,8 @@ footer {
     gap: 10px;
     margin-bottom: 1.5rem;
   }
-  .toolbar select, .search-wrap {
-    width: 100%;
-    min-width: unset;
-  }
-  .result-count {
-    margin-left: 0;
-    text-align: center;
-    width: 100%;
-  }
+  .toolbar select, .search-wrap { width: 100%; min-width: unset; }
+  .result-count { margin-left: 0; text-align: center; width: 100%; }
 
   .macro-title { font-size: 1.35rem; }
   summary { padding: 12px 16px; font-size: 0.95rem; }
@@ -457,7 +447,7 @@ footer {
 <header>
   <div class="header-inner">
     <a class="logo" href="https://matematicaviva.github.io/">
-      Matematica<span>Viva</span>
+      <span class="logo-m">M</span><span class="logo-v">V</span> – Matematica<span>Viva</span>
     </a>
     
     <button class="menu-toggle" id="menuToggle" aria-label="Apri menu" aria-expanded="false">
@@ -523,7 +513,9 @@ footer {
 
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">Matematica<span>Viva</span></div>
+    <div class="footer-logo">
+      <span class="footer-logo-m">M</span><span class="footer-logo-v">V</span> – Matematica<span>Viva</span>
+    </div>
     <div class="footer-info">
       <p><strong>M. Prandelli</strong> — Docente di matematica</p>
       <p>Laurea in Matematica · PhD in Matematica pura e applicata</p>
@@ -561,9 +553,9 @@ const docs = [
   {titolo:"Geometria: sintesi rette parallele e perpendicolari",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/formulario_parallele_perpendicolari.pdf"},
   {titolo:"Algebra: sintesi scomposizione di polinomi",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/formulario_polinomi.pdf"},
   {titolo:"Algebra: sintesi equazioni lineari intere e fratte",cat:"schemi",classe:1,tipo:"pdf",url:"viewer.html?file=schemi/classe1/sintesi_equazioni_lineari.pdf"},
-  {titolo:"Algebra: sintesi disequazioni di secondo grado",cat:"schemi",classe:2,tipo:"pdf",url:"viewer.html?file=schemi/classe2/sintesi_disequazioni_sec.pdf"},
-  {titolo:"Geometria: sintesi sezione aurea",cat:"schemi",classe:2,tipo:"pdf",url:"viewer.html?file=schemi/classe2/formulario_sezione_aurea.pdf"},
-  {titolo:"Goniometria: sintesi relazioni introduttive",cat:"schemi",classe:4,tipo:"pdf",url:"viewer.html?file=schemi/classe4/sintesi_goniometria.pdf"},
+  {titolo:"Algebra: sintesi disequazioni di secondo grado",cat:"schemi",classe:2,tipo:"pdf",url:"schemi/classe2/sintesi_disequazioni_sec.pdf"},
+  {titolo:"Geometria: sintesi sezione aurea",cat:"schemi",classe:2,tipo:"pdf",url:"schemi/classe2/formulario_sezione_aurea.pdf"},
+  {titolo:"Goniometria: sintesi relazioni introduttive",cat:"schemi",classe:4,tipo:"pdf",url:"schemi/classe4/sintesi_goniometria.pdf"},
   {titolo:"Geometria: rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/rette_parallele_perpendicolari.html"},
   {titolo:"Geometria: esercizi rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/Scheda_Esercizi_Parallele_Perpendicolari_def.html"},
   {titolo:"Geometria: quadrilateri",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/quadrilateri_def.html"},
@@ -582,7 +574,6 @@ const docs = [
 const catLabel = {teoria:"Teoria", esercizi:"Esercizi", schemi:"Schemi", lezioni:"Lezioni interattive"};
 let fClasse="all", fCat="all", fTipo="all", fQ="";
 
-// Drawer Menu Mobile
 const menuToggle = document.getElementById("menuToggle");
 const mainNav = document.getElementById("mainNav");
 const menuIcon = document.getElementById("menuIcon");
