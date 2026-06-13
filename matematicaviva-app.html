@@ -559,7 +559,6 @@ const BASE = "https://matematicaviva.github.io/";
 const docs = [
   {titolo:"Geometria: rette perpendicolari e parallele",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/rette_parallele_perpendicolari.pdf"},
   {titolo:"Geometria: quadrilateri",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/quadrilateri.pdf"},
-  {titolo:"Algebra: i monomi",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/monomi_def.pdf"},
   {titolo:"Algebra: scomposizione di polinomi",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/scomposizione_polinomi.pdf"},
   {titolo:"Algebra: equazioni lineari intere e fratte",cat:"teoria",classe:1,tipo:"pdf",url:"viewer.html?file=teoria/classe1/equazioni_lineari.pdf"},
   {titolo:"Geometria: Teorema di Talete e similitudini",cat:"teoria",classe:2,tipo:"pdf",url:"viewer.html?file=teoria/classe2/talete_similitudini.pdf"},
@@ -579,6 +578,7 @@ const docs = [
   {titolo:"Geometria: rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/rette_parallele_perpendicolari.html"},
   {titolo:"Geometria: esercizi rette parallele e perpendicolari",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/Scheda_Esercizi_Parallele_Perpendicolari_def.html"},
   {titolo:"Geometria: quadrilateri",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/quadrilateri_def.html"},
+  {titolo:"Algebra: i monomi",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/monomi_def.html"},
   {titolo:"Algebra: scomposizione di polinomi",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/scomposizione_polinomi.html"},
   {titolo:"Algebra: equazioni lineari intere e fratte",cat:"lezioni",classe:1,tipo:"html",url:"lezioni/classe1/equazioni_lineari.html"},
   {titolo:"Geometria: Coniche",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/coniche.html"},
@@ -588,11 +588,18 @@ const docs = [
   {titolo:"Algebra: disequazioni di secondo grado e parabola",cat:"lezioni",classe:2,tipo:"html",url:"lezioni/classe2/disequazioni_parabola_v.html"},
   {titolo:"Circonferenza",cat:"lezioni",classe:3,tipo:"html",url:"lezioni/classe3/circonferenza.html"},
   {titolo:"Goniometria: introduzione",cat:"lezioni",classe:4,tipo:"html",url:"lezioni/classe4/goniometria_def.html"},
-  {titolo:"Coordinate sferiche",cat:"lezioni",classe:5,tipo:"html",url:"lezioni/classe5/Coordinate_sferiche_def.html"},
+  {titolo:"Coordinate sferiche",cat:"lezioni",classe:5,tipo:"html",url:"lezioni/classe5/Coordinate_sferiche_def.html"}
 ];
 
 const catLabel = {teoria:"Teoria", esercizi:"Esercizi", schemi:"Schemi", lezioni:"Lezioni interattive"};
 let fClasse="all", fCat="all", fTipo="all", fQ="";
+
+// Funzione di Escape per la sicurezza da XSS
+function escapeHtml(str) {
+  return str.replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
 
 // Drawer Menu Mobile
 const menuToggle = document.getElementById("menuToggle");
@@ -654,33 +661,41 @@ function render() {
   let html = "";
   let currentCat = "";
 
-  sorted.forEach(g => {
+  sorted.forEach((g) => {
     if (currentCat !== g.cat) {
+      if (currentCat !== "") {
+        html += `</div>`; // Chiude il div .macro-section precedente
+      }
       currentCat = g.cat;
-      html += `<div class="macro-title">${catLabel[g.cat]}</div>`;
+      html += `<div class="macro-section">`;
+      html += `  <h2 class="macro-title">${escapeHtml(catLabel[g.cat])}</h2>`;
     }
 
     const forceOpen = (fQ !== "" || fClasse !== "all" || fCat !== "all" || fTipo !== "all") ? "open" : "";
-    const s = g.items.length === 1 ? "e" : "i";
+    const s = g.items.length === 1 ? "o" : "i";
 
     html += `<details ${forceOpen}>`;
-    html += `  <summary>Classe ${g.classe}ª <span class="badge-count">${g.items.length} lezion${s}</span></summary>`;
+    html += `  <summary>Classe ${g.classe}ª <span class="badge-count">${g.items.length} document${s}</span></summary>`;
     html += `  <div class="doc-list">`;
     
     g.items.forEach(d => {
       const isPdf = d.tipo === "pdf";
-      html += `    <div class="doc-row" tabindex="0" role="button" aria-label="Apri ${d.titolo}" data-url="${d.url}" data-title="${d.titolo}">`;
+      html += `    <div class="doc-row" tabindex="0" role="button" aria-label="Apri ${escapeHtml(d.titolo)}" data-url="${escapeHtml(d.url)}" data-title="${escapeHtml(d.titolo)}">`;
       html += `      <div class="doc-icon ${isPdf ? 'icon-pdf' : 'icon-html'}">`;
       html += `        <i class="ti ${isPdf ? 'ti-file-type-pdf' : 'ti-file-code'}" aria-hidden="true"></i>`;
       html += `      </div>`;
-      html += `      <span class="doc-title">${d.titolo}<span class="badge-type ${isPdf ? 'badge-pdf' : 'badge-html'}">${d.tipo.toUpperCase()}</span></span>`;
-      html += `      <span class="doc-meta">Classe ${d.classe}ª · ${catLabel[d.cat]}</span>`;
+      html += `      <span class="doc-title">${escapeHtml(d.titolo)}<span class="badge-type ${isPdf ? 'badge-pdf' : 'badge-html'}">${d.tipo.toUpperCase()}</span></span>`;
+      html += `      <span class="doc-meta">Classe ${d.classe}ª · ${escapeHtml(catLabel[d.cat])}</span>`;
       html += `    </div>`;
     });
     
     html += `  </div>`;
     html += `</details>`;
   });
+
+  if (html !== "") {
+    html += `</div>`; // Chiude l'ultimo div .macro-section rimasto aperto
+  }
 
   targetContainer.innerHTML = html;
 
