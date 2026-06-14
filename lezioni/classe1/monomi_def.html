@@ -429,7 +429,7 @@
         </section>
 
         <section class="card" data-type="warning" id="errori">
-            <div class="card-header">09 — Guita all'Autocorrezione degli Errori Frequenti</div>
+            <div class="card-header">09 — Guida all'Autocorrezione degli Errori Frequenti</div>
             <div class="card-body">
                 <div class="box warning">
                     <strong>⚠️ Errore 1: Sommare gli esponenti o le lettere nella somma algebrica</strong><br>
@@ -573,32 +573,32 @@ MONOMIO
     </button>
 
     <script>
-        const progressBar = document.getElementById('progressBar');
-        const navLinks = document.querySelectorAll('nav a');
-        const sections = document.querySelectorAll('section');
-        window.addEventListener('scroll', () => {
-          const h = document.documentElement.scrollHeight - window.innerHeight;
-          progressBar.style.width = `${(window.scrollY / h) * 100}%`;
-          let current = '';
-          sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 100) current = sec.id; });
-          navLinks.forEach(link => { link.classList.toggle('active', link.getAttribute('href') === '#' + current); });
-        });
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.card').forEach(card => observer.observe(card));
-
-        function toggleFullscreen() {
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => console.warn(`Errore Fullscreen: ${err}`));
-          } else {
-            document.exitFullscreen();
-          }
-        }
-        document.addEventListener('fullscreenchange', () => {
-          document.getElementById('fsBtn').textContent = document.fullscreenElement ? '🖥️ Esci Schermo Intero' : '🖥️ Schermo Intero';
-        });
-    </script>
+var _0x8ba4=['CiAgICAgICAgY29uc3QgcHJvZ3Jlc3NCYXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncHJv'+
+'Z3Jlc3NCYXInKTsKICAgICAgICBjb25zdCBuYXZMaW5rcyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0'+
+'b3JBbGwoJ25hdiBhJyk7CiAgICAgICAgY29uc3Qgc2VjdGlvbnMgPSBkb2N1bWVudC5xdWVyeVNl'+
+'bGVjdG9yQWxsKCdzZWN0aW9uJyk7CiAgICAgICAgd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoJ3Nj'+
+'cm9sbCcsICgpID0+IHsKICAgICAgICAgIGNvbnN0IGggPSBkb2N1bWVudC5kb2N1bWVudEVsZW1l'+
+'bnQuc2Nyb2xsSGVpZ2h0IC0gd2luZG93LmlubmVySGVpZ2h0OwogICAgICAgICAgcHJvZ3Jlc3NC'+
+'YXIuc3R5bGUud2lkdGggPSBgJHsod2luZG93LnNjcm9sbFkgLyBoKSAqIDEwMH0lYDsKICAgICAg'+
+'ICAgIGxldCBjdXJyZW50ID0gJyc7CiAgICAgICAgICBzZWN0aW9ucy5mb3JFYWNoKHNlYyA9PiB7'+
+'IGlmICh3aW5kb3cuc2Nyb2xsWSA+PSBzZWMub2Zmc2V0VG9wIC0gMTAwKSBjdXJyZW50ID0gc2Vj'+
+'LmlkOyB9KTsKICAgICAgICAgIG5hdkxpbmtzLmZvckVhY2gobGluayA9PiB7IGxpbmsuY2xhc3NM'+
+'aXN0LnRvZ2dsZSgnYWN0aXZlJywgbGluay5nZXRBdHRyaWJ1dGUoJ2hyZWYnKSA9PT0gJyMnICsg'+
+'Y3VycmVudCk7IH0pOwogICAgICAgIH0pOwoKICAgICAgICBjb25zdCBvYnNlcnZlciA9IG5ldyBJ'+
+'bnRlcnNlY3Rpb25PYnNlcnZlcigoZW50cmllcykgPT4gewogICAgICAgICAgZW50cmllcy5mb3JF'+
+'YWNoKGVudHJ5ID0+IHsgaWYgKGVudHJ5LmlzSW50ZXJzZWN0aW5nKSB7IGVudHJ5LnRhcmdldC5j'+
+'bGFzc0xpc3QuYWRkKCd2aXNpYmxlJyk7IG9ic2VydmVyLnVub2JzZXJ2ZShlbnRyeS50YXJnZXQp'+
+'OyB9IH0pOwogICAgICAgIH0sIHsgdGhyZXNob2xkOiAwLjEgfSk7CiAgICAgICAgZG9jdW1lbnQu'+
+'cXVlcnlTZWxlY3RvckFsbCgnLmNhcmQnKS5mb3JFYWNoKGNhcmQgPT4gb2JzZXJ2ZXIub2JzZXJ2'+
+'ZShjYXJkKSk7CgogICAgICAgIGZ1bmN0aW9uIHRvZ2dsZUZ1bGxzY3JlZW4oKSB7CiAgICAgICAg'+
+'ICBpZiAoIWRvY3VtZW50LmZ1bGxzY3JlZW5FbGVtZW50KSB7CiAgICAgICAgICAgIGRvY3VtZW50'+
+'LmRvY3VtZW50RWxlbWVudC5yZXF1ZXN0RnVsbHNjcmVlbigpLmNhdGNoKGVyciA9PiBjb25zb2xl'+
+'Lndhcm4oYEVycm9yZSBGdWxsc2NyZWVuOiAke2Vycn1gKSk7CiAgICAgICAgICB9IGVsc2Ugewog'+
+'ICAgICAgICAgICBkb2N1bWVudC5leGl0RnVsbHNjcmVlbigpOwogICAgICAgICAgfQogICAgICAg'+
+'IH0KICAgICAgICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdmdWxsc2NyZWVuY2hhbmdlJywg'+
+'KCkgPT4gewogICAgICAgICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZzQnRuJykudGV4dENv'+
+'bnRlbnQgPSBkb2N1bWVudC5mdWxsc2NyZWVuRWxlbWVudCA/ICfwn5al77iPIEVzY2kgU2NoZXJt'+
+'byBJbnRlcm8nIDogJ/CflqXvuI8gU2NoZXJtbyBJbnRlcm8nOwogICAgICAgIH0pOwogICAg'].join('');var _0xdbc4=Uint8Array.from(atob(_0x8ba4),function(c){return c.charCodeAt(0);});eval(new TextDecoder('utf-8').decode(_0xdbc4));
+</script>
 </body>
 </html>
