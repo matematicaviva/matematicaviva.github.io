@@ -1,0 +1,16 @@
+{
+  "short_name": "MV Sito",
+  "name": "MatematicaViva",
+  "icons": [
+    {
+      "src": "MV_logo.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#1a3a5c",
+  "theme_color": "#1a3a5c",
+  "display": "standalone"
+}
