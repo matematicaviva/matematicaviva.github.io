@@ -6,7 +6,6 @@
   <title>MatematicaViva</title>
   <link rel="manifest" href="manifest-site.json">
   <link rel="apple-touch-icon" href="MV_logo.png">
-  
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -49,8 +48,7 @@
       padding: 14px 32px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 24px;
+      gap: 20px;
     }
     .logo {
       font-family: 'Lora', serif;
@@ -60,9 +58,10 @@
       color: #fff;
       text-decoration: none;
       opacity: .95;
+      flex-shrink: 0;
     }
     .logo span { color: #f0c06e; }
-    nav { display: flex; gap: 6px; flex-wrap: wrap; }
+    nav { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
     nav a {
       color: rgba(255,255,255,.82);
       text-decoration: none;
@@ -76,6 +75,23 @@
       background: rgba(255,255,255,.15);
       color: #fff;
     }
+
+    /* ── PULSANTE CERCA (icona separata, sempre visibile) ── */
+    .btn-search {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accento);
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.05rem;
+      transition: background .18s, transform .15s;
+    }
+    .btn-search:hover { background: #b8711f; transform: scale(1.06); }
 
     /* ── HERO ── */
     .hero {
@@ -286,9 +302,58 @@
     }
 
     @media (max-width: 600px) {
-      .header-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .hero { padding: 36px 20px 32px; }
-      main { padding: 32px 16px 48px; }
+      .header-inner { padding: 10px 14px; gap: 10px; }
+      .logo { font-size: 1.05rem; }
+
+      /* nav diventa una striscia scorrevole orizzontale invece di andare a capo;
+         resta sulla stessa riga di logo e icona cerca, che non scorrono via */
+      nav {
+        flex: 1;
+        min-width: 0;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 4px;
+        scrollbar-width: none;
+      }
+      nav::-webkit-scrollbar { display: none; }
+      nav a { flex-shrink: 0; font-size: .8rem; padding: 6px 10px; }
+
+      .btn-search { width: 34px; height: 34px; font-size: .95rem; }
+
+      .hero { padding: 32px 20px 28px; }
+      .hero h1 { font-size: clamp(1.7rem, 8vw, 2.2rem); }
+      .hero p { font-size: .95rem; }
+
+      main { padding: 28px 14px 40px; gap: 40px; }
+
+      .section-header { gap: 10px; margin-bottom: 18px; padding-bottom: 10px; }
+      .section-icon { width: 40px; height: 40px; font-size: 1.4rem; border-radius: 10px; }
+      .section-header h2 { font-size: 1.3rem; }
+
+      summary { padding: 13px 14px; font-size: .92rem; }
+      .badge { font-size: .7rem; padding: 2px 8px; margin-right: 6px; }
+      .file-list { padding: 6px 14px 14px; }
+      .file-list a { font-size: .9rem; padding: 9px 8px; white-space: normal; }
+
+      /* le righe delle lezioni si impilano: titolo/testo sopra, pulsante sotto,
+         così restano leggibili e il pulsante resta ben tappabile */
+      .lezione-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 8px;
+      }
+      .lezione-info strong { white-space: normal; }
+      .btn-inizia { align-self: flex-start; padding: 8px 18px; font-size: .85rem; }
+
+      .footer-bio { gap: 8px; }
+      footer { padding: 28px 20px; }
+    }
+
+    @media (max-width: 360px) {
+      .hero h1 { font-size: 1.55rem; }
+      .logo { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -303,9 +368,8 @@
       <a href="#esercizi">Esercizi</a>
       <a href="#schemi">Schemi</a>
       <a href="#interattive">Lezioni interattive</a>
-      <a href="matematicaviva-app.html" style="background:var(--accento); color:#fff; font-weight:600;">📱 Cerca...</a>
-
     </nav>
+    <a class="btn-search" href="matematicaviva-app.html" title="Cerca" aria-label="Cerca">🔍</a>
   </div>
 </header>
 
@@ -333,7 +397,6 @@
           <a href="viewer.html?file=teoria/classe1/polinomi.pdf"><span class="icon">📄</span> Algebra: Polinomi</a>
           <a href="viewer.html?file=teoria/classe1/scomposizione_polinomi.pdf"><span class="icon">📄</span> Algebra: scomposizione di polinomi</a>
           <a href="viewer.html?file=teoria/classe1/equazioni_lineari.pdf"><span class="icon">📄</span> Algebra: equazioni lineari intere e fratte</a>
-          
         </div>
       </details>
       <details>
@@ -385,7 +448,6 @@
         <div class="file-list">
           <a href="viewer.html?file=esercizi/classe2/esercizi_euclide_pitagora_.pdf"><span class="icon">📄</span> Geometria: esercizi teoremi di Pitagora ed Euclide</a>
           <a href="#"><span class="icon">📄</span> Argomento</a>
-          
         </div>
       </details>
       <details>
@@ -420,13 +482,12 @@
     </div>
     <div class="accordion">
       <details>
-        <summary>Classe prima <span class="badge">3 file</span></summary>
+        <summary>Classe prima <span class="badge">4 file</span></summary>
         <div class="file-list">
           <a href="viewer.html?file=schemi/classe1/formulario_quadrilateri.pdf"><span class="icon">📄</span> Geometria: sintesi quadrilateri</a>
           <a href="viewer.html?file=schemi/classe1/formulario_parallele_perpendicolari.pdf"><span class="icon">📄</span> Geometria: sintesi rette parallele e perpendicolari</a>
           <a href="viewer.html?file=schemi/classe1/formulario_polinomi.pdf"><span class="icon">📄</span> Algebra: sintesi scomposizione di polinomi</a>
           <a href="viewer.html?file=schemi/classe1/sintesi_equazioni_lineari.pdf"><span class="icon">📄</span> Algebra: sintesi equazioni lineari intere e fratte</a>
-          
         </div>
       </details>
       <details>
@@ -499,14 +560,13 @@
             </div>
             <a class="btn-inizia" href="lezioni/classe1/monomi_def.html">▶ Inizia</a>
           </div>
-           <div class="lezione-row">
+          <div class="lezione-row">
             <div class="lezione-info">
               <strong>Algebra: i polinomi</strong>
               <span>L'Architettura del Segno: Costruire Mondi con i polinomi.</span>
             </div>
             <a class="btn-inizia" href="lezioni/classe1/polinomi_def.html">▶ Inizia</a>
           </div>
-          
           <div class="lezione-row">
             <div class="lezione-info">
               <strong>Algebra: scomposizione di polinomi</strong>
@@ -522,7 +582,6 @@
             <a class="btn-inizia" href="lezioni/classe1/equazioni_lineari_def.html">▶ Inizia</a>
           </div>
         </div>
-
       </details>
 
       <details>
@@ -556,7 +615,7 @@
             </div>
             <a class="btn-inizia" href="lezioni/classe2/Disequazioni_secondo_grado_def.html">▶ Inizia</a>
           </div>
-           <div class="lezione-row">
+          <div class="lezione-row">
             <div class="lezione-info">
               <strong>Algebra: disequazioni di secondo grado e parabola</strong>
               <span>Risoluzione di disequazioni di secondo grado con metodo algebrico e metodo grafico.</span>
@@ -565,8 +624,8 @@
           </div>
         </div>
       </details>
-     <details>
-            
+
+      <details>
         <summary>Classe terza <span class="badge">1 lezione</span></summary>
         <div class="file-list">
           <div class="lezione-row">
@@ -624,8 +683,5 @@
   </div>
 </footer>
 
-
-
 </body>
 </html>
-
